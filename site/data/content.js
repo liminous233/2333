@@ -154,6 +154,7 @@ window.CONTENT = {
     },
     // 首页「致谢」小块：图片署名（上线必须保留）
     credits: [
+      ['作者', '翎 · liminous（世界观、剧情文案、页面设计与排版、素材）'],
       ['枪', 'Gordon Gartrell · CC BY-SA 2.0 · Wikimedia Commons'],
       ['祈祷室围墙', '小红书 @Jyuemim'],
       ['黑日', '小红书 @無山'],
@@ -388,6 +389,8 @@ window.CONTENT = {
       ['role', 'The Visitors', 'A · B · C · D'],
       ['role', 'The Choir', 'Twenty-Four Voices'],
       ['role', 'The Twin Moons', 'Themselves'],
+      ['gap'],
+      ['role', 'Story, World & Design', 'liminous'],
       ['gap'],
       ['head', 'Recorded at'],
       ['line', 'The Choir of Sacred Offering'],
