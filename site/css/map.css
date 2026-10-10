@@ -70,6 +70,13 @@
 }
 .map-card p { margin: 0; font-family: 'Stardom', 'DM Serif Display', var(--f-display); font-size: 17px; letter-spacing: .02em; color: #f1f3f8; white-space: nowrap; }
 .map-card--zh p { font-family: var(--f-body); font-size: 13px; letter-spacing: .14em; }
+/* DAY 5–7：小卡上面一行 DAY N，文字可以换行 */
+.map-card--day { width: max-content; max-width: min(280px, calc(100vw - 32px)); }
+.map-card--day p { white-space: normal; line-height: 1.7; }
+.map-card__day, .map-panel__day { display: block; font-size: 10px; letter-spacing: .32em; color: var(--klein-glow); }
+.map-card__day { margin-bottom: 4px; }
+.map-panel__day { margin: 0 0 -6px; padding: 0 6px; }
+.map-panel__day[hidden] { display: none; }
 @keyframes pop-in { from { opacity: 0; transform: translate(-50%, calc(-100% - 2px)); } }
 
 /* ---- 右下角翻出的图片 ---- */

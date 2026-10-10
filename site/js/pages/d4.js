@@ -227,6 +227,7 @@
         CC.$('.d4-wrap', sec).appendChild(d);
         d.addEventListener('click', function () {
           d.classList.add('is-leaving');
+          CC.state.setFlag('d4Report', true);          // 述职分支走完：地图钟楼的档案室能进了（DAY 5）
           ping();
           later(function () { d.remove(); say(0); }, 280);
         });

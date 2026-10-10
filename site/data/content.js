@@ -252,7 +252,18 @@ window.CONTENT = {
       up: '上楼',
       archive: '档案室', archiveText: '似乎锁门了。',
       gaze: '眺望', gazeText: '银莲花田簇拥着卡塔西斯圣堂，你的心中感到一阵安宁。',
+      // DAY4 走了述职分支（点过「本次述职结束」，flag d4Report）之后：朋友给了钥匙，档案室能进了
+      day5: {
+        label: 'DAY 5',
+        upText: '…我的朋友利用职务之便给了我一把钥匙。',
+        archiveText: '主教的私人藏书室',
+        open: 'Open it',
+        openText: '地面上散落着黑色的、看着不祥的太阳图案手稿。\n他感谢了我借给他笔的使用权限。',
+      },
     },
+    // 看过 DAY 5 之后点会议厅 → DAY 6；看过 DAY 6 之后点银莲花田 → DAY 7（都替换原来的小卡）
+    day6: { label: 'DAY 6', text: '圣献唱诗院高层最近似乎变得人心浮动，大门进出人员频繁。' },
+    day7: { label: 'DAY 7', text: '摇曳的白色海洋如今点缀零星红色…罂粟？' },
     dining: {
       image: 'assets/img/map/dining.webp',
       text: '还没到开饭的时间。',

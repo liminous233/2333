@@ -129,6 +129,18 @@
       btn.classList.add('is-open');
     }
 
+    // DAY 5–7 的小卡：上面一行小字 DAY N，文字可以换行；贴边时往里挪，不出屏
+    function dayCard(btn, D) {
+      card(btn, D.text, true);
+      layer.classList.add('map-card--day');
+      layer.innerHTML = '<span class="map-card__day mono">' + CC.esc(D.label) + '</span><p>' + CC.esc(D.text) + '</p>';
+      var r = layer.getBoundingClientRect(), pad = 8, dx = 0;
+      if (r.left < pad) dx = pad - r.left;
+      else if (r.right > window.innerWidth - pad) dx = window.innerWidth - pad - r.right;
+      if (dx) layer.style.marginLeft = dx + 'px';
+    }
+    function day(n) { return CC.state.seen('day:' + n); }
+
     // 右下角翻出来的图片面板
     function panel(btn, html) {
       closeAll();
@@ -180,9 +192,17 @@
       },
 
       studio: function (btn) { card(btn, M.studio, true); },
-      field: function (btn) { card(btn, M.field, true); },
+      field: function (btn) {
+        if (!day(6)) { card(btn, M.field, true); return; }
+        dayCard(btn, M.day7);
+        CC.state.once('day:7');
+      },
       parlour: function (btn) { card(btn, M.parlour, true); },
-      hall: function (btn) { card(btn, M.hall, true); },
+      hall: function (btn) {
+        if (!day(5)) { card(btn, M.hall, true); return; }
+        dayCard(btn, M.day6);
+        CC.state.once('day:6');
+      },
 
       // 居室：点那句话，下面才弹出选项
       dorm: function (btn) {
@@ -249,14 +269,29 @@
       },
 
       bell: function (btn) {
-        var B = M.bell;
-        var p = panel(btn, figure(B.image) + '<p class="map-panel__text"></p>' + choices([['up', B.up]]));
+        var B = M.bell, D5 = B.day5;
+        var key = CC.state.flag('d4Report');          // DAY4 述职分支走完：有钥匙
+        var p = panel(btn, figure(B.image) + '<p class="map-panel__day mono" hidden>' + CC.esc(D5.label) + '</p>' +
+          '<p class="map-panel__text"></p>' + choices([['up', B.up]]));
         p.addEventListener('click', function (e) {
           var a = e.target.closest('[data-act]');
           if (!a) return;
           var act = a.getAttribute('data-act');
-          if (act === 'up') CC.$('.map-panel__acts', p).outerHTML = choices([['archive', B.archive], ['gaze', B.gaze]]);
-          if (act === 'archive') say(p, B.archiveText);
+          if (act === 'up') {
+            CC.$('.map-panel__acts', p).outerHTML = choices([['archive', B.archive], ['gaze', B.gaze]]);
+            if (key) { CC.$('.map-panel__day', p).hidden = false; say(p, D5.upText); }
+          }
+          if (act === 'archive') {
+            if (!key) { say(p, B.archiveText); return; }
+            say(p, D5.archiveText);
+            a.setAttribute('data-act', 'open');      // 「档案室」原地变成「Open it」
+            a.textContent = D5.open;
+          }
+          if (act === 'open') {
+            say(p, D5.openText);
+            a.remove();
+            CC.state.once('day:5');
+          }
           if (act === 'gaze') { say(p, B.gazeText, true); CC.state.once('map:gaze', 2); }
         });
       },
