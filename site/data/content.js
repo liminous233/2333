@@ -164,7 +164,7 @@ window.CONTENT = {
     kicker: 'A JOURNEY THROUGH THE EIGHT DAYS OF THE GREAT HYMN',
     // 左下角花体字（7 人 · 调查组 2 · 信徒组 1 的缩写）
     partySign: '7c.2p.1e',
-    partyHint: '玩家身份分布：7 游客，2 调查员，1 邪信徒',
+    partyHint: '共 7 人：4 游客、2 调查员、1 邪信徒',
     // 唱片上螺旋排列的哥特体文字（只能用英文/拉丁字母，Aktura 字体没有中文）。不够长会自动重复
     discText:
       'The Sacred Choir of Offering is a renowned sanctuary of soul healing, where hymns are said to wash the sins from the heart. ' +
