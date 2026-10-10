@@ -317,7 +317,7 @@ window.CONTENT = {
     moons: [
       { n: 1, x: 78.1, y: 51.0, label: '前往证物柜', route: 'evidence' },
       { n: 2, x: 67.4, y: 53.3, label: '游客守则',   route: 'rules' },
-      { n: 3, x: 55.3, y: 53.3, label: '失踪档案',   route: 'missing' },
+      { n: 3, x: 55.3, y: 53.3, label: '唱诗院地图', route: 'map' },     // 守则和失踪档案都在手提箱里了，这里改成地图入口
       { n: 4, x: 44.8, y: 53.3, label: 'D4 日志',    route: 'd4' },
       { n: 5, x: 33.1, y: 53.2, label: '前往教堂',   route: 'church' },
       { n: 6, x: 20.6, y: 53.1, label: '', route: 'ending', twin: true },
@@ -373,6 +373,8 @@ window.CONTENT = {
       { who: 'wei',  text: '(=。=)' },
     ],
     back: '回望穹顶',
+    // 述职分支最后，鼠标移到「前往教堂」时短暂浮出（还没看过 DAY 5 才出现），点它去地图
+    mapHint: '地图似有异动……回去看看？',
   },
 
   // 教堂（方案 5，docs/specs/5.教堂界面.pdf）

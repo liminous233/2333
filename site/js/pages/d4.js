@@ -250,8 +250,28 @@
     }
     function options() {
       var a = CC.$('.d4-acts', sec);
-      a.innerHTML = '<a class="ev-btn" href="#/journal">' + CC.esc(D.back) + '</a><a class="ev-btn" href="#/church">' + CC.esc(D.toChurch) + '</a>';
+      a.innerHTML = '<a class="ev-btn" href="#/journal">' + CC.esc(D.back) + '</a><a class="ev-btn d4-to-church" href="#/church">' + CC.esc(D.toChurch) + '</a>';
       a.hidden = false;
+      // 还没看过 DAY 5：移到「前往教堂」上时，短暂浮出一行蓝色小字提示地图有变化（点它去地图）
+      if (CC.state.seen('day:5')) return;
+      var go = CC.$('.d4-to-church', a), tip = null, hideT = 0;
+      function show() {
+        clearTimeout(hideT);
+        if (!tip) {
+          tip = document.createElement('a');
+          tip.className = 'd4-hint';
+          tip.href = '#/map';
+          tip.textContent = D.mapHint;
+          a.appendChild(tip);
+          tip.addEventListener('pointerenter', function () { clearTimeout(hideT); });
+          tip.addEventListener('pointerleave', hide);
+        }
+        tip.classList.add('is-on');
+        hideT = later(hide, 2600);                    // 短暂出现，没理它就自己淡掉
+      }
+      function hide() { clearTimeout(hideT); if (tip) tip.classList.remove('is-on'); }
+      go.addEventListener('pointerenter', show);
+      go.addEventListener('focus', show);
     }
 
     CC.cleanup = function () {

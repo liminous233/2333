@@ -125,6 +125,16 @@
 
 .d4-acts { position: absolute; z-index: 6; left: 50%; top: calc(100% + 14px); transform: translateX(-50%); display: flex; gap: 12px; animation: d4-pop .5s var(--ease) both; }
 .d4-acts .ev-btn { text-decoration: none; white-space: nowrap; }
+/* 「前往教堂」上方短暂浮出的蓝色小提示 */
+.d4-hint {
+  position: absolute; right: 0; bottom: calc(100% + 10px); white-space: nowrap; text-decoration: none;
+  padding: 6px 12px; background: var(--klein); color: #fff; font-family: var(--f-body); font-size: 12px; letter-spacing: .16em;
+  box-shadow: 0 8px 22px rgba(0, 47, 167, .28);
+  opacity: 0; transform: translateY(4px); pointer-events: none; transition: opacity .35s, transform .35s var(--ease);
+}
+.d4-hint::after { content: ''; position: absolute; right: 22px; top: 100%; border: 5px solid transparent; border-top-color: var(--klein); }
+.d4-hint.is-on { opacity: 1; transform: none; pointer-events: auto; }
+.d4-hint:hover, .d4-hint:focus-visible { background: #0a3fd0; outline: none; }
 
 /* ---------------------------------------------------------------- ≥ 50：长满银莲花 */
 .bloom { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
