@@ -155,6 +155,7 @@ window.CONTENT = {
     // 首页「致谢」小块：图片署名（上线必须保留）
     credits: [
       ['作者', '翎 · liminous（世界观、剧情文案、页面设计与排版、素材）'],
+      ['代码', 'Claude · 克（按翎的设计方案实现）'],
       ['枪', 'Gordon Gartrell · CC BY-SA 2.0 · Wikimedia Commons'],
       ['祈祷室围墙', '小红书 @Jyuemim'],
       ['黑日', '小红书 @無山'],
