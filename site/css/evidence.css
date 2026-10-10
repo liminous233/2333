@@ -1,0 +1,244 @@
+/* ================= 4–6. 证物柜 · 手提箱 / 游客守则 / 失踪档案（方案 3） ================= */
+body.is-white {
+  --bg: #ffffff; --bg-2: #f4f5f7; --fg: #141824; --fg-2: #3a4352; --dim: #7a8494;
+  --line: rgba(20, 24, 36, .12); --line-2: rgba(20, 24, 36, .28);
+  background: #fff; color: var(--fg);
+}
+body.is-white #smoke, body.is-white #grain { display: none; }
+
+/* ---------------------------------------------------------------- 手提箱 */
+.case {
+  min-height: 100vh; min-height: 100svh; display: grid; place-items: center;
+  padding: 52px 16px 72px; background: #fff;
+}
+.case__stage {
+  position: relative; width: min(94vw, calc((100svh - 130px) * 1.497), 1180px); aspect-ratio: 1500 / 1002;
+  container-type: inline-size; user-select: none; -webkit-user-select: none;
+}
+.case__img { display: block; width: 100%; height: auto; pointer-events: none; -webkit-user-drag: none; }
+
+.bc-item {
+  position: absolute; padding: 0; margin: 0; border: 0; background: none; cursor: pointer;
+  transform: rotate(var(--rot)); transform-origin: 50% 50%;
+  filter: drop-shadow(0 .35cqw .4cqw rgba(0, 0, 0, .34));
+  transition: transform .45s var(--ease), filter .45s var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.bc-item__in { display: block; position: relative; }
+.bc-item__in > img { display: block; width: 100%; height: auto; pointer-events: none; -webkit-user-drag: none; }
+/* 插在口袋里：下半截藏起来 */
+.bc-item.is-tucked { clip-path: inset(-20% -20% var(--tuck) -20%); }
+.bc-item:hover, .bc-item:focus-visible {
+  transform: rotate(var(--rot)) translateY(-.6cqw) scale(1.03);
+  filter: drop-shadow(0 1.2cqw 1.1cqw rgba(0, 0, 0, .36)); z-index: 30 !important; outline: none;
+}
+.bc-item.is-tucked:hover, .bc-item.is-tucked:focus-visible { transform: rotate(var(--rot)) translateY(-1.2cqw); }
+.bc-item:focus-visible .bc-item__in { outline: 1px dashed var(--klein-glow); outline-offset: 4px; }
+.bc-item.is-lifted { visibility: hidden; }
+/* 箱子里的证件只看正面 */
+.bc-item__in.obj--card { aspect-ratio: 1000 / 630; }
+.bc-item--card .idc { box-shadow: 0 0 0 .5px rgba(0, 0, 0, .25); }
+
+/* ---------------------------------------------------------------- 拿起来（在门禁页 .lift 的基础上） */
+.lift--ev { gap: 16px; }
+.lift--ev .lift__item { animation: sway 6s ease-in-out infinite; }
+.lift__sway { position: relative; }
+@keyframes sway {
+  0%, 100% { transform: translateY(0) rotate(-.8deg); }
+  50% { transform: translateY(-6px) rotate(.8deg); }
+}
+.lift--candle .lift__item  { width: min(150px, 34vw); }
+.lift--anemone .lift__item { width: min(340px, 70vw); }
+.lift--hymn .lift__item    { width: min(440px, 88vw); }
+.lift--rules .lift__item   { width: min(760px, 94vw); }
+.lift--missing .lift__item { width: min(400px, 74vw, calc((100svh - 240px) / 1.578)); }
+.lift--candle .fc__glare, .lift--anemone .fc__glare, .lift--rules .fc__glare { display: none; }
+.lift--hymn .lift__item, .lift--rules .lift__item { max-height: calc(100svh - 230px); }
+.lift--hymn .lift__item { width: min(440px, 88vw, calc((100svh - 230px) * .74)); }
+.lift--rules .lift__item { width: min(760px, 94vw, calc((100svh - 230px) * 1.115)); }
+
+/* 直接铺在页面上（守则页、失踪档案页） */
+.item-page { position: relative; min-height: 100vh; min-height: 100svh; background: #fff; }
+.lift--page { position: relative; inset: auto; z-index: 1; min-height: 100vh; min-height: 100svh; padding: 56px 16px 80px; }
+
+/* 文案：物件下方 */
+.ev-cap { position: relative; z-index: 1; text-align: center; display: flex; flex-direction: column; gap: 6px; max-width: 32em; }
+.ev-cap:empty { display: none; }
+.ev-cap p { margin: 0; }
+.ev-cap__label { font-size: 11px; letter-spacing: .2em; color: var(--fg-2); }
+.ev-cap__label span { color: var(--fg); }
+.ev-cap__text { font-family: var(--f-body); font-size: 15px; letter-spacing: .14em; line-height: 1.7; color: var(--fg); }
+.ev-cap__en { font-family: 'Pinyon Script', var(--f-display); font-size: 17px; line-height: 1.2; color: var(--fg-2); }
+.ev-cap__hint { font-size: 10px; letter-spacing: .16em; color: var(--dim); }
+
+/* 选项 */
+.ev-acts { position: relative; z-index: 1; display: flex; gap: 10px; transition: opacity .4s, transform .4s; }
+.ev-acts:empty { display: none; }
+.ev-acts.is-gone { opacity: 0; transform: translateY(4px); pointer-events: none; }
+.ev-btn {
+  padding: 7px 22px; background: #fff; border: 1px solid rgba(20, 24, 36, .32); color: var(--fg);
+  font-family: var(--f-body); font-size: 13px; letter-spacing: .3em; padding-right: calc(22px - .3em); cursor: pointer;
+  transition: background-color .3s, color .3s, border-color .3s;
+}
+.ev-btn:hover, .ev-btn:focus-visible { background: var(--klein); border-color: var(--klein); color: #fff; outline: none; }
+/* 同化值太高：浏览被划掉，点了只会抖 */
+.ev-btn.is-denied { color: var(--dim); border-style: dashed; text-decoration: line-through; cursor: not-allowed; }
+.ev-btn.is-denied:hover { background: #fff; color: var(--dim); border-color: rgba(20, 24, 36, .32); }
+.ev-btn.is-shake { animation: deny .42s; }
+@keyframes deny { 20% { transform: translateX(-4px); } 40% { transform: translateX(4px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); } }
+
+/* ---------------------------------------------------------------- 两半牛皮纸 */
+.kp { position: relative; container-type: inline-size; }
+.kp > img { display: block; width: 100%; height: auto; pointer-events: none; -webkit-user-drag: none; }
+.forever__ink {
+  position: absolute; left: 28%; top: 30%;
+  font-family: 'Homemade Apple', var(--f-hand); font-weight: 400; font-size: 15cqw; line-height: 1;
+  color: rgba(22, 16, 12, .86); transform: rotate(-4deg); filter: blur(.4px); mix-blend-mode: multiply;
+}
+/* 拼好的：按原信纸 1080 × 1420 摆，Forever 从 758 / 1420 处开始，留一点没对齐的缝 */
+.kmerge { position: relative; aspect-ratio: 1080 / 1420; }
+.kmerge .kp { position: absolute; left: 0; width: 100%; }
+.kmerge .kp--we { top: 0; }
+.kmerge .kp--forever { top: 53.38%; transform: translate(.6%, .7%) rotate(.6deg); }
+.kmerge .kp.is-joining { animation: join .9s var(--ease) both; }
+.kmerge .kp--forever.is-joining { animation-name: join-up; }
+@keyframes join { from { transform: translate(-30%, -40%) rotate(-14deg); opacity: 0; } }
+@keyframes join-up { from { transform: translate(30%, 40%) rotate(14deg); opacity: 0; } }
+.lift--forever .lift__item { width: min(520px, 86vw); }
+.lift--merged .lift__item { width: min(400px, 80vw, calc((100svh - 260px) * .76)); }
+.lift--forever .fc__glare, .lift--merged .fc__glare { display: none; }
+
+/* ---------------------------------------------------------------- 香烛 */
+.cdl { position: relative; }
+.cdl > img { display: block; width: 100%; height: auto; pointer-events: none; -webkit-user-drag: none; }
+.cdl__flame, .cdl__glow { position: absolute; left: 52.8%; pointer-events: none; opacity: 0; transition: opacity .8s; }
+.cdl__flame {
+  top: -2.6%; width: 12%; aspect-ratio: .5; transform: translateX(-50%); transform-origin: 50% 90%;
+  border-radius: 50% 50% 46% 46% / 64% 64% 36% 36%;
+  background: radial-gradient(ellipse at 50% 76%, #fff 0 18%, #fff3cf 34%, #ffd27a 62%, rgba(255, 170, 70, 0) 76%);
+  filter: blur(.4px);
+}
+.cdl__glow {
+  top: -28%; width: 120%; aspect-ratio: 1; transform: translateX(-50%); border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 226, 160, .5), rgba(255, 220, 150, .12) 55%, transparent);
+}
+.cdl.is-lit .cdl__flame { opacity: 1; animation: flame 1.8s ease-in-out infinite alternate; }
+.cdl.is-lit .cdl__glow { opacity: 1; animation: glow 2.6s ease-in-out infinite alternate; }
+@keyframes flame {
+  0% { transform: translateX(-50%) scale(1) rotate(-2deg); }
+  35% { transform: translateX(-52%) scale(.94, 1.06) rotate(2deg); }
+  70% { transform: translateX(-48%) scale(1.04, .96) rotate(-1deg); }
+  100% { transform: translateX(-50%) scale(.97, 1.04) rotate(1.5deg); }
+}
+@keyframes glow { from { opacity: .75; } to { opacity: 1; } }
+
+/* ---------------------------------------------------------------- 颂歌谱子 */
+.hymn {
+  container-type: inline-size; position: relative; aspect-ratio: 3 / 4.05; overflow: hidden;
+  padding: 8% 9% 7%; color: #2e2a24;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, .55), transparent 60%),
+    radial-gradient(ellipse at 80% 90%, rgba(190, 170, 130, .16), transparent 55%),
+    linear-gradient(170deg, #f7f2e6, #efe7d4);
+  box-shadow: inset 0 0 24px rgba(160, 140, 100, .18);
+}
+.hymn__title {
+  margin: 0 0 3cqw; text-align: center; font-family: 'Pinyon Script', var(--f-display); font-size: 9cqw; line-height: 1;
+  color: #231f1a;
+}
+.hymn__staves { display: block; width: 100%; height: 30cqw; margin-bottom: 5cqw; overflow: visible; }
+.hymn__staves line { stroke: rgba(50, 44, 36, .5); stroke-width: .5; }
+.hymn__staves .stem { stroke: rgba(40, 34, 28, .85); stroke-width: .7; }
+.hymn__staves ellipse { fill: rgba(36, 30, 24, .9); }
+.hymn__staves ellipse.open { fill: none; stroke: rgba(36, 30, 24, .9); stroke-width: .6; }
+.hymn__staves .clef { fill: none; stroke: rgba(36, 30, 24, .8); stroke-width: .8; }
+.hymn__body { position: relative; }
+.hymn__en {
+  margin: 0; font-family: 'Pinyon Script', var(--f-display); font-size: 5.4cqw; line-height: 1.32; text-align: justify;
+  transition: opacity 1.6s ease-in, filter 1.6s;
+}
+/* 可变邻近：离鼠标越近，描边越粗（像字重变大） */
+.px__w { display: inline-block; white-space: nowrap; }
+.px__c { -webkit-text-stroke: calc(var(--p, 0) * .055em) currentColor; transition: -webkit-text-stroke-width .18s; }
+.hymn__zh {
+  position: absolute; left: 0; right: 0; top: 0; margin: 0;
+  font-family: var(--f-hand); font-size: 5.6cqw; line-height: 1.62; letter-spacing: .04em; color: #2a231b;
+  opacity: 0; filter: url(#hymnMelt) blur(.2px); transform-origin: 50% 0;
+  transition: opacity 1.6s ease-out;
+}
+/* 停留 1.5 秒：闪成中文（快），移开后慢慢回英文 */
+.hymn.is-zh .hymn__en { opacity: 0; filter: blur(2px); transition: opacity .12s, filter .12s; }
+.hymn.is-zh .hymn__zh { opacity: 1; transition: opacity .12s; }
+.hymn.is-sung { box-shadow: inset 0 0 24px rgba(160, 140, 100, .18), 0 0 40px rgba(255, 236, 190, .9); }
+.hymn.is-sung .hymn__en { text-shadow: 0 0 .6cqw rgba(200, 160, 80, .45); }
+.lift__sway:has(.hymn.is-folding) { animation: fold .9s cubic-bezier(.5, 0, .7, .4) forwards; transform-origin: 50% 0; }
+@keyframes fold { 50% { transform: perspective(900px) rotateX(70deg); } to { transform: perspective(900px) rotateX(88deg) scaleY(.5); opacity: 0; } }
+
+/* ---------------------------------------------------------------- 游客守则（笔记本左页手写） */
+.nb { position: relative; container-type: inline-size; }
+.nb > img { display: block; width: 100%; height: auto; pointer-events: none; -webkit-user-drag: none; }
+.nb__ink {
+  position: absolute; left: 6.5%; width: 39.5%; top: 16.5%;
+  color: rgba(22, 26, 48, .88); transition: opacity 1s;
+}
+.nb__ink p { margin: 0; }
+.nb__ink--en { font-family: 'Homemade Apple', var(--f-hand); }
+.nb__ink--en .nb__title { font-size: 3.1cqw; margin-bottom: 2.4cqw; transform: rotate(-1.5deg); }
+.nb__ink--en .nb__rule { font-size: 1.62cqw; line-height: 2.05; margin-bottom: 1.15cqw; transform: rotate(calc(-.6deg + var(--i) * .25deg)); }
+.nb__ink--zh { font-family: var(--f-hand); opacity: 0; }
+.nb__ink--zh .nb__title { font-size: 3.4cqw; margin-bottom: 2.6cqw; letter-spacing: .1em; }
+.nb__ink--zh .nb__rule { font-size: 2.05cqw; line-height: 1.7; margin-bottom: 1.6cqw; }
+.nb__rule b { font-weight: 400; margin-right: .3em; }
+.nb__rule.is-blur { filter: blur(.42cqw); opacity: .7; user-select: none; }
+.nb.is-zh .nb__ink--en { opacity: 0; transition: opacity .15s; }
+.nb.is-zh .nb__ink--zh { opacity: 1; transition: opacity .15s; }
+.bc-item--rules .nb__ink { display: none; }        /* 箱子里太小，不写字 */
+
+/* ---------------------------------------------------------------- 失踪档案：纸袋 + 抽出的旧纸 */
+.mf { position: relative; cursor: pointer; container-type: inline-size; }
+.mf__env, .mf__front { display: block; width: 100%; height: auto; pointer-events: none; -webkit-user-drag: none; }
+.mf__front { position: absolute; inset: 0; z-index: 2; clip-path: inset(11.6% 0 0 0); }
+/* 纸在袋子里：藏在袋身后面 */
+.mf__paper {
+  position: absolute; z-index: 1; left: 6%; top: 16%; width: 88%; container-type: inline-size;
+  transition: transform .5s var(--ease);
+}
+.mf__paper > img { display: block; width: 100%; height: auto; }
+.mf:not(.is-out):not(.is-forgotten):hover .mf__paper { transform: translateY(-5%); }
+.mf.is-pulling .mf__paper { transform: translateY(-62%); }
+/* 抽出来以后：纸到最前面，放大，袋子退到左下 */
+.mf.is-out { cursor: default; }
+.mf.is-out .mf__paper {
+  z-index: 3; transform: translate(16%, -15%) rotate(-2deg) scale(1.15);
+  transition: transform .7s var(--ease); filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .28));
+}
+.mf.is-out .mf__env, .mf.is-out .mf__front { transform: translate(-14%, 4%) rotate(-5deg) scale(.88); transition: transform .7s var(--ease); }
+.mf__env, .mf__front { transition: transform .7s var(--ease); }
+.mf.is-forgetting .mf__paper { transform: translateY(0); filter: blur(3px); opacity: 0; transition: transform .9s ease-in, filter .9s, opacity 1.1s; }
+.mf.is-forgotten { cursor: default; }
+.mf.is-forgotten .mf__paper { opacity: 0; }
+
+.mf__ink {
+  position: absolute; left: 9%; right: 9%; top: 7%;
+  font-family: var(--f-body); color: rgba(40, 32, 22, .9);
+}
+.mf__head { margin: 0 0 2.6cqw; font-size: 4.6cqw; font-weight: 600; letter-spacing: .26em; text-align: center; }
+.mf__meta { display: flex; flex-direction: column; gap: .4cqw; padding-bottom: 2cqw; margin-bottom: 2.6cqw; border-bottom: .25cqw solid rgba(60, 46, 30, .4); }
+.mf__f { font-size: 2.8cqw; line-height: 1.5; letter-spacing: .02em; white-space: nowrap; }
+.mf__f small { font-size: 1em; color: rgba(70, 58, 44, .8); }
+.mf__blur { font-style: normal; filter: blur(.35cqw); opacity: .7; }
+.mf__people { display: flex; flex-direction: column; gap: 3cqw; width: 60%; }
+.mf__p { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1.5cqw; }
+.mf__f--wide { grid-column: 1 / -1; }
+.mf__photo {
+  position: absolute; margin: 0; right: 5%; top: 30%; width: 33%; transform: rotate(4deg);
+  box-shadow: 0 .6cqw 1.4cqw rgba(0, 0, 0, .28);
+}
+.mf__photo img { display: block; width: 100%; height: auto; filter: sepia(.25) contrast(1.05); }
+.tape { position: absolute; width: 34%; height: 9%; background: rgba(236, 228, 206, .72); box-shadow: 0 0 .4cqw rgba(0, 0, 0, .12); }
+.tape--a { left: -10%; top: -4%; transform: rotate(-32deg); }
+.tape--b { right: -10%; top: -3%; transform: rotate(28deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .lift--ev .lift__item, .cdl.is-lit .cdl__flame, .cdl.is-lit .cdl__glow { animation: none; }
+}

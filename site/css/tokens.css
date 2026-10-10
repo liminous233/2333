@@ -1,0 +1,79 @@
+/* 颜色 / 字体 / 同化阶段变量 */
+:root {
+  --ink: #0a0c12;
+  --ink-2: #141824;
+  --bone: #eef0f3;
+  --fog: #c6cfda;
+  --mist: #7e8c9c;
+  --klein: #002fa7;
+  --klein-deep: #001a66;
+  --klein-glow: #2f5bff;
+
+  --f-display: 'Boska', 'Cormorant Garamond', 'Noto Serif SC', serif;
+  --f-fraktur: 'UnifrakturMaguntia', 'Cormorant Garamond', serif;
+  --f-body: 'Noto Serif SC', 'Songti SC', 'SimSun', serif;
+  --f-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --f-hand: 'LXGW WenKai', 'KaiTi', 'STKaiti', cursive;
+
+  --gutter: clamp(16px, 4vw, 56px);
+  --maxw: 1240px;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+
+  --assim: 0;
+}
+
+/* 阶段 0 · 清醒：黑底 */
+body[data-stage="0"] {
+  --bg: #0a0c12;
+  --bg-2: #121621;
+  --fg: #eef0f3;
+  --fg-2: #c6cfda;
+  --dim: #7e8c9c;
+  --line: rgba(198, 207, 218, .16);
+  --line-2: rgba(198, 207, 218, .32);
+  --note: #5b7cff;
+  --accent: #2f5bff;
+  --sheet: #10141d;
+}
+
+/* 阶段 1 · 微恙：开始泛灰 */
+body[data-stage="1"] {
+  --bg: #1a1e27;
+  --bg-2: #222734;
+  --fg: #e4e8ed;
+  --fg-2: #bcc5d0;
+  --dim: #8794a3;
+  --line: rgba(198, 207, 218, .2);
+  --line-2: rgba(198, 207, 218, .38);
+  --note: #6582ff;
+  --accent: #2f5bff;
+  --sheet: #1f2430;
+}
+
+/* 阶段 2 · 安宁：接近骨白 */
+body[data-stage="2"] {
+  --bg: #cdd4dc;
+  --bg-2: #d9dfe6;
+  --fg: #2b323d;
+  --fg-2: #4a5462;
+  --dim: #6d7987;
+  --line: rgba(30, 40, 60, .14);
+  --line-2: rgba(30, 40, 60, .3);
+  --note: rgba(0, 47, 167, .62);
+  --accent: #002fa7;
+  --sheet: #e3e8ee;
+}
+
+/* 阶段 3 · 至臻：近乎纯白 */
+body[data-stage="3"] {
+  --bg: #f3f4f6;
+  --bg-2: #f8f9fa;
+  --fg: #97a1ac;
+  --fg-2: #aab3bd;
+  --dim: #c3cad2;
+  --line: rgba(60, 70, 90, .08);
+  --line-2: rgba(60, 70, 90, .16);
+  --note: rgba(0, 47, 167, 0);
+  --accent: rgba(0, 47, 167, .35);
+  --sheet: #fbfbfc;
+}

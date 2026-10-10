@@ -1,0 +1,171 @@
+/* ================= DAY4 日志（方案 4） ================= */
+.d4 { position: relative; min-height: 100vh; min-height: 100svh; overflow: hidden; }
+.d4[data-phase="moon"] { background: #000; }
+.d4[data-phase="log"] { background: #fff; }
+
+/* ---------------------------------------------------------------- 黑底：莫比乌斯环月亮 */
+.d4-moon { min-height: 100vh; min-height: 100svh; display: grid; place-items: center; }
+/* 比原图在方案里的大小缩了约 25% */
+.d4-stage { position: relative; width: min(64vw, 128vh, 1000px); aspect-ratio: 1356 / 580; }
+.d4-sway { position: absolute; inset: 0; transition: transform 1.1s cubic-bezier(.2, .7, .2, 1); transform-origin: 50% 52%; }
+.d4-moons { display: block; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none; }
+.d4-core {
+  position: absolute; z-index: 3; aspect-ratio: 1; transform: translate(-50%, -50%);
+  padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer;
+  transition: box-shadow .5s var(--ease);
+}
+.d4-core:hover, .d4-core:focus-visible { outline: none; box-shadow: 0 0 28px 6px rgba(226, 234, 246, .32); }
+/* 十字架：只露出底端尖端，悬在中心圆月上方（尖端在月亮图 38% 高处） */
+.d4-cross {
+  position: absolute; z-index: 2; left: 49.93%; bottom: 62%; width: 18%; height: 40vh;
+  transform: translateX(-50%); overflow: hidden; pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 55%); mask-image: linear-gradient(to bottom, transparent, #000 55%);
+}
+.d4-cross img {
+  position: absolute; left: 50%; bottom: 0; height: 104vh; width: auto; transform: translateX(-49.6%);
+  filter: saturate(1.25) brightness(1.25) drop-shadow(0 0 12px rgba(40, 80, 255, .55));
+  animation: d4-hover 4.5s ease-in-out infinite;
+}
+@keyframes d4-hover { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
+.d4.is-stabbing .d4-cross img { animation: none; }
+/* 扎中：月亮闪一下，整块抖 */
+.d4.is-hit .d4-stage { animation: d4-shake .38s cubic-bezier(.36, .07, .19, .97); }
+.d4.is-hit .d4-moons { filter: brightness(1.6) contrast(1.1); transition: filter .2s; }
+@keyframes d4-shake {
+  15% { transform: translate(-6px, 3px); } 30% { transform: translate(5px, -3px); } 45% { transform: translate(-4px, 2px); }
+  60% { transform: translate(3px, -1px); } 75% { transform: translate(-2px, 1px); }
+}
+.pxswap { position: fixed; inset: 0; z-index: 90; width: 100vw; height: 100vh; pointer-events: none; }
+
+/* ---------------------------------------------------------------- 白底：纸页 */
+/* 纸往下放，让十字架的横杠露在纸上方（横杠在十字架 37.7% 高处） */
+.d4-log { min-height: 100vh; min-height: 100svh; display: grid; justify-items: center; align-items: start; padding: 23svh 16px 10svh; }
+.d4-wrap { position: relative; height: min(64svh, 132vw); aspect-ratio: 1025 / 1500; }
+/* 最底下：Observation Log（黑字、蓝色硬边阴影）。Observation 在纸左边、尾巴压在纸下；
+   Log 在纸右边、莱恩第二条消息上方、开头压在纸下一点 */
+.d4-title {
+  position: absolute; z-index: 0; inset: 0; margin: 0; pointer-events: none;
+  font-family: 'Boska', 'Cormorant Garamond', serif; font-weight: 500; font-size: clamp(40px, 5.6vw, 96px);
+  line-height: .95; letter-spacing: -.01em; color: #0b0d12; white-space: nowrap;
+  text-shadow: .055em .055em 0 var(--klein);
+}
+.d4-title span { position: absolute; }
+.d4-title span:first-child { right: calc(100% - .75em); top: 7%; }
+.d4-title span:last-child { left: calc(100% - .1em); top: 39%; }
+.d4-pale { position: absolute; z-index: 1; left: 50%; top: -50.5%; height: 110%; width: auto; transform: translateX(-49%); pointer-events: none; opacity: .92; }
+.d4-sheet { position: absolute; z-index: 2; inset: 0; container-type: inline-size; box-shadow: 0 18px 40px rgba(20, 22, 30, .16); }
+.d4-sheet__paper { display: block; width: 100%; height: 100%; pointer-events: none; -webkit-user-drag: none; }
+
+/* 报告：手写英文，停 1.5 秒换中文 */
+.d4-ink {
+  position: absolute; inset: 0; padding: 14% 12% 10% 13%; color: rgba(18, 22, 40, .9);
+  transition: opacity .9s;
+}
+.d4-ink p { margin: 0; }
+.d4-ink--en { font-family: 'Cedarville Cursive', 'Homemade Apple', cursive; }
+.d4-ink--en .d4-ink__date { font-size: 3.3cqw; margin-bottom: 9cqw; }
+.d4-ink--en .d4-ink__head { font-size: 3cqw; line-height: 1.5; margin-bottom: 5cqw; }
+.d4-ink--en .d4-ink__to { font-size: 3.6cqw; margin-bottom: 3cqw; }
+.d4-ink--en .d4-ink__body { font-size: 3.6cqw; line-height: 1.62; text-indent: 2.4em; }
+.d4-ink--en .d4-ink__close { font-size: 3.5cqw; margin: 5cqw 0 0 44%; }
+.d4-ink--en .d4-ink__sign { font-size: 4.2cqw; margin: 2cqw 0 0 44%; transform: rotate(-3deg); white-space: nowrap; }
+.d4-ink--en .d4-ink__code { font-family: var(--f-mono); font-size: 2.2cqw; letter-spacing: .2em; margin: 4cqw 0 0 0; color: rgba(18, 22, 40, .55); }
+.d4-ink--zh { font-family: var(--f-hand); opacity: 0; }
+.d4-ink--zh .d4-ink__date { font-size: 3.2cqw; margin-bottom: 9cqw; }
+.d4-ink--zh .d4-ink__head { font-size: 3cqw; line-height: 1.6; margin-bottom: 5cqw; }
+.d4-ink--zh .d4-ink__to { font-size: 3.6cqw; margin-bottom: 3cqw; }
+.d4-ink--zh .d4-ink__body { font-size: 3.6cqw; line-height: 1.85; text-indent: 2em; }
+.d4-ink--zh .d4-ink__close { font-size: 3.5cqw; margin: 5cqw 0 0 50%; }
+.d4-ink--zh .d4-ink__sign { font-size: 3.9cqw; margin: 2cqw 0 0 52%; }
+.d4-ink--zh .d4-ink__code { font-family: var(--f-mono); font-size: 2.2cqw; letter-spacing: .2em; margin-top: 4cqw; color: rgba(18, 22, 40, .55); }
+.d4-sheet.is-zh .d4-ink--en { opacity: 0; transition: opacity .15s; }
+.d4-sheet.is-zh .d4-ink--zh { opacity: 1; transition: opacity .15s; }
+
+/* 本次述职结束 */
+.d4-done {
+  position: absolute; z-index: 6; left: 50%; top: calc(100% + 12px); transform: translateX(-50%);
+  padding: 12px 30px; background: rgba(255, 255, 255, .96); border: 1px solid rgba(20, 24, 36, .35);
+  box-shadow: 0 10px 30px rgba(10, 14, 24, .18);
+  font-family: var(--f-body); font-size: 14px; letter-spacing: .32em; color: #141824; cursor: pointer;
+  animation: d4-pop .45s cubic-bezier(.2, 1.3, .4, 1) both;
+}
+.d4-done:hover, .d4-done:focus-visible { background: var(--klein); border-color: var(--klein); color: #fff; outline: none; }
+.d4-done.is-leaving { animation: d4-out .28s ease-in both; }
+@keyframes d4-pop { from { opacity: 0; transform: translate(-50%, 10px) scale(.92); } }
+@keyframes d4-out { to { opacity: 0; transform: translate(-50%, 6px) scale(.96); } }
+
+/* 聊天气泡：黑（莱恩）在右，克莱因蓝（维西娅）在左 */
+.d4-chat { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+.bub {
+  position: absolute; pointer-events: auto; width: max-content; max-width: min(300px, 34vw);
+  padding: 13px 22px; border: 0; border-radius: 22px; cursor: pointer; text-align: left;
+  font-family: var(--f-body); font-size: 15px; line-height: 1.5; letter-spacing: .04em; color: #fff;
+  box-shadow: 0 10px 24px rgba(10, 14, 24, .18);
+}
+.bub--ryan { left: calc(100% + 28px); background: #26262a; color: #f2f3f5; transform-origin: 100% 100%; animation: bub-r .55s cubic-bezier(.2, 1.35, .4, 1) both; }
+.bub--wei { right: calc(100% + 28px); background: #0036c8; transform-origin: 0 100%; animation: bub-l .55s cubic-bezier(.2, 1.35, .4, 1) both; }
+.bub:nth-child(1) { top: 26%; } .bub:nth-child(2) { top: 41%; } .bub:nth-child(3) { top: 56%; } .bub:nth-child(4) { top: 71%; }
+.bub__tail { position: absolute; bottom: 0; width: 17px; height: 17px; fill: currentColor; }
+.bub--ryan .bub__tail { right: -7px; color: #26262a; }
+.bub--wei .bub__tail { left: -7px; color: #0036c8; transform: scaleX(-1); }
+.bub:not(.is-read):not(:last-child), .bub.is-read { cursor: default; }
+.bub:last-child:not(:nth-child(4))::after {          /* 提示还能点 */
+  content: ''; position: absolute; right: 10px; top: 8px; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: .55;
+  animation: bub-dot 1.4s ease-in-out infinite;
+}
+@keyframes bub-dot { 50% { opacity: .1; } }
+@keyframes bub-r { from { opacity: 0; transform: translateX(26px) scale(.6); } }
+@keyframes bub-l { from { opacity: 0; transform: translateX(-26px) scale(.6); } }
+
+.d4-acts { position: absolute; z-index: 6; left: 50%; top: calc(100% + 14px); transform: translateX(-50%); display: flex; gap: 12px; animation: d4-pop .5s var(--ease) both; }
+.d4-acts .ev-btn { text-decoration: none; white-space: nowrap; }
+
+/* ---------------------------------------------------------------- ≥ 50：长满银莲花 */
+.bloom { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.bloom__p {
+  position: absolute; height: auto; transform: translate(-50%, -50%) rotate(var(--r)) scale(1);
+  filter: drop-shadow(0 6px 10px rgba(20, 22, 30, .18)) saturate(.7);
+  animation: grow 1.1s cubic-bezier(.2, .9, .3, 1.05) both;
+}
+.bloom__p.is-leaf { filter: drop-shadow(0 4px 6px rgba(20, 22, 30, .14)) saturate(.6); }
+@keyframes grow { from { opacity: 0; transform: translate(-50%, -30%) rotate(calc(var(--r) - 25deg)) scale(.15); } }
+.d4-over {
+  position: absolute; z-index: 4; left: 0; right: 0; top: 7%; margin: 0 auto; width: max-content;
+  padding: 4px 12px; background: none; border: 0; cursor: pointer;
+  font-family: 'Cedarville Cursive', 'Homemade Apple', cursive; font-size: 9cqw; color: #12141c;
+  animation: d4-fade 1.2s 2.6s both;
+}
+.d4-over.is-church { animation: none; font-family: var(--f-body); font-size: 5.4cqw; letter-spacing: .4em; padding-left: calc(12px + .4em); }
+.d4-over.is-church:hover, .d4-over.is-church:focus-visible { color: var(--klein); outline: none; }
+@keyframes d4-fade { from { opacity: 0; } }
+/* 故障：黑白，切片错位 + 灰色重影，不要彩色 */
+.d4-over.is-glitch, .d4-over.is-church.is-glitch { animation: glitch-mono .62s steps(1) both; }
+@keyframes glitch-mono {
+  0%   { clip-path: inset(0 0 0 0); transform: none; text-shadow: none; }
+  10%  { clip-path: inset(10% 0 55% 0); transform: translate(-6px, 0); text-shadow: 4px 0 0 rgba(0, 0, 0, .35); }
+  20%  { clip-path: inset(60% 0 8% 0); transform: translate(7px, 1px); text-shadow: -5px 0 0 rgba(120, 120, 120, .6); }
+  30%  { clip-path: inset(30% 0 35% 0); transform: translate(-3px, -1px) skewX(-8deg); text-shadow: 3px 0 0 rgba(0, 0, 0, .5); }
+  40%  { clip-path: inset(0 0 70% 0); transform: translate(5px, 0); opacity: .6; }
+  50%  { clip-path: inset(45% 0 20% 0); transform: translate(-8px, 2px); opacity: 1; text-shadow: 6px 0 0 rgba(90, 90, 90, .5); }
+  60%  { clip-path: inset(15% 0 40% 0); transform: translate(2px, -2px) skewX(10deg); }
+  70%  { clip-path: inset(70% 0 0 0); transform: translate(-4px, 0); opacity: .4; }
+  80%  { clip-path: inset(0 0 0 0); transform: translate(3px, 0); opacity: 1; text-shadow: -3px 0 0 rgba(0, 0, 0, .4); }
+  90%  { clip-path: inset(25% 0 25% 0); transform: none; }
+  100% { clip-path: inset(0 0 0 0); transform: none; text-shadow: none; }
+}
+
+/* ---------------------------------------------------------------- 窄屏：标题放到纸上方，气泡压在纸上 */
+@media (max-width: 760px) {
+  .d4-stage { width: 92vw; }
+  .d4-log { padding-top: 150px; }
+  .d4-wrap { height: auto; width: min(80vw, 46svh); }
+  .bub { max-width: 64vw; }
+  .d4-title { font-size: 36px; }
+  .d4-title span:first-child { right: auto; left: 18px; top: -128px; }
+  .d4-title span:last-child { left: auto; right: 0; top: -128px; }
+  .bub--ryan { left: auto; right: -6px; }
+  .bub--wei { right: auto; left: -6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .d4-cross img, .bloom__p, .bub { animation: none; }
+}

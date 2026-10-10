@@ -1,0 +1,93 @@
+/* ================= 教堂（方案 5） ================= */
+.ch { position: relative; height: 100vh; height: 100svh; overflow: hidden; background: #000; color: #141824; }
+.ch .back-arrow { color: #d8dde4; }
+.ch__bg, .ch__img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ch__img { object-fit: cover; object-position: 50% 40%; opacity: 0; transition: opacity 2.6s ease; }
+.ch__img.is-on { opacity: 1; }
+/* 电影式上下黑边：只有一点点渐变 */
+.ch::before, .ch::after { content: ''; position: absolute; left: 0; right: 0; z-index: 3; height: 13vh; pointer-events: none; }
+.ch::before { top: 0; background: linear-gradient(#000, rgba(0, 0, 0, .55) 45%, transparent); }
+.ch::after { bottom: 0; background: linear-gradient(transparent, rgba(0, 0, 0, .55) 55%, #000); }
+
+/* 左上角 */
+.ch__hello { position: absolute; z-index: 4; left: clamp(20px, 5vw, 72px); top: clamp(76px, 15vh, 150px); display: flex; flex-direction: column; align-items: flex-start; gap: 18px; transition: opacity .9s, filter .9s, transform .9s; }
+.ch__welcome { margin: 0; font-family: 'Stardom', 'DM Serif Display', var(--f-display); font-size: clamp(44px, 5vw, 78px); line-height: 1; color: #10131b; text-shadow: 0 0 22px rgba(255, 255, 255, .7); }
+.ch-btn {
+  padding: 9px 24px; background: rgba(8, 10, 16, .68); border: 1px solid rgba(255, 255, 255, .3); color: #f1f3f8;
+  font-family: var(--f-body); font-size: 14px; letter-spacing: .32em; padding-right: calc(24px - .32em); cursor: pointer;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: background-color .3s, border-color .3s;
+}
+.ch-btn:hover, .ch-btn:focus-visible { background: rgba(0, 47, 167, .7); border-color: rgba(255, 255, 255, .6); outline: none; }
+.ch.is-joined .ch__hello { opacity: 0; filter: blur(6px); transform: translateY(-6px); pointer-events: none; }
+
+/* ♢：左上一行字、右边神像、左侧「前往神国」 */
+.ch__holy {
+  position: absolute; z-index: 4; left: clamp(20px, 5vw, 72px); top: clamp(80px, 15vh, 150px); margin: 0; max-width: min(520px, 80vw);
+  font-family: var(--f-body); font-size: clamp(15px, 1.3vw, 19px); letter-spacing: .2em; line-height: 1.9; color: #0f121a;
+  text-shadow: 0 0 14px rgba(255, 255, 255, .9); opacity: 0;
+}
+.ch__holy.is-in { animation: ch-in 2s var(--ease) forwards; }
+@keyframes ch-in { from { opacity: 0; filter: blur(8px); letter-spacing: .5em; } to { opacity: 1; filter: none; } }
+.ch__idol {
+  position: absolute; z-index: 2; right: 0; top: 0; height: 100%; width: auto; max-width: 70vw; object-fit: cover; object-position: 100% 50%;
+  opacity: 0; filter: blur(18px) brightness(1.15); transform: scale(1.05); transform-origin: 100% 50%; pointer-events: none;
+  transition: opacity 2.8s ease, filter 3.2s ease, transform 3.6s var(--ease);
+}
+.ch.is-idol .ch__idol { opacity: 1; filter: none; transform: none; }
+.ch__go {
+  position: absolute; z-index: 4; left: clamp(28px, 9vw, 150px); top: 44vh; text-decoration: none;
+  font-family: var(--f-body); font-size: clamp(22px, 2.2vw, 32px); letter-spacing: .5em; color: #0b0d14;
+  text-shadow: 0 0 18px rgba(255, 255, 255, .85);
+  animation: ch-in 2.2s var(--ease) both;
+}
+.ch__go span { display: inline-block; transform-origin: 50% 0; }
+.ch__go:hover, .ch__go:focus-visible { color: var(--klein); outline: none; }
+/* 慢慢融化流到页面底 */
+.ch__go.is-melting span { filter: url(#chMelt) blur(.3px); animation: ch-melt 16s cubic-bezier(.5, 0, .9, .6) forwards; }
+@keyframes ch-melt {
+  0% { transform: none; opacity: 1; }
+  60% { transform: translateY(28vh) scaleY(1.6); opacity: .92; }
+  100% { transform: translateY(44vh) scaleY(2.4) scaleX(1.06); opacity: .8; }
+}
+
+/* 非 ♢：红色天穹压下来、黑 0.4 秒 */
+.ch__sky {
+  position: absolute; inset: 0; z-index: 5; pointer-events: none;
+  background: linear-gradient(#5a0004, #b3000d 40%, rgba(150, 0, 10, .55) 70%, transparent);
+  transform: translateY(-100%); opacity: 0;
+}
+.ch.is-sky .ch__sky { animation: ch-sky .95s cubic-bezier(.55, 0, .8, .4) forwards; }
+@keyframes ch-sky { 0% { transform: translateY(-100%); opacity: .2; } 100% { transform: translateY(0); opacity: 1; } }
+.ch.is-red .ch__sky { animation: none; opacity: 0; transition: opacity 1.4s; transform: none; }
+.ch__black { position: absolute; inset: 0; z-index: 6; background: #000; opacity: 0; pointer-events: none; transition: opacity .12s; }
+.ch.is-black .ch__black { opacity: 1; }
+
+/* 字幕：中上英下，中文比英文小，英文扁长 */
+.ch__sub { position: absolute; z-index: 4; left: 0; right: 0; bottom: 9vh; display: flex; justify-content: center; padding: 0 16px; }
+.ch__line {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; margin: 0; text-align: center; max-width: 900px;
+  animation: ch-sub .7s var(--ease) both;
+}
+@keyframes ch-sub { from { opacity: 0; transform: translateY(6px); filter: blur(4px); } }
+.ch__zh { font-family: var(--f-body); font-size: clamp(13px, 1.05vw, 16px); letter-spacing: .22em; color: #f0d6d6; text-shadow: 0 0 10px #000; }
+.ch__en {
+  font-family: 'Neco', 'Roboto Slab', var(--f-display); font-size: clamp(20px, 2vw, 30px); letter-spacing: .14em; color: #fff3f3;
+  transform: scale(1.12, .72); text-shadow: 0 0 12px #000;
+}
+.ch.is-red { cursor: pointer; }
+/* 最后一句：大一点，是按钮 */
+.ch__last { background: none; border: 0; cursor: pointer; padding: 10px 20px; }
+.ch__last .ch__zh { font-size: clamp(20px, 1.8vw, 28px); color: #fff; letter-spacing: .4em; }
+.ch__last .ch__en { font-size: clamp(30px, 3.2vw, 48px); }
+.ch__last:hover .ch__zh, .ch__last:hover .ch__en, .ch__last:focus-visible .ch__en { color: #ffb3b3; }
+.ch__last:focus-visible { outline: 1px dashed rgba(255, 255, 255, .5); outline-offset: 6px; }
+
+@media (max-width: 760px) {
+  .ch__img { object-position: 38% 40%; }
+  .ch__idol { max-width: 92vw; opacity: 0; }
+  .ch.is-idol .ch__idol { opacity: .9; }
+  .ch__go { top: 40vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ch__go.is-melting span { animation-duration: .01s; }
+}

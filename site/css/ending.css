@@ -1,0 +1,46 @@
+/* ================= 结局 1 · 谢幕 ================= */
+.credits { position: relative; height: 100vh; height: 100svh; overflow: hidden; background: #050505; color: #ece9e2; cursor: default; }
+/* 胶片：整个画面轻微上下抖（gate weave） */
+.credits__gate { position: absolute; inset: 0; animation: weave 3.2s steps(24) infinite; }
+@keyframes weave {
+  0%, 100% { transform: translate(0, 0); } 13% { transform: translate(.4px, -.8px); } 27% { transform: translate(-.5px, .6px); }
+  41% { transform: translate(.3px, 1px); } 58% { transform: translate(-.3px, -.5px); } 72% { transform: translate(.6px, .3px); } 86% { transform: translate(-.4px, -.9px); }
+}
+.credits__roll { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 16px; will-change: transform; }
+.credits__roll p { margin: 0; }
+.cr__title { font-family: 'Boska', var(--f-display); font-weight: 500; font-size: clamp(28px, 3.4vw, 52px); letter-spacing: .14em; }
+.cr__sub { margin-top: 14px !important; font-family: 'Boska', var(--f-display); font-style: italic; font-size: clamp(15px, 1.4vw, 20px); letter-spacing: .06em; color: #b9b5ad; }
+.cr__gap { height: 22vh; }
+.cr__role { display: grid; grid-template-columns: 1fr 1fr; gap: 2.2em; width: min(720px, 92vw); margin: 0 0 18px !important; }
+.cr__role span { text-align: right; font-family: var(--f-mono); font-size: 11px; letter-spacing: .26em; text-transform: uppercase; color: #9e9a92; padding-top: .5em; }
+.cr__role b { text-align: left; font-family: 'Boska', var(--f-display); font-weight: 400; font-size: clamp(18px, 1.6vw, 24px); letter-spacing: .04em; }
+.cr__head { font-family: var(--f-mono); font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: #9e9a92; margin-bottom: 14px !important; }
+.cr__line { font-family: 'Boska', var(--f-display); font-size: clamp(15px, 1.25vw, 18px); line-height: 2; color: #d8d4cc; max-width: 46em; }
+.cr__end { font-family: 'Boska', var(--f-display); font-weight: 300; font-style: italic; font-size: clamp(40px, 5vw, 76px); letter-spacing: .2em; }
+.cr__thanks { margin-top: 36px !important; font-family: 'Boska', var(--f-display); font-style: italic; font-size: clamp(14px, 1.2vw, 17px); color: #b9b5ad; letter-spacing: .04em; }
+
+/* 胶片：闪烁 + 颗粒 + 暗角 + 偶尔的竖划痕 */
+.credits__film { position: absolute; inset: 0; pointer-events: none; }
+.credits__film::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0, 0, 0, .75));
+  animation: flick .18s steps(2) infinite;
+}
+@keyframes flick { 0% { opacity: .92; } 50% { opacity: 1; } }
+.credits__film::after {
+  content: ''; position: absolute; inset: -50%; opacity: .07;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain .5s steps(5) infinite;
+}
+@keyframes grain { 0% { transform: translate(0, 0); } 20% { transform: translate(-6%, 4%); } 40% { transform: translate(5%, -7%); } 60% { transform: translate(-3%, 8%); } 80% { transform: translate(7%, 2%); } }
+.credits__film i { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(255, 255, 255, .22); opacity: 0; }
+.credits__film i:nth-child(1) { left: 23%; animation: scratch 5.3s steps(1) infinite; }
+.credits__film i:nth-child(2) { left: 71%; animation: scratch 7.9s steps(1) infinite 2.1s; }
+@keyframes scratch { 0%, 88%, 100% { opacity: 0; } 89% { opacity: .8; transform: translateX(0); } 92% { opacity: .5; transform: translateX(3px); } 95% { opacity: .7; transform: translateX(-2px); } }
+.credits.is-end .cr__end { animation: end-glow 4s ease-in-out infinite alternate; }
+@keyframes end-glow { to { text-shadow: 0 0 18px rgba(255, 245, 225, .35); } }
+.credits .back-arrow { color: #8c8880; z-index: 2; }
+
+@media (prefers-reduced-motion: reduce) {
+  .credits__gate, .credits__film::before, .credits__film::after, .credits__film i { animation: none; }
+}

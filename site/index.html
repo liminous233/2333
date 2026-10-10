@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>圣献唱诗院 · Case File 0110</title>
+  <meta name="description" content="调查警员维西娅·卡鲁的随身调查档案。">
+  <!-- 谷歌字体放在本地（国内打不开谷歌） -->
+  <link rel="stylesheet" href="assets/fonts/google-fonts.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+  <script>
+    /* 英文字体 Boska、哥特体 Aktura（Fontshare）。本地双击打开时（file://）它的 CSS 里的 // 地址会失效，所以改成 https 再插入 */
+    (function () {
+      var u = 'https://api.fontshare.com/v2/css?f[]=boska@300,301,400,401,500&f[]=aktura@400&f[]=stardom@400&f[]=neco@400,500&f[]=bonny@400,500&display=swap';
+      if (location.protocol === 'file:') {
+        fetch(u, { cache: 'no-store' }).then(function (r) { return r.text(); }).then(function (t) {
+          var s = document.createElement('style');
+          s.textContent = t.replace(/url\('\/\//g, "url('https://");
+          document.head.appendChild(s);
+        }).catch(function () {});
+      } else {
+        var l = document.createElement('link');
+        l.rel = 'stylesheet'; l.href = u;
+        document.head.appendChild(l);
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/gate.css">
+  <link rel="stylesheet" href="css/map.css">
+  <link rel="stylesheet" href="css/journal.css">
+  <link rel="stylesheet" href="css/evidence.css">
+  <link rel="stylesheet" href="css/d4.css">
+  <link rel="stylesheet" href="css/church.css">
+  <link rel="stylesheet" href="css/ending.css">
+</head>
+<body data-stage="0">
+  <canvas id="smoke" aria-hidden="true"></canvas>
+  <div id="glitch" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div id="grain" aria-hidden="true"></div>
+
+  <header id="chrome" hidden>
+    <a class="brand" href="#/home">
+      <span class="brand__star">✦</span>
+      <span class="brand__case" data-text="caseNo"></span>
+    </a>
+    <a class="backlink" href="#/home">← INDEX · 目录</a>
+    <span class="chrome__spacer"></span>
+    <div class="status">
+      <span id="tokens" class="status__tokens"></span>
+      <div id="meter" class="meter" title="同化值">
+        <svg viewBox="0 0 40 40" aria-hidden="true">
+          <defs>
+            <clipPath id="meterClip"><circle cx="20" cy="20" r="13"/></clipPath>
+          </defs>
+          <circle cx="20" cy="20" r="13" class="meter__base"/>
+          <rect id="meterFill" x="7" y="33" width="26" height="0" clip-path="url(#meterClip)" class="meter__fill"/>
+          <circle cx="20" cy="20" r="17" class="meter__ring"/>
+        </svg>
+        <span class="meter__text">
+          <small class="meter__label"></small>
+          <b id="meterWord"></b>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main id="app" tabindex="-1"></main>
+
+  <button id="leave" class="corner corner--left" hidden></button>
+  <button id="music" class="corner corner--right" hidden aria-pressed="false">
+    <span class="music__bars"><i></i><i></i><i></i></span><span class="music__label"></span>
+  </button>
+
+  <div id="modal" class="modal" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true">
+      <button class="modal__close" data-close aria-label="关闭">✕</button>
+      <div class="modal__body"></div>
+    </div>
+  </div>
+
+  <script src="data/content.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/corruption.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/smoke.js"></script>
+  <script src="js/flipcard.js"></script>
+  <script src="js/crumple.js"></script>
+  <script src="js/scramble.js"></script>
+  <script src="js/proximity.js"></script>
+  <script src="js/pages/gate.js"></script>
+  <script src="js/items.js"></script>
+  <script src="js/pages/home.js"></script>
+  <script src="js/pages/map.js"></script>
+  <script src="js/pages/journal.js"></script>
+  <script src="js/pages/evidence.js"></script>
+  <script src="js/pages/rules.js"></script>
+  <script src="js/pages/d4.js"></script>
+  <script src="js/pages/church.js"></script>
+  <script src="js/pages/ending.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

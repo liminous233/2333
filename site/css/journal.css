@@ -1,0 +1,113 @@
+/* ================= 3. 八日日志 · 森林月相（方案 3） ================= */
+body.is-bare #app { padding-bottom: 0; min-height: 0; }
+
+/* 不带字的返回箭头 */
+.back-arrow {
+  position: fixed; top: 12px; left: 16px; z-index: 46;
+  display: grid; place-items: center; width: 32px; height: 32px;
+  color: var(--dim); text-decoration: none; font-size: 17px; line-height: 1;
+  transition: color .3s;
+}
+.back-arrow:hover, .back-arrow:focus-visible { color: var(--fg); outline: none; }
+
+.sky {
+  position: relative; display: flex; flex-direction: column;
+  height: 100vh; height: 100svh; background: #000; overflow: hidden;
+}
+/* 顶上的黑边 + 扁长小字 */
+.sky__band {
+  position: relative; z-index: 2; flex: none; height: clamp(40px, 6.4vh, 60px);
+  display: flex; align-items: center; justify-content: center; background: #000;
+}
+.sky__band .back-arrow { color: #6f7884; }
+.sky__band .back-arrow:hover { color: #e9edf2; }
+.sky__title {
+  margin: 0; font-family: 'Neco', 'Roboto Slab', var(--f-display); font-weight: 400;
+  font-size: clamp(10px, .95vw, 13px); letter-spacing: .62em; padding-left: .62em; white-space: nowrap;
+  color: #d4d9df; transform: scale(1.18, .62);
+}
+
+.sky__frame { position: relative; flex: 1; overflow: hidden; container-type: size; }
+/* 铺满（像 cover），但不会宽到六个月亮出屏：最多 145% 屏宽，其余用黑边补 */
+.sky__stage {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(max(100cqw, 100cqh * 1.6323), 145cqw); aspect-ratio: 1536 / 941;
+  container-type: inline-size;
+}
+.sky__img { display: block; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none; }
+
+.sky__moon {
+  position: absolute; z-index: 1; width: 8%; aspect-ratio: 1; transform: translate(-50%, -50%);
+  padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer;
+  transition: box-shadow .6s var(--ease);
+}
+.sky__moon--twin { width: 10.8%; aspect-ratio: 1.4; }
+.sky__moon:hover, .sky__moon.is-open, .sky__moon:focus-visible {
+  outline: none; box-shadow: 0 0 2.4cqw .4cqw rgba(226, 234, 246, .28);
+}
+/* 停留时画满的细圈 */
+.sky__ring { position: absolute; inset: -9%; width: 118%; height: 118%; overflow: visible; pointer-events: none; transform: rotate(-90deg); }
+.sky__moon--twin .sky__ring { inset: -9% -6%; width: 112%; height: 118%; }
+.sky__ring circle {
+  fill: none; stroke: rgba(238, 242, 248, .85); stroke-width: .45;
+  stroke-dasharray: 100; stroke-dashoffset: 100; opacity: 0; transition: stroke-dashoffset .25s ease-out, opacity .25s;
+}
+.sky__moon.is-arming .sky__ring circle { stroke-dashoffset: 0; opacity: 1; transition: stroke-dashoffset 1s linear; }
+.sky__moon.is-open .sky__ring circle { stroke-dashoffset: 0; opacity: 1; stroke: rgba(238, 242, 248, .45); }
+/* 去过的月亮：底下一个克莱因蓝小点 */
+.sky__moon.is-seen::after {
+  content: ''; position: absolute; left: 50%; top: 112%; width: 4px; height: 4px; margin-left: -2px;
+  background: var(--klein-glow); transform: rotate(45deg); box-shadow: 0 0 6px var(--klein-glow);
+}
+
+/* 弹出的小卡：在月亮下方 */
+.sky__pop, .sky__nope {
+  position: absolute; z-index: 3; transform: translate(-50%, 4.6cqw);
+  animation: sky-in .32s var(--ease) both;
+}
+.sky__pop.is-leaving, .sky__nope.is-leaving { animation: sky-out .24s ease-in both; }
+@keyframes sky-in { from { opacity: 0; transform: translate(-50%, 4cqw); } }
+@keyframes sky-out { to { opacity: 0; transform: translate(-50%, 4.3cqw); } }
+.sky__pop a {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 8px 18px; white-space: nowrap; text-decoration: none;
+  background: rgba(5, 6, 10, .72); border: 1px solid rgba(255, 255, 255, .24);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  font-family: var(--f-body); font-size: 14px; letter-spacing: .22em; color: #f1f3f8;
+  transition: border-color .3s, background-color .3s;
+}
+.sky__pop a small { font-size: 11px; letter-spacing: .3em; color: #b8c2cf; }
+.sky__pop a:hover, .sky__pop a:focus-visible { outline: none; border-color: rgba(255, 255, 255, .62); background: rgba(0, 47, 167, .45); }
+/* 副本未完成：斜体小字，晃 */
+.sky__nope em {
+  display: block; white-space: nowrap; font-family: var(--f-body); font-style: italic; font-size: 13px; letter-spacing: .24em;
+  color: #f4f6f9; text-shadow: 0 0 6px rgba(0, 0, 0, .95), 0 0 14px rgba(0, 0, 0, .7);
+  animation: nope 1.4s ease-in-out infinite;
+}
+@keyframes nope {
+  0%, 100% { transform: translateX(0) skewX(-12deg); }
+  10% { transform: translateX(-3px) skewX(-12deg) rotate(-1deg); }
+  20% { transform: translateX(3px) skewX(-12deg) rotate(1deg); }
+  30% { transform: translateX(-2px) skewX(-12deg); }
+  40% { transform: translateX(2px) skewX(-12deg); }
+  50% { transform: translateX(0) skewX(-12deg); }
+}
+
+/* 图很亮：角落的两个按钮垫一层半透明黑 */
+body[data-route="journal"] .corner {
+  background: rgba(5, 6, 10, .55); border-color: rgba(255, 255, 255, .28); color: #dfe4ea;
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+}
+body[data-route="journal"] .corner:hover { color: #fff; border-color: rgba(255, 255, 255, .6); }
+
+/* 还没写的页 */
+.soon { min-height: 100vh; min-height: 100svh; display: grid; place-items: center; background: #000; }
+.soon p { margin: 0; font-size: 13px; letter-spacing: .3em; color: #8b95a2; }
+
+@media (max-width: 600px) {
+  .sky__title { font-size: 9px; letter-spacing: .4em; padding-left: .4em; }
+  .sky__pop a { padding: 6px 12px; font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sky__nope em { animation: none; transform: skewX(-12deg); }
+}

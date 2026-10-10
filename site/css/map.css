@@ -1,0 +1,174 @@
+/* ================= 2. 唱诗院地图 · 方块地图 ================= */
+.grounds {
+  max-width: 1240px; margin: 0 auto; padding: 56px calc(var(--gutter) + 40px) 64px max(16px, calc(var(--gutter) - 28px));
+  display: grid; grid-template-columns: minmax(0, 640px) minmax(220px, 1fr); gap: clamp(24px, 3vw, 44px);
+  align-items: start;
+}
+.grounds__map { display: flex; flex-direction: column; align-items: center; gap: 26px; }
+
+/* ---- 格子 ---- */
+.tiles {
+  position: relative; width: 100%; aspect-ratio: 1;
+  display: grid; grid-template-columns: repeat(19, 1fr); grid-template-rows: repeat(19, 1fr); gap: 2px;
+}
+.tile {
+  display: block; min-width: 0; border-radius: 1px;
+  background: #222; background-repeat: no-repeat;
+  transition: filter .5s var(--ease), transform .5s var(--ease);
+}
+.tile:hover { filter: brightness(1.18); }
+.tile--flower {
+  background-image: url('../assets/img/map/anemone.webp');
+  filter: grayscale(.35) brightness(var(--b, 1)) contrast(1.05);
+}
+.tile--flower:hover { filter: grayscale(0) brightness(1.12); }
+.tile--moon {
+  background-color: #000; background-image: url('../assets/img/map/moon.webp'); background-size: 300% 300%;
+  filter: brightness(var(--b, 1));
+}
+.tile--eye {
+  background-color: #050608 !important; background-size: 150% 150%; background-position: 50% 50%;
+  animation: eye-blink 9s infinite;
+  transform-origin: 50% 50%;
+}
+@keyframes eye-blink {
+  0%, 92%, 100% { background-size: 150% 150%; filter: none; }
+  94% { background-size: 150% 8%; filter: brightness(.4); }
+  96% { background-size: 150% 150%; }
+}
+
+/* ---- 房间 ---- */
+.room {
+  position: relative; z-index: 2; margin: -1px; padding: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+  background: none; border: 1px solid transparent; color: #fff; cursor: default;
+  text-shadow: 0 0 6px rgba(0, 0, 0, .9), 0 1px 2px rgba(0, 0, 0, .9);
+  transition: border-color .35s, background-color .35s;
+}
+.room.is-active { cursor: pointer; }
+.room:hover, .room.is-open, .room:focus-visible { border-color: rgba(255, 255, 255, .7); background: rgba(0, 47, 167, .16); outline: none; }
+.room.is-active::before {
+  content: ''; position: absolute; top: 4px; left: 4px; width: 5px; height: 5px;
+  background: var(--klein-glow); transform: rotate(45deg); box-shadow: 0 0 6px var(--klein-glow);
+}
+.room__zh { font-family: var(--f-body); font-weight: 600; font-size: clamp(11px, 1.45vw, 15px); letter-spacing: .12em; line-height: 1.2; white-space: nowrap; }
+.room__zh small { font-weight: 400; font-size: .78em; opacity: .85; }
+.room__en { font-size: clamp(6px, .62vw, 8px); letter-spacing: .2em; opacity: .75; white-space: nowrap; }
+.room--cathedral { justify-content: flex-end; padding-bottom: 4px; }
+.room--cathedral .room__zh { font-size: clamp(10px, 1.1vw, 12px); }
+.room--label { pointer-events: none; }
+
+/* 大门的半透明黑色小卡 */
+.map-card {
+  /* 绝对定位：只借房间那块格子定位，不参与格子尺寸计算（不然会把整张地图撑长） */
+  position: absolute; z-index: 5; left: 50%; top: 0;
+  transform: translate(-50%, calc(-100% - 10px));
+  padding: 10px 16px; background: rgba(5, 6, 10, .74); border: 1px solid rgba(255, 255, 255, .22);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  animation: pop-in .35s var(--ease) both;
+  pointer-events: none;
+}
+.map-card p { margin: 0; font-family: 'Stardom', 'DM Serif Display', var(--f-display); font-size: 17px; letter-spacing: .02em; color: #f1f3f8; white-space: nowrap; }
+.map-card--zh p { font-family: var(--f-body); font-size: 13px; letter-spacing: .14em; }
+@keyframes pop-in { from { opacity: 0; transform: translate(-50%, calc(-100% - 2px)); } }
+
+/* ---- 右下角翻出的图片 ---- */
+.map-panel {
+  position: fixed; right: clamp(16px, 7vw, 120px); bottom: clamp(28px, 6vh, 64px); z-index: 60;
+  --pw: min(360px, 30vw); width: fit-content; min-width: min(220px, var(--pw)); min-width: min(220px, var(--pw));
+  display: flex; flex-direction: column; gap: 12px;
+  animation: panel-in .55s var(--ease) both;
+}
+.map-panel.is-leaving { animation: panel-out .38s ease-in both; }
+@keyframes panel-in { from { opacity: 0; transform: translate(18px, 18px) scale(.97); } }
+@keyframes panel-out { to { opacity: 0; transform: translate(12px, 12px) scale(.98); } }
+.map-panel__fig { position: relative; margin: 0; }
+/* 整张图按比例缩小放进去，不裁切；四边和黑底互相渗一点（过渡不宽） */
+.map-panel__fig img {
+  display: block; width: auto; height: auto; max-width: var(--pw); max-height: min(440px, calc(100vh - 300px));
+  max-height: min(440px, calc(100svh - 300px));
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
+                      linear-gradient(to bottom, transparent, #000 7%, #000 93%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
+              linear-gradient(to bottom, transparent, #000 7%, #000 93%, transparent);
+  mask-composite: intersect;
+  filter: contrast(1.02);
+  transition: opacity .4s, filter .4s;
+}
+.map-panel__fig img.is-swap { opacity: 0; filter: blur(6px); }
+.map-panel__text {
+  min-height: 1.6em; margin: 0; padding: 0 6px;
+  font-family: var(--f-body); font-size: 14px; line-height: 1.75; letter-spacing: .08em; color: var(--fg);
+}
+.map-panel__text.is-in { animation: text-in .5s var(--ease) both; }
+@keyframes text-in { from { opacity: 0; transform: translateY(4px); } }
+.map-panel__text:empty { display: none; }
+.map-panel__text { white-space: pre-line; }
+/* 面板宽度跟着图片走，文字和按钮不撑宽 */
+.map-panel__text, .map-panel__got, .map-panel__acts { width: 0; min-width: 100%; box-sizing: border-box; }
+/* 居室：可以点的那句话 */
+.map-panel__text--tap { cursor: pointer; border-bottom: 1px dashed rgba(255, 255, 255, .28); padding-bottom: 4px; transition: border-color .3s, color .3s; }
+.map-panel__text--tap::after { content: ' ›'; color: var(--klein-glow); }
+.map-panel__text--tap:hover, .map-panel__text--tap:focus-visible { border-color: rgba(255, 255, 255, .7); outline: none; }
+.map-panel__got { margin: -4px 0 0; padding: 0 6px; font-size: 12px; letter-spacing: .2em; color: var(--klein-glow); animation: text-in .5s var(--ease) both; }
+.map-panel__acts.is-gone { opacity: 0; pointer-events: none; transition: opacity .4s; }
+/* 图片来源（四处走走那张） */
+.map-panel__credit { position: absolute; right: 8px; bottom: 6px; font-size: 10px; letter-spacing: .08em; color: rgba(230, 234, 240, .7); text-shadow: 0 0 4px #000; }
+.map-panel__credit:empty { display: none; }
+.map-panel__acts { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 6px; }
+.pop-btn {
+  padding: 6px 16px; background: rgba(5, 6, 10, .62); border: 1px solid rgba(255, 255, 255, .24);
+  color: #eef0f3; font-family: var(--f-body); font-size: 13px; letter-spacing: .16em; cursor: pointer;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  transition: border-color .3s, background-color .3s;
+}
+.pop-btn:hover, .pop-btn:focus-visible { border-color: rgba(255, 255, 255, .6); background: rgba(0, 47, 167, .4); outline: none; }
+.map-panel__x {
+  position: absolute; top: -6px; right: -6px; z-index: 2; width: 26px; height: 26px; padding: 0;
+  background: rgba(5, 6, 10, .7); border: 1px solid rgba(255, 255, 255, .2); color: #c6cfda; font-size: 11px; cursor: pointer;
+}
+/* 餐厅："嗨" */
+.map-panel__hi {
+  position: absolute; left: 50%; top: 18%; z-index: 2; opacity: 0; pointer-events: none;
+  padding: 4px 12px; background: rgba(5, 6, 10, .72); border: 1px solid rgba(255, 255, 255, .3);
+  font-family: var(--f-body); font-size: 15px; letter-spacing: .2em; color: #fff;
+}
+.map-panel.is-hi .map-panel__hi { animation: hi .9s .35s var(--ease) both; }
+@keyframes hi { from { opacity: 0; transform: translate(-50%, 6px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+/* 打乱文字 */
+.scr__c { display: inline; }
+.scr__c.is-scr { color: var(--klein-glow); opacity: .85; }
+
+/* ---- 右边欢迎语：中上英下 ---- */
+/* 扁一点：行少、行距紧，横向铺开 */
+.grounds__welcome { padding-top: 34px; display: flex; flex-direction: column; gap: 14px; }
+.welcome__zh, .welcome__en { margin: 0; display: flex; flex-direction: column; }
+.welcome__zh span { font-family: var(--f-body); font-size: 14px; line-height: 1.6; letter-spacing: .22em; color: var(--fg-2); white-space: nowrap; }
+.welcome__zh .welcome__big { font-size: clamp(22px, 2.2vw, 30px); font-weight: 600; letter-spacing: .34em; line-height: 1.3; color: var(--fg); margin-bottom: 2px; }
+.welcome__en span { font-family: 'Stardom', 'DM Serif Display', var(--f-display); font-size: clamp(15px, 1.35vw, 18px); line-height: 1.3; color: var(--fg-2); }
+.welcome__en .welcome__big { font-size: clamp(34px, 3.6vw, 48px); line-height: 1; letter-spacing: .02em; color: var(--fg); margin-bottom: 2px; }
+
+/* ---- 点燃香烛：英上中下，存在感低 ---- */
+.candle-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 6px 18px; background: none; border: 0; cursor: pointer; color: var(--fg-2); opacity: .62;
+  transition: opacity .5s, color .5s, text-shadow .5s;
+}
+.candle-btn:hover, .candle-btn:focus-visible { opacity: 1; color: var(--fg); text-shadow: 0 0 14px rgba(240, 236, 220, .45); outline: none; }
+.candle-btn__en { font-family: 'Stardom', 'DM Serif Display', var(--f-display); font-size: 20px; letter-spacing: .04em; }
+.candle-btn__zh { font-family: var(--f-body); font-size: 11px; letter-spacing: .4em; }
+
+@media (max-width: 860px) {
+  .grounds { grid-template-columns: 1fr; padding: 72px var(--gutter) 64px; }
+  .grounds__welcome { order: -1; }
+  .tiles { gap: 1px; }
+  .room__en { display: none; }
+  .map-panel { --pw: min(300px, calc(100vw - 32px)); }
+  .map-panel__fig img { max-height: min(320px, 44vh); max-height: min(320px, 44svh); }
+  .map-panel__fig img { max-height: min(320px, 44vh); max-height: min(320px, 44svh); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tile--eye { animation: none; }
+}
