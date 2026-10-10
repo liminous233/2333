@@ -392,6 +392,7 @@ window.CONTENT = {
       ['role', 'The Twin Moons', 'Themselves'],
       ['gap'],
       ['role', 'Story, World & Design', 'liminous'],
+      ['role', 'Code', 'Claude'],
       ['gap'],
       ['head', 'Recorded at'],
       ['line', 'The Choir of Sacred Offering'],
