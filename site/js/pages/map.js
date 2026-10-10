@@ -201,7 +201,7 @@
       hall: function (btn) {
         if (!day(5)) { card(btn, M.hall, true); return; }
         dayCard(btn, M.day6);
-        CC.state.once('day:6');
+        CC.state.once('day:6', { clarity: 1 });
       },
 
       // 居室：点那句话，下面才弹出选项
@@ -290,7 +290,7 @@
           if (act === 'open') {
             say(p, D5.openText);
             a.remove();
-            CC.state.once('day:5');
+            CC.state.once('day:5', { clarity: 1 });
           }
           if (act === 'gaze') { say(p, B.gazeText, true); CC.state.once('map:gaze', 2); }
         });
