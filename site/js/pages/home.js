@@ -180,7 +180,8 @@
               '<span class="cover__hint mono">' + CC.esc(H.startHint) + ' →</span>' +
             '</a></h1>' +
             '<p class="cover__en">' + CC.esc(H.titleEn) + '</p>' +
-            '<p class="cover__party">' + CC.esc(H.partySign) + '</p>' +
+            '<p class="cover__party"><span class="party" tabindex="0" aria-describedby="partyHint">' + CC.esc(H.partySign) +
+              '<span class="party__hint" id="partyHint" role="tooltip">' + CC.esc(H.partyHint) + '</span></span></p>' +
           '</div>' +
         '</div>' +
         '<div class="cover__right">' +

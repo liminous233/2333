@@ -205,6 +205,19 @@
       sheet.addEventListener('pointerup', function (e) { if (e.pointerType === 'touch') zh(!sheet.classList.contains('is-zh')); });
       later(pop, 22000);                                   // 一直不停留也会弹出来
 
+      // 述职结束：报告淡出，纸上换成「您的朋友正在试图联系您…」（停留 1.5 秒变中文，沿用上面的悬停逻辑）
+      function ping() {
+        var old = CC.$$('.d4-ink', sheet);
+        old.forEach(function (el) { el.classList.add('is-gone'); });
+        later(function () {
+          old.forEach(function (el) { el.remove(); });
+          sheet.classList.remove('is-zh');
+          sheet.insertAdjacentHTML('beforeend',
+            '<div class="d4-ink d4-ink--ping d4-ink--en"><p>' + CC.esc(D.ping.en) + '</p></div>' +
+            '<div class="d4-ink d4-ink--ping d4-ink--zh" aria-hidden="true"><p>' + CC.esc(D.ping.zh) + '</p></div>');
+        }, 700);
+      }
+
       function pop() {
         if (popped) return;
         popped = true;
@@ -214,6 +227,7 @@
         CC.$('.d4-wrap', sec).appendChild(d);
         d.addEventListener('click', function () {
           d.classList.add('is-leaving');
+          ping();
           later(function () { d.remove(); say(0); }, 280);
         });
       }

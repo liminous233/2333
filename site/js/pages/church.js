@@ -15,6 +15,8 @@
   CC.pages.church = function (root) {
     var H = C.church;
     var reduce = CC.reducedMotion();
+    // 不管从月相页第五个月亮，还是从 DAY4 的「前往教堂」进来，都算看过第五个月亮（不然双月一直是「副本未完成」）
+    CC.state.once('moon:5');
     var timers = [];
     function later(f, ms) { var t = setTimeout(f, reduce ? Math.min(ms, 300) : ms); timers.push(t); return t; }
 

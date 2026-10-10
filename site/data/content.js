@@ -164,6 +164,7 @@ window.CONTENT = {
     kicker: 'A JOURNEY THROUGH THE EIGHT DAYS OF THE GREAT HYMN',
     // 左下角花体字（7 人 · 调查组 2 · 信徒组 1 的缩写）
     partySign: '7c.2p.1e',
+    partyHint: '玩家身份分布：7 游客，2 调查员，1 邪信徒',
     // 唱片上螺旋排列的哥特体文字（只能用英文/拉丁字母，Aktura 字体没有中文）。不够长会自动重复
     discText:
       'The Sacred Choir of Offering is a renowned sanctuary of soul healing, where hymns are said to wash the sins from the heart. ' +
@@ -239,7 +240,9 @@ window.CONTENT = {
       image: 'assets/img/map/chapel.webp',
       text: ['唱诗院的老人们平日会来到这里。', '你踏入此地，无人望向你。'],
       pray: '做礼拜', prayText: '月光短暂地注视了你。', prayAssim: 2,
-      walk: '四处走走', walkText: '建筑后是极高的围墙，似乎隔绝了两个世界。', walkClarity: 1,
+      // 逛逛 → 看见神父（白发的年轻神父就是莱恩）→ 向外走去 → 围墙图
+      walk: '逛逛', walkText: '看见白发的年轻神父穿梭座次，偶有几位修女寻他解惑。',
+      out: '向外走去', outText: '建筑后是极高的围墙，似乎隔绝了两个世界。', walkClarity: 1,
       walkImage: 'assets/img/map/chapel-wall.webp',
       walkCredit: '图片来源：小红书 @Jyuemim',
       leave: '离开', leaveText: '月光饶有兴致地瞥视了你。', leaveAssim: 8,
@@ -349,6 +352,8 @@ window.CONTENT = {
       },
     },
     done: '本次述职结束',
+    // 点了「本次述职结束」后纸上换成这一句（英文，停留 1.5 秒变中文）
+    ping: { en: 'Your friend is trying to reach you…', zh: '您的朋友正在试图联系您…' },
     // 聊天：黑色在右边（莱恩），克莱因蓝在左边（维西娅）。点一条出下一条
     chat: [
       { who: 'ryan', text: '消息.zip' },

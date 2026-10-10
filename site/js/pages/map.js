@@ -224,8 +224,15 @@
         var walked = false;
         acts(p, {
           pray: function () { say(p, H.prayText); CC.state.once('map:chapel:pray', H.prayAssim); },
-          walk: function () {
+          // 逛逛：先看见神父，「逛逛」原地换成「向外走去」
+          walk: function (b) {
             say(p, H.walkText);
+            b.setAttribute('data-act', 'out');
+            b.textContent = H.out;
+          },
+          // 向外走去：围墙图 + 原来的那句话
+          out: function () {
+            say(p, H.outText);
             CC.state.once('map:chapel:walk', { clarity: H.walkClarity });
             if (walked) return;
             walked = true;
