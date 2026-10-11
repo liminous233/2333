@@ -147,6 +147,10 @@
 /* 打乱文字 */
 .scr__c { display: inline; }
 .scr__c.is-scr { color: var(--klein-glow); opacity: .85; }
+/* 眺望：DAY 5 读完后，安宁的蓝字变成深红；扰动时沿用同一色。 */
+.map-panel__text.is-gaze { color: var(--klein-glow); }
+.map-panel__text.is-gaze-unrest { color: #a32b3b; }
+.map-panel__text.is-gaze .scr__c.is-scr { color: inherit; }
 
 /* ---- 右边欢迎语：中上英下 ---- */
 /* 扁一点：行少、行距紧，横向铺开 */
