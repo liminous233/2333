@@ -252,7 +252,7 @@
       var a = CC.$('.d4-acts', sec);
       a.innerHTML = '<a class="ev-btn" href="#/journal">' + CC.esc(D.back) + '</a><a class="ev-btn d4-to-church" href="#/church">' + CC.esc(D.toChurch) + '</a>';
       a.hidden = false;
-      // 还没看过 DAY 5：移到「前往教堂」上时，短暂浮出一行蓝色小字提示地图有变化（点它去地图）
+      // 还没看过 DAY 5：提示保留 6 秒，停在提示上可继续阅读或点去地图。
       if (CC.state.seen('day:5')) return;
       var go = CC.$('.d4-to-church', a), tip = null, hideT = 0;
       function show() {
@@ -263,13 +263,32 @@
           tip.href = '#/map';
           tip.textContent = D.mapHint;
           a.appendChild(tip);
-          tip.addEventListener('pointerenter', function () { clearTimeout(hideT); });
-          tip.addEventListener('pointerleave', hide);
+          tip.addEventListener('pointerenter', pause);
+          tip.addEventListener('focus', pause);
+          tip.addEventListener('pointerleave', scheduleHide);
+          tip.addEventListener('blur', scheduleHide);
         }
         tip.classList.add('is-on');
-        hideT = later(hide, 2600);                    // 短暂出现，没理它就自己淡掉
+        tip.tabIndex = 0;
+        tip.removeAttribute('aria-hidden');
+        scheduleHide();
       }
-      function hide() { clearTimeout(hideT); if (tip) tip.classList.remove('is-on'); }
+      function pause() { clearTimeout(hideT); }
+      function scheduleHide() {
+        pause();
+        if (tip && tip.matches(':hover, :focus')) return;
+        // 阅读时间不随 reduced-motion 缩短。
+        hideT = setTimeout(hide, 6000);
+        timers.push(hideT);
+      }
+      function hide() {
+        pause();
+        if (tip) {
+          tip.classList.remove('is-on');
+          tip.tabIndex = -1;
+          tip.setAttribute('aria-hidden', 'true');
+        }
+      }
       go.addEventListener('pointerenter', show);
       go.addEventListener('focus', show);
     }
