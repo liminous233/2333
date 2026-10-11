@@ -141,16 +141,6 @@
     }
     function day(n) { return CC.state.seen('day:' + n); }
 
-    // 餐厅 DAY 7 字的水波扭曲：位移强度 0.3 秒后从 0 慢慢涨到 10（SMIL 动画，Chrome / Safari / Firefox 都支持）
-    function meltFilter() {
-      return '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="diningMelt" x="-10%" y="-20%" width="120%" height="300%">' +
-        '<feTurbulence type="fractalNoise" baseFrequency="0.012 0.09" numOctaves="2" seed="7" result="n">' +
-          '<animate attributeName="baseFrequency" dur="9s" values="0.012 0.09;0.016 0.05;0.012 0.09" repeatCount="indefinite"/></feTurbulence>' +
-        '<feDisplacementMap in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G">' +
-          '<animate attributeName="scale" begin="0.3s" dur="5s" values="0;5;10" keyTimes="0;0.35;1" fill="freeze"/></feDisplacementMap>' +
-        '</filter></svg>';
-    }
-
     // 右下角翻出来的图片面板
     function panel(btn, html) {
       closeAll();
@@ -199,10 +189,28 @@
       else el.textContent = text;
     }
 
+    function day7Label() {
+      return '<p class="map-panel__day mono">' + CC.esc(M.day7.label) + '</p>';
+    }
+    function melt(p, value) {
+      var text = CC.$('.map-panel__text', p);
+      text.classList.add('dining-melt');
+      text.setAttribute('aria-label', value);
+      var rand = CC.rng(707);
+      text.innerHTML = Array.from(value).map(function (ch) {
+        return '<span aria-hidden="true" style="--delay:' + (4.5 + rand() * 5).toFixed(2) + 's;--fall:' +
+          (170 + rand() * 190).toFixed(0) + 'px;--stretch:' + (2 + rand() * 4).toFixed(2) + ';--drift:' +
+          (-7 + rand() * 14).toFixed(1) + 'px">' + CC.esc(ch) + '</span>';
+      }).join('');
+    }
+
     var actions = {
       gate: function (btn) {
         var G = M.gate;
-        panel(btn, figure(G.image) + '<p class="map-panel__text">' + CC.esc(G.text) + '</p>');
+        var report = CC.state.flag('d4Report');
+        var p = panel(btn, figure(report ? G.reportImage : G.image) + (report ? day7Label() : '') +
+          '<p class="map-panel__text">' + CC.esc(G.text) + '</p>');
+        if (report) melt(p, G.text);
         CC.state.once('map:gate', G.assim);
       },
 
@@ -222,6 +230,28 @@
       // 居室：点那句话，下面才弹出选项
       dorm: function (btn) {
         var D = M.dorm;
+        if (CC.state.flag('d4Report')) {
+          var R = D.report;
+          var chat = panel(btn, figure(D.image) + day7Label() +
+            '<div class="map-panel__message" aria-live="polite"><p class="map-panel__text">' + CC.esc(R.text) + '</p></div>' +
+            choices([['message', R.view]]));
+          var messageIndex = 0;
+          acts(chat, {
+            message: function () {
+              if (messageIndex >= R.messages.length) return;
+              var message = R.messages[messageIndex++];
+              var last = messageIndex === R.messages.length;
+              CC.$('.map-panel__message', chat).innerHTML =
+                '<' + (last ? 'p' : 'button type="button" data-act="message"') +
+                ' class="map-chat map-chat--' + message.tone + '">' + CC.esc(message.text) +
+                '</' + (last ? 'p' : 'button') + '>';
+              CC.$('.map-panel__acts', chat).outerHTML = choices(last ? [['leave', R.leave]] : []);
+              CC.$(last ? '[data-act="leave"]' : '.map-chat', chat).focus({ preventScroll: true });
+            },
+            leave: closeAll,
+          });
+          return;
+        }
         var p = panel(btn, figure(D.image) +
           '<p class="map-panel__text map-panel__text--tap" data-act="open" tabindex="0" role="button">' + CC.esc(D.text) + '</p>' +
           '<p class="map-panel__got" hidden></p>' + '<div class="map-panel__acts"></div>');
@@ -333,17 +363,7 @@
               p.classList.add('is-dining-day7');
               CC.$('.map-panel__day', p).hidden = false;
               say(p, D.girlText);
-              var text = CC.$('.map-panel__text', p);
-              text.classList.add('dining-melt');
-              text.setAttribute('aria-label', D.girlText);
-              // 流淌：半秒左右就开始，从左往右一波波往下淌（前面的字先化），每个字先轻轻下坠、再越拉越长加速滴落；
-              // 整句再叠一层慢慢变强的水波扭曲（#diningMelt）
-              var rand = CC.rng(707), chars = Array.from(D.girlText);
-              text.innerHTML = chars.map(function (ch, i) {
-                return '<span aria-hidden="true" style="--delay:' + (0.35 + i * 0.06 + rand() * 0.4).toFixed(2) + 's;--dur:' +
-                  (5.5 + rand() * 2.2).toFixed(2) + 's;--fall:' + (60 + rand() * 70).toFixed(0) + 'px;--stretch:' +
-                  (1.6 + rand() * 1.4).toFixed(2) + ';--drift:' + (-3 + rand() * 6).toFixed(1) + 'px">' + CC.esc(ch) + '</span>';
-              }).join('') + meltFilter();
+              melt(p, D.girlText);
             }, reduce ? 0 : 420);
             timers.push(reveal);
             CC.$('.map-panel__acts', p).outerHTML = choices([['leave', D.leave]]);
@@ -354,8 +374,10 @@
       },
 
       cathedral: function (btn) {
-        var p = panel(btn, figure(M.cathedral.image) + '<p class="map-panel__text"></p>');
-        say(p, M.cathedral.text, true);
+        var report = CC.state.flag('d4Report');
+        var p = panel(btn, figure(report ? M.cathedral.reportImage : M.cathedral.image) +
+          (report ? day7Label() : '') + '<p class="map-panel__text"></p>');
+        say(p, M.cathedral.text, true, report ? 'unrest' : undefined);
         CC.state.once('map:cathedral', 2);
       },
     };
