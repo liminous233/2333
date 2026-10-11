@@ -255,6 +255,7 @@ window.CONTENT = {
       // DAY4 走了述职分支（点过「本次述职结束」，flag d4Report）之后：朋友给了钥匙，档案室能进了
       day5: {
         label: 'DAY 5',
+        gazeText: '银莲花田与罂粟簇拥着卡塔西斯圣堂，你的心中感到一阵躁动。',
         upText: '…我的朋友利用职务之便给了我一把钥匙。',
         archiveText: '主教的私人藏书室',
         open: 'Open it',
