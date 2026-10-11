@@ -135,22 +135,39 @@
   position: absolute; top: -6px; right: -6px; z-index: 2; width: 26px; height: 26px; padding: 0;
   background: rgba(5, 6, 10, .7); border: 1px solid rgba(255, 255, 255, .2); color: #c6cfda; font-size: 11px; cursor: pointer;
 }
-/* 餐厅："嗨" */
-.map-panel__hi {
-  position: absolute; left: 50%; top: 18%; z-index: 2; opacity: 0; pointer-events: none;
-  padding: 4px 12px; background: rgba(5, 6, 10, .72); border: 1px solid rgba(255, 255, 255, .3);
-  font-family: var(--f-body); font-size: 15px; letter-spacing: .2em; color: #fff;
+/* DAY 7 餐桌：细颗粒覆在照片上，文字像蜡一样向面板外淌。 */
+.is-dining-day7 { overflow: visible; }
+.is-dining-day7 .map-panel__fig { overflow: hidden; isolation: isolate; }
+.is-dining-day7 .map-panel__fig::after {
+  content: ''; position: absolute; inset: -12%; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Cpath fill='%23fff' filter='url(%23n)' d='M0 0h160v160H0z'/%3E%3C/svg%3E");
+  opacity: .32; mix-blend-mode: soft-light;
+  animation: dining-grain .45s steps(1) infinite;
 }
-.map-panel.is-hi .map-panel__hi { animation: hi .9s .35s var(--ease) both; }
-@keyframes hi { from { opacity: 0; transform: translate(-50%, 6px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes dining-grain {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-5%, 7%); }
+  50% { transform: translate(6%, -4%); }
+  75% { transform: translate(-3%, -6%); }
+}
+.dining-melt { position: relative; overflow: visible; pointer-events: none; z-index: 2; }
+.dining-melt span {
+  display: inline-block; transform-origin: 50% 0;
+  animation: dining-melt 18s var(--delay) cubic-bezier(.35, 0, .65, 1) both;
+}
+@keyframes dining-melt {
+  0%, 8% { transform: none; filter: none; opacity: 1; }
+  35% { transform: translate(calc(var(--drift) * .2), 12px) scaleY(1.55); filter: blur(.3px); opacity: .9; }
+  70% { transform: translate(var(--drift), calc(var(--fall) * .55)) scaleY(var(--stretch)); filter: blur(.8px); opacity: .65; }
+  100% { transform: translate(var(--drift), var(--fall)) scaleY(calc(var(--stretch) + 1)); filter: blur(1.6px); opacity: 0; }
+}
 
 /* 打乱文字 */
 .scr__c { display: inline; }
 .scr__c.is-scr { color: var(--klein-glow); opacity: .85; }
-/* 眺望：DAY 5 读完后，安宁的蓝字变成深红；扰动时沿用同一色。 */
-.map-panel__text.is-gaze { color: var(--klein-glow); }
-.map-panel__text.is-gaze-unrest { color: #a32b3b; }
-.map-panel__text.is-gaze .scr__c.is-scr { color: inherit; }
+/* 平时保持白字，仅正在扰动的字着色；DAY 5 后由蓝变深红。 */
+.map-panel__text.is-gaze { color: #eef0f3; }
+.map-panel__text.is-gaze-unrest .scr__c.is-scr { color: #a32b3b; }
 
 /* ---- 右边欢迎语：中上英下 ---- */
 /* 扁一点：行少、行距紧，横向铺开 */
@@ -182,4 +199,5 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .tile--eye { animation: none; }
+  .is-dining-day7 .map-panel__fig::after, .dining-melt span { animation: none; }
 }
