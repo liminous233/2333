@@ -269,9 +269,9 @@ window.CONTENT = {
       image: 'assets/img/map/dining.webp',
       text: '还没到开饭的时间。',
       forward: '走到前方',
-      hi: '嗨',
-      girlImage: 'assets/img/map/dining-girl.webp',
-      girlText: '女孩？看着你，她对你打了个招呼。',
+      label: 'DAY 7',
+      girlImage: 'assets/img/map/dining-day7.jpg',
+      girlText: '双头的羔羊桌布被布置在餐桌，无人知晓何时更换的样式。',
       leave: '离开餐厅',
     },
     cathedral: {
