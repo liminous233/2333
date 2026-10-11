@@ -150,16 +150,18 @@
   50% { transform: translate(6%, -4%); }
   75% { transform: translate(-3%, -6%); }
 }
-.dining-melt { position: relative; overflow: visible; pointer-events: none; z-index: 2; }
+.dining-melt { position: relative; overflow: visible; pointer-events: none; z-index: 2; filter: url(#diningMelt); }
 .dining-melt span {
   display: inline-block; transform-origin: 50% 0;
-  animation: dining-melt 18s var(--delay) cubic-bezier(.35, 0, .65, 1) both;
+  animation: dining-melt var(--dur, 7s) var(--delay) both;
 }
+/* 像蜡/墨往下淌：字的顶端基本留在原位，身子越拉越长、越来越细，慢慢往下流、变淡；每段缓入，有"重力"的感觉 */
 @keyframes dining-melt {
-  0%, 8% { transform: none; filter: none; opacity: 1; }
-  35% { transform: translate(calc(var(--drift) * .2), 12px) scaleY(1.55); filter: blur(.3px); opacity: .9; }
-  70% { transform: translate(var(--drift), calc(var(--fall) * .55)) scaleY(var(--stretch)); filter: blur(.8px); opacity: .65; }
-  100% { transform: translate(var(--drift), var(--fall)) scaleY(calc(var(--stretch) + 1)); filter: blur(1.6px); opacity: 0; }
+  0% { transform: none; filter: none; opacity: 1; animation-timing-function: cubic-bezier(.45, 0, .7, .55); }
+  18% { transform: translateY(1px) scaleY(1.25) scaleX(.98); filter: blur(.1px); opacity: 1; animation-timing-function: cubic-bezier(.45, 0, .75, .6); }
+  48% { transform: translate(calc(var(--drift) * .4), calc(var(--fall) * .15)) scaleY(var(--stretch)) scaleX(.9); filter: blur(.4px); opacity: .9; animation-timing-function: cubic-bezier(.5, 0, .8, .6); }
+  78% { transform: translate(calc(var(--drift) * .8), calc(var(--fall) * .5)) scaleY(calc(var(--stretch) * 1.9)) scaleX(.78); filter: blur(1px); opacity: .55; animation-timing-function: ease-in; }
+  100% { transform: translate(var(--drift), var(--fall)) scaleY(calc(var(--stretch) * 2.6)) scaleX(.68); filter: blur(2px); opacity: 0; }
 }
 
 /* 打乱文字 */

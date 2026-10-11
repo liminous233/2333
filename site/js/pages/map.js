@@ -141,6 +141,16 @@
     }
     function day(n) { return CC.state.seen('day:' + n); }
 
+    // 餐厅 DAY 7 字的水波扭曲：位移强度 0.3 秒后从 0 慢慢涨到 10（SMIL 动画，Chrome / Safari / Firefox 都支持）
+    function meltFilter() {
+      return '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="diningMelt" x="-10%" y="-20%" width="120%" height="300%">' +
+        '<feTurbulence type="fractalNoise" baseFrequency="0.012 0.09" numOctaves="2" seed="7" result="n">' +
+          '<animate attributeName="baseFrequency" dur="9s" values="0.012 0.09;0.016 0.05;0.012 0.09" repeatCount="indefinite"/></feTurbulence>' +
+        '<feDisplacementMap in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G">' +
+          '<animate attributeName="scale" begin="0.3s" dur="5s" values="0;5;10" keyTimes="0;0.35;1" fill="freeze"/></feDisplacementMap>' +
+        '</filter></svg>';
+    }
+
     // 右下角翻出来的图片面板
     function panel(btn, html) {
       closeAll();
@@ -326,12 +336,14 @@
               var text = CC.$('.map-panel__text', p);
               text.classList.add('dining-melt');
               text.setAttribute('aria-label', D.girlText);
-              var rand = CC.rng(707);
-              text.innerHTML = Array.from(D.girlText).map(function (ch) {
-                return '<span aria-hidden="true" style="--delay:' + (4.5 + rand() * 5).toFixed(2) + 's;--fall:' +
-                  (170 + rand() * 190).toFixed(0) + 'px;--stretch:' + (2 + rand() * 4).toFixed(2) + ';--drift:' +
-                  (-7 + rand() * 14).toFixed(1) + 'px">' + CC.esc(ch) + '</span>';
-              }).join('');
+              // 流淌：半秒左右就开始，从左往右一波波往下淌（前面的字先化），每个字先轻轻下坠、再越拉越长加速滴落；
+              // 整句再叠一层慢慢变强的水波扭曲（#diningMelt）
+              var rand = CC.rng(707), chars = Array.from(D.girlText);
+              text.innerHTML = chars.map(function (ch, i) {
+                return '<span aria-hidden="true" style="--delay:' + (0.35 + i * 0.06 + rand() * 0.4).toFixed(2) + 's;--dur:' +
+                  (5.5 + rand() * 2.2).toFixed(2) + 's;--fall:' + (60 + rand() * 70).toFixed(0) + 'px;--stretch:' +
+                  (1.6 + rand() * 1.4).toFixed(2) + ';--drift:' + (-3 + rand() * 6).toFixed(1) + 'px">' + CC.esc(ch) + '</span>';
+              }).join('') + meltFilter();
             }, reduce ? 0 : 420);
             timers.push(reveal);
             CC.$('.map-panel__acts', p).outerHTML = choices([['leave', D.leave]]);
