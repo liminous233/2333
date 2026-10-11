@@ -37,8 +37,8 @@
           busy = true;
           if (Math.random() < 0.5) c.el.textContent = rnd();
           c.el.classList.add('is-scr');
-        } else if (c.el.textContent !== c.ch) {
-          c.el.textContent = c.ch;
+        } else {
+          if (c.el.textContent !== c.ch) c.el.textContent = c.ch;
           c.el.classList.remove('is-scr');
         }
       });
