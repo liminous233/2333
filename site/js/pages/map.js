@@ -175,8 +175,13 @@
         return '<button class="pop-btn" data-act="' + b[0] + '">' + CC.esc(b[1]) + '</button>';
       }).join('') + '</div>';
     }
-    function say(p, text, scramble) {
+    function say(p, text, scramble, tone) {
       var el = CC.$('.map-panel__text', p);
+      scr.forEach(function (s) { s.destroy(); });
+      scr = [];
+      el.removeAttribute('aria-label');
+      el.classList.toggle('is-gaze', !!tone);
+      el.classList.toggle('is-gaze-unrest', tone === 'unrest');
       el.classList.remove('is-in');
       void el.offsetWidth;
       el.classList.add('is-in');
@@ -292,7 +297,11 @@
             a.remove();
             CC.state.once('day:5', { clarity: 1 });
           }
-          if (act === 'gaze') { say(p, B.gazeText, true); CC.state.once('map:gaze', 2); }
+          if (act === 'gaze') {
+            var unrest = day(5);
+            say(p, unrest ? D5.gazeText : B.gazeText, true, unrest ? 'unrest' : 'calm');
+            CC.state.once('map:gaze', 2);
+          }
         });
       },
 
