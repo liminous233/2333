@@ -355,7 +355,7 @@
             CC.state.once('day:5', { clarity: 1 });
           }
           if (act === 'gaze') {
-            var unrest = day(5);
+            var unrest = key;                         // 拿到钥匙（述职分支走完、地图异动）后眺望就变成罂粟 / 躁动
             say(p, unrest ? D5.gazeText : B.gazeText, true, unrest ? 'unrest' : 'calm');
             CC.state.once('map:gaze', 2);
           }
