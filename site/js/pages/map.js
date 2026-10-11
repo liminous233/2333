@@ -307,7 +307,7 @@
 
       dining: function (btn) {
         var D = M.dining;
-        var p = panel(btn, figure(D.image) + '<span class="map-panel__hi" aria-hidden="true">' + CC.esc(D.hi) + '</span>' +
+        var p = panel(btn, figure(D.image) + '<p class="map-panel__day mono" hidden>' + CC.esc(D.label) + '</p>' +
           '<p class="map-panel__text">' + CC.esc(D.text) + '</p>' + choices([['forward', D.forward]]));
         p.addEventListener('click', function (e) {
           var a = e.target.closest('[data-act]');
@@ -316,14 +316,26 @@
           if (act === 'forward') {
             var img = CC.$('.map-panel__fig img', p);
             img.classList.add('is-swap');
-            setTimeout(function () {
+            var reveal = setTimeout(function () {
+              if (layer !== p) return;
               img.src = D.girlImage;
               img.classList.remove('is-swap');
-              p.classList.add('is-hi');
+              p.classList.add('is-dining-day7');
+              CC.$('.map-panel__day', p).hidden = false;
+              say(p, D.girlText);
+              var text = CC.$('.map-panel__text', p);
+              text.classList.add('dining-melt');
+              text.setAttribute('aria-label', D.girlText);
+              var rand = CC.rng(707);
+              text.innerHTML = Array.from(D.girlText).map(function (ch) {
+                return '<span aria-hidden="true" style="--delay:' + (4.5 + rand() * 5).toFixed(2) + 's;--fall:' +
+                  (170 + rand() * 190).toFixed(0) + 'px;--stretch:' + (2 + rand() * 4).toFixed(2) + ';--drift:' +
+                  (-7 + rand() * 14).toFixed(1) + 'px">' + CC.esc(ch) + '</span>';
+              }).join('');
             }, reduce ? 0 : 420);
-            say(p, D.girlText);
+            timers.push(reveal);
             CC.$('.map-panel__acts', p).outerHTML = choices([['leave', D.leave]]);
-            CC.state.once('map:girl', 3);
+            CC.state.once('map:girl', 3); // 沿用旧记录键，已有存档不重复加分。
           }
           if (act === 'leave') closeAll();
         });
