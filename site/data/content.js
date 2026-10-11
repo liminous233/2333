@@ -222,6 +222,7 @@ window.CONTENT = {
     // 数值全部暗中计分，不显示（地图页补充，docs/specs/2b）
     gate: {
       image: 'assets/img/map/gate.webp',
+      reportImage: 'assets/img/map/gate-day7.png',
       text: 'DAY1.祂的世界',
       assim: 1,
     },
@@ -231,6 +232,15 @@ window.CONTENT = {
       wander: '游荡', wanderText: '你在尽头的休息厅茶几下找到一张撕了一半的牛皮纸。', got: '获得「forever」×1',
       wanderClarity: 8,                           // 捡到的半张纸放进手提箱（证物柜），和「WE」拼合时同化值 +5
       enter: '进屋', enterText: '钟声敲响，遁入梦乡。', enterAssim: 1,
+      report: {
+        text: '所有人行色匆匆，游客聚集在正厅想要离开，被修女镇压。',
+        view: '查看消息', leave: '离开',
+        messages: [
+          { tone: 'black', text: '无需担心，正常流程' },
+          { tone: 'blue', text: '你干的好事。' },
+          { tone: 'black', text: '拭目以待' },
+        ],
+      },
     },
     studio: '筹办大颂礼的重要场所，游客免入。',
     field: '禁止踩踏花坪。',
@@ -276,6 +286,7 @@ window.CONTENT = {
     },
     cathedral: {
       image: 'assets/img/map/cathedral.webp',
+      reportImage: 'assets/img/map/cathedral-day7.png',
       text: '天地间的纯白，我们的安宁。',
     },
     close: '关闭',
