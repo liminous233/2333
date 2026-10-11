@@ -279,9 +279,14 @@ window.CONTENT = {
       image: 'assets/img/map/dining.webp',
       text: '还没到开饭的时间。',
       forward: '走到前方',
+      // 平时：走到前方 → 女孩打招呼
+      hi: '嗨',
+      girlImage: 'assets/img/map/dining-girl.webp',
+      girlText: '女孩？看着你，她对你打了个招呼。',
+      // DAY4 述职分支走完（flag d4Report）后：走到前方 → DAY 7 双头羔羊桌布 + 融化文字
       label: 'DAY 7',
-      girlImage: 'assets/img/map/dining-day7.jpg',
-      girlText: '双头的羔羊桌布被布置在餐桌，无人知晓何时更换的样式。',
+      clothImage: 'assets/img/map/dining-day7.jpg',
+      clothText: '双头的羔羊桌布被布置在餐桌，无人知晓何时更换的样式。',
       leave: '离开餐厅',
     },
     cathedral: {

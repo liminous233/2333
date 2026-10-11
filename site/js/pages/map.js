@@ -364,7 +364,9 @@
 
       dining: function (btn) {
         var D = M.dining;
+        var day7 = CC.state.flag('d4Report');          // 述职分支走完才是 DAY 7 桌布，否则还是女孩
         var p = panel(btn, figure(D.image) + '<p class="map-panel__day mono" hidden>' + CC.esc(D.label) + '</p>' +
+          (day7 ? '' : '<span class="map-panel__hi" aria-hidden="true">' + CC.esc(D.hi) + '</span>') +
           '<p class="map-panel__text">' + CC.esc(D.text) + '</p>' + choices([['forward', D.forward]]));
         p.addEventListener('click', function (e) {
           var a = e.target.closest('[data-act]');
@@ -375,13 +377,15 @@
             img.classList.add('is-swap');
             var reveal = setTimeout(function () {
               if (layer !== p) return;
-              img.src = D.girlImage;
+              img.src = day7 ? D.clothImage : D.girlImage;
               img.classList.remove('is-swap');
+              if (!day7) { p.classList.add('is-hi'); return; }
               p.classList.add('is-dining-day7');
               CC.$('.map-panel__day', p).hidden = false;
-              say(p, D.girlText);
-              melt(p, D.girlText);
+              say(p, D.clothText);
+              melt(p, D.clothText);
             }, reduce ? 0 : 420);
+            if (!day7) say(p, D.girlText);
             timers.push(reveal);
             CC.$('.map-panel__acts', p).outerHTML = choices([['leave', D.leave]]);
             CC.state.once('map:girl', 3); // 沿用旧记录键，已有存档不重复加分。
