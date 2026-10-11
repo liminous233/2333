@@ -136,6 +136,26 @@
   background: rgba(5, 6, 10, .7); border: 1px solid rgba(255, 255, 255, .2); color: #c6cfda; font-size: 11px; cursor: pointer;
 }
 /* DAY 7 餐桌：细颗粒覆在照片上，文字像蜡一样向面板外淌。 */
+.map-panel__message { width: 0; min-width: 100%; box-sizing: border-box; padding: 0 6px; }
+.map-panel__message .map-panel__text { width: 100%; min-width: 0; padding: 0; }
+.map-chat {
+  --bubble: #242428; display: block; position: relative; box-sizing: border-box;
+  width: fit-content; max-width: calc(100% - 14px); margin: 4px 0 6px; padding: 13px 18px;
+  border: 1px solid rgba(255,255,255,.13); border-radius: 17px;
+  background: var(--bubble); color: #eef0f3; font: 14px/1.75 var(--f-body); letter-spacing: .06em;
+  box-shadow: 0 6px 18px rgba(0,0,0,.24); transform-origin: bottom left;
+  animation: map-chat-in .55s cubic-bezier(.16,1,.3,1) both;
+}
+.map-chat::after { content: ''; position: absolute; bottom: 4px; left: -7px; width: 13px; height: 13px; background: var(--bubble); clip-path: polygon(100% 0,100% 100%,0 100%); }
+.map-chat--blue { --bubble: #002fa7; margin-left: auto; transform-origin: bottom right; }
+.map-chat--blue::after { left: auto; right: -7px; transform: scaleX(-1); }
+button.map-chat { cursor: pointer; }
+button.map-chat:focus-visible { outline: 1px solid #eef0f3; outline-offset: 4px; }
+@keyframes map-chat-in {
+  from { opacity: 0; transform: translateY(14px) scale(.88); filter: blur(3px); }
+  70% { opacity: 1; transform: translateY(-2px) scale(1.02); filter: blur(0); }
+  to { opacity: 1; transform: none; filter: none; }
+}
 .is-dining-day7 { overflow: visible; }
 .is-dining-day7 .map-panel__fig { overflow: hidden; isolation: isolate; }
 .is-dining-day7 .map-panel__fig::after {
@@ -150,18 +170,16 @@
   50% { transform: translate(6%, -4%); }
   75% { transform: translate(-3%, -6%); }
 }
-.dining-melt { position: relative; overflow: visible; pointer-events: none; z-index: 2; filter: url(#diningMelt); }
+.dining-melt { position: relative; overflow: visible; pointer-events: none; z-index: 2; }
 .dining-melt span {
   display: inline-block; transform-origin: 50% 0;
-  animation: dining-melt var(--dur, 7s) var(--delay) both;
+  animation: dining-melt 18s var(--delay) cubic-bezier(.35, 0, .65, 1) both;
 }
-/* 像蜡/墨往下淌：字的顶端基本留在原位，身子越拉越长、越来越细，慢慢往下流、变淡；每段缓入，有"重力"的感觉 */
 @keyframes dining-melt {
-  0% { transform: none; filter: none; opacity: 1; animation-timing-function: cubic-bezier(.45, 0, .7, .55); }
-  18% { transform: translateY(1px) scaleY(1.25) scaleX(.98); filter: blur(.1px); opacity: 1; animation-timing-function: cubic-bezier(.45, 0, .75, .6); }
-  48% { transform: translate(calc(var(--drift) * .4), calc(var(--fall) * .15)) scaleY(var(--stretch)) scaleX(.9); filter: blur(.4px); opacity: .9; animation-timing-function: cubic-bezier(.5, 0, .8, .6); }
-  78% { transform: translate(calc(var(--drift) * .8), calc(var(--fall) * .5)) scaleY(calc(var(--stretch) * 1.9)) scaleX(.78); filter: blur(1px); opacity: .55; animation-timing-function: ease-in; }
-  100% { transform: translate(var(--drift), var(--fall)) scaleY(calc(var(--stretch) * 2.6)) scaleX(.68); filter: blur(2px); opacity: 0; }
+  0%, 8% { transform: none; filter: none; opacity: 1; }
+  35% { transform: translate(calc(var(--drift) * .2), 12px) scaleY(1.55); filter: blur(.3px); opacity: .9; }
+  70% { transform: translate(var(--drift), calc(var(--fall) * .55)) scaleY(var(--stretch)); filter: blur(.8px); opacity: .65; }
+  100% { transform: translate(var(--drift), var(--fall)) scaleY(calc(var(--stretch) + 1)); filter: blur(1.6px); opacity: 0; }
 }
 
 /* 打乱文字 */
@@ -202,4 +220,5 @@
 @media (prefers-reduced-motion: reduce) {
   .tile--eye { animation: none; }
   .is-dining-day7 .map-panel__fig::after, .dining-melt span { animation: none; }
+  .map-chat { animation: none; }
 }
