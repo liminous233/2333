@@ -301,8 +301,13 @@
 
       chapel: function (btn) {
         var H = M.chapel;
-        var p = panel(btn, figure(H.image) + '<p class="map-panel__text">' + CC.esc(H.text.join('\n')) + '</p>' +
+        // 地图异动后换成 DAY 6 版本（图、文案），没写的字段沿用原版；没异动时原样不动
+        var d6 = CC.state.flag('d4Report');
+        if (d6) H = Object.assign({}, M.chapel, M.chapel.day6);
+        var p = panel(btn, figure(H.image) + (d6 ? '<p class="map-panel__day mono">' + CC.esc(H.label) + '</p>' : '') +
+          '<p class="map-panel__text">' + CC.esc(H.text.join('\n')) + '</p>' +
           choices([['pray', H.pray], ['walk', H.walk], ['leave', H.leave]]));
+        if (d6) CC.state.once('map:chapel:day6', H.enterAssim);
         var walked = false;
         acts(p, {
           pray: function () { say(p, H.prayText); CC.state.once('map:chapel:pray', H.prayAssim); },
