@@ -233,13 +233,13 @@
 
       studio: function (btn) { card(btn, M.studio, true); },
       field: function (btn) {
-        if (!day(6)) { card(btn, M.field, true); return; }
+        if (!CC.state.flag('d4Report')) { card(btn, M.field, true); return; }   // 地图异动后马上变 DAY 7
         dayCard(btn, M.day7);
         CC.state.once('day:7');
       },
       parlour: function (btn) { card(btn, M.parlour, true); },
       hall: function (btn) {
-        if (!day(5)) { card(btn, M.hall, true); return; }
+        if (!CC.state.flag('d4Report')) { card(btn, M.hall, true); return; }    // 地图异动后马上变 DAY 6
         dayCard(btn, M.day6);
         CC.state.once('day:6', { clarity: 1 });
       },
