@@ -127,6 +127,15 @@
       layer.style.gridColumn = btn.style.gridColumn;
       layer.style.gridRow = btn.style.gridRow;
       btn.classList.add('is-open');
+      fit(layer);
+    }
+    // 小卡贴到屏幕边时往里挪，不出屏（手机上会客室那张原来会伸出右边）
+    function fit(el) {
+      el.style.marginLeft = '';
+      var r = el.getBoundingClientRect(), pad = 8, dx = 0;
+      if (r.left < pad) dx = pad - r.left;
+      else if (r.right > window.innerWidth - pad) dx = window.innerWidth - pad - r.right;
+      if (dx) el.style.marginLeft = dx + 'px';
     }
 
     // DAY 5–7 的小卡：上面一行小字 DAY N，文字可以换行；贴边时往里挪，不出屏
@@ -134,10 +143,7 @@
       card(btn, D.text, true);
       layer.classList.add('map-card--day');
       layer.innerHTML = '<span class="map-card__day mono">' + CC.esc(D.label) + '</span><p>' + CC.esc(D.text) + '</p>';
-      var r = layer.getBoundingClientRect(), pad = 8, dx = 0;
-      if (r.left < pad) dx = pad - r.left;
-      else if (r.right > window.innerWidth - pad) dx = window.innerWidth - pad - r.right;
-      if (dx) layer.style.marginLeft = dx + 'px';
+      fit(layer);
     }
     function day(n) { return CC.state.seen('day:' + n); }
 
@@ -196,12 +202,23 @@
       var text = CC.$('.map-panel__text', p);
       text.classList.add('dining-melt');
       text.setAttribute('aria-label', value);
+      // 流淌（用户要的节奏）：半秒内开始，从左往右一波波往下淌；每个字顶端基本不动、往下拉长变细（墨迹/蜡泪），
+      // 整句再叠一层慢慢变强的水波扭曲（#diningMelt）
       var rand = CC.rng(707);
-      text.innerHTML = Array.from(value).map(function (ch) {
-        return '<span aria-hidden="true" style="--delay:' + (4.5 + rand() * 5).toFixed(2) + 's;--fall:' +
-          (170 + rand() * 190).toFixed(0) + 'px;--stretch:' + (2 + rand() * 4).toFixed(2) + ';--drift:' +
-          (-7 + rand() * 14).toFixed(1) + 'px">' + CC.esc(ch) + '</span>';
-      }).join('');
+      text.innerHTML = Array.from(value).map(function (ch, i) {
+        return '<span aria-hidden="true" style="--delay:' + (0.35 + i * 0.06 + rand() * 0.4).toFixed(2) + 's;--dur:' +
+          (5.5 + rand() * 2.2).toFixed(2) + 's;--fall:' + (60 + rand() * 70).toFixed(0) + 'px;--stretch:' +
+          (1.6 + rand() * 1.4).toFixed(2) + ';--drift:' + (-3 + rand() * 6).toFixed(1) + 'px">' + CC.esc(ch) + '</span>';
+      }).join('') + meltFilter();
+    }
+    // 水波扭曲：位移强度 0.3 秒后从 0 慢慢涨到 10（SMIL 动画）
+    function meltFilter() {
+      return '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="diningMelt" x="-10%" y="-20%" width="120%" height="300%">' +
+        '<feTurbulence type="fractalNoise" baseFrequency="0.012 0.09" numOctaves="2" seed="7" result="n">' +
+          '<animate attributeName="baseFrequency" dur="9s" values="0.012 0.09;0.016 0.05;0.012 0.09" repeatCount="indefinite"/></feTurbulence>' +
+        '<feDisplacementMap in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G">' +
+          '<animate attributeName="scale" begin="0.3s" dur="5s" values="0;5;10" keyTimes="0;0.35;1" fill="freeze"/></feDisplacementMap>' +
+        '</filter></svg>';
     }
 
     var actions = {
