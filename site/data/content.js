@@ -453,7 +453,7 @@ window.CONTENT = {
     zh: '祂的食戮日',
     en: 'The Day of His Devouring',
     sunCredit: '图 · 小红书 @無山',
-    meltAfter: 12000,            // 停留多久开始融化（毫秒）
+    meltAfter: 6000,             // 停留多久开始融化（毫秒）
   },
 
   // 4. 证物柜（方案 3）：白底，只有一只打开的手提箱。物件点一下拿出来，下方是文案和选项。
