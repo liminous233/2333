@@ -243,13 +243,13 @@
 
       studio: function (btn) { card(btn, M.studio, true); },
       field: function (btn) {
-        if (!day(6)) { card(btn, M.field, true); return; }
+        if (!CC.state.flag('d4Report')) { card(btn, M.field, true); return; }   // 地图异动后马上变 DAY 7
         dayCard(btn, M.day7);
         CC.state.once('day:7');
       },
       parlour: function (btn) { card(btn, M.parlour, true); },
       hall: function (btn) {
-        if (!day(5)) { card(btn, M.hall, true); return; }
+        if (!CC.state.flag('d4Report')) { card(btn, M.hall, true); return; }    // 地图异动后马上变 DAY 6
         dayCard(btn, M.day6);
         CC.state.once('day:6', { clarity: 1 });
       },
@@ -311,8 +311,13 @@
 
       chapel: function (btn) {
         var H = M.chapel;
-        var p = panel(btn, figure(H.image) + '<p class="map-panel__text">' + CC.esc(H.text.join('\n')) + '</p>' +
+        // 地图异动后换成 DAY 6 版本（图、文案），没写的字段沿用原版；没异动时原样不动
+        var d6 = CC.state.flag('d4Report');
+        if (d6) H = Object.assign({}, M.chapel, M.chapel.day6);
+        var p = panel(btn, figure(H.image) + (d6 ? '<p class="map-panel__day mono">' + CC.esc(H.label) + '</p>' : '') +
+          '<p class="map-panel__text">' + CC.esc(H.text.join('\n')) + '</p>' +
           choices([['pray', H.pray], ['walk', H.walk], ['leave', H.leave]]));
+        if (d6) CC.state.once('map:chapel:day6', H.enterAssim);
         var walked = false;
         acts(p, {
           pray: function () { say(p, H.prayText); CC.state.once('map:chapel:pray', H.prayAssim); },
@@ -365,7 +370,7 @@
             CC.state.once('day:5', { clarity: 1 });
           }
           if (act === 'gaze') {
-            var unrest = day(5);
+            var unrest = key;                         // 拿到钥匙（述职分支走完、地图异动）后眺望就变成罂粟 / 躁动
             say(p, unrest ? D5.gazeText : B.gazeText, true, unrest ? 'unrest' : 'calm');
             CC.state.once('map:gaze', 2);
           }

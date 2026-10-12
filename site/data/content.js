@@ -256,6 +256,18 @@ window.CONTENT = {
       walkImage: 'assets/img/map/chapel-wall.webp',
       walkCredit: '图片来源：小红书 @Jyuemim',
       leave: '离开', leaveText: '月光饶有兴致地瞥视了你。', leaveAssim: 8,
+      // 地图异动后（flag d4Report）：DAY 6 版本，图和文案都换掉；按钮和流程不变，没写的沿用上面
+      day6: {
+        label: 'DAY 6',
+        image: 'assets/img/map/chapel-day6.webp',
+        text: ['老人们的座位空了大半。', '你踏入此地，有人回过头来凝视你。'],
+        enterAssim: -5,                   // 进门同化值 -5（只第一次）
+        prayText: '这次没有注视加诸你身，只有窗外透下一圈暗红的光晕洒在你的面庞。',
+        walkText: '曾经的白发神父一路升职为五大主教之一，他事务繁忙，再无他的身影。',
+        outText: '围墙脚下落满了红色的花瓣，墙的另端隐约传来令人躁动的呓语。',
+        walkImage: 'assets/img/map/chapel-wall-day6.webp',
+        leaveText: '和别人一样行色匆匆？不，这只是一场游戏，而你只需等待结局。',
+      },
     },
     bell: {
       image: 'assets/img/map/belltower.webp',
