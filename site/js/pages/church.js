@@ -14,6 +14,8 @@
 
   CC.pages.church = function (root) {
     var H = C.church;
+    var peaceV = CC.story.peaceVariant();
+    if (peaceV) CC.state.setFlag('v02:peaceLock');
     var reduce = CC.reducedMotion();
     // 不管从月相页第五个月亮，还是从 DAY4 的「前往教堂」进来，都算看过第五个月亮（不然双月一直是「副本未完成」）
     CC.state.once('moon:5');
@@ -51,7 +53,7 @@
     /* ---- ♢：神国 ---- */
     function holy() {
       var t = CC.$('.ch__holy', sec);
-      later(function () { t.textContent = H.holyText; t.classList.add('is-in'); }, 600);
+      later(function () { t.textContent = peaceV ? C.v02.peaceV.holyText : H.holyText; t.classList.add('is-in'); }, 600);
       later(function () { sec.classList.add('is-idol'); stopNoise = CC.storyEffects.noise(sec); }, 900);
       later(function () {
         var go = document.createElement('a');

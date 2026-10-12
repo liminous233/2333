@@ -81,7 +81,26 @@
           no: A.closeAll, yes: function () { S.setFlag('v02:peaceLock'); CC.go('church'); } }); return true;
       }
       if (name === 'field') { A.card(btn, H.field, true); return true; }
-      if (name === 'hall') { A.card(btn, M.hall, true); return true; }
+      if (name === 'hall') {
+        var hall = H.hall, step = 0;
+        hall.stages.forEach(function (s, i) { if (S.seen(s.key)) step = i; });
+        var hp = panel(btn, step === 3 ? hall.portrait : hall.image, 0, '', []);
+        function showHall() {
+          var stage = hall.stages[step];
+          S.settle(stage.key, stage.delta);
+          A.say(hp, stage.text);
+          choices(hp, step === 0 ? [['hallEnter', hall.enter]] : step === 1 ? [['hallNext', hall.next]] :
+            step === 2 ? [['hallPortrait', hall.view]] : [['hallChurch', hall.church], ['leave', V.leave]]);
+        }
+        A.acts(hp, {
+          hallEnter: function () { if (step !== 0) return; step = 1; showHall(); },
+          hallNext: function () { if (step !== 1) return; step = 2; showHall(); },
+          hallPortrait: function () { if (step !== 2) return; step = 3; A.swap(hp, hall.portrait); showHall(); },
+          hallChurch: function () { if (step !== 3) return; S.setFlag('v02:peaceLock'); CC.go('church'); },
+          leave: A.closeAll
+        });
+        showHall(); return true;
+      }
       if (name === 'dining') {
         var D = M.dining, p = panel(btn, D.image, 0, H.diningIntro, [['forward', H.forward]]);
         A.acts(p, { forward: function () {

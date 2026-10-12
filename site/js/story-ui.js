@@ -88,7 +88,7 @@
     var choices = Object.keys(r.choices).map(function (k) { return labels[r.choices[k]] || r.choices[k]; });
     choices = choices.concat(r.actions || []);
     var F = R.fields;
-    return [R.title + ' · ' + r.version, F.ending + '：' + R.names[r.kind], F.assim + '：' + r.assim + ' / ' + F.clarity + '：' + r.clarity,
+    return [R.title + ' · ' + r.version, F.ending + '：' + (r.variant === 'overline-v' ? V.peaceV.name : R.names[r.kind]), F.assim + '：' + r.assim + ' / ' + F.clarity + '：' + r.clarity,
       F.report + '：' + (R.routes[r.report.route] || r.report.route), F.route + '：' + (R.routes[r.route] || r.route),
       F.choices + '：' + (choices.join('；') || '—'), F.exploration + '：' + r.explored + '/' + r.total,
       F.identity + '：' + (r.identity ? R.yes : R.no), F.sent + '：' + (r.sent ? R.yes : R.no), F.survived + '：' + (r.survived ? F.yes : F.no)].join('\n');
@@ -106,6 +106,7 @@
   }
   function bilingual(text) {
     var zh = text === V.infinityText ? V.infinityTextZh : text === V.infinitySub[0] ? V.infinitySub[1] : V.creditsZh[text];
+    if (text === V.peaceV.sub[0]) zh = V.peaceV.sub[1];
     if (!zh) return CC.esc(text);
     return '<span class="v02-bilingual"><span class="v02-en" lang="en">' + CC.esc(text) + '</span><span class="v02-cn" lang="zh">' + CC.esc(zh) + '</span></span>';
   }

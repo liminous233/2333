@@ -27,10 +27,17 @@
   function archiveReady() { return hasEvidence() && S.seen('v02:present') && S.seen('v02:discuss'); }
   function infinity() { return route() === 'RECONNECT' && hasEvidence() && S.flag('v02:archiveDone') && S.flag('v02:messageSent'); }
   function peace() { return route() === 'EARLY_MOON' || route() === 'ANOMALY' || S.flag('v02:peaceLock'); }
+  function peaceVariant() {
+    var ending = S.record('v02:ending');
+    if (ending) return ending.variant === 'overline-v';
+    return route() === 'ANOMALY' && S.choice('v02:d4') === 'embrace' && S.assim === 100;
+  }
   function guard(page) {
     var ending = S.record('v02:ending');
     if (ending) return ending.kind === 'peace' ? 'ending' : page;
     if (S.flag('v02:peaceLock')) return S.flag('v02:hymnComplete') ? 'ending' : 'church';
+    // The new C2 variant must also play its hymn when entered via the twin moon.
+    if (peaceVariant() && page === 'ending' && !S.flag('v02:hymnComplete')) return 'church';
     if (S.flag('d4Diamond')) return /^(church|ending)$/.test(page) ? page : 'church';
     if (route() === 'EARLY_MOON') return page === 'd4' ? page : 'd4';
     if (route() === 'ANOMALY' && !S.choice('v02:d4')) return page === 'd4' ? page : 'd4';
@@ -45,6 +52,7 @@
     return S.remember('v02:ending', function () {
       var rooms = window.CONTENT.map.rooms.filter(function (r) { return r.action; });
       return { version: window.CONTENT.v02.version, kind: kind, assim: S.assim, clarity: S.clarity,
+        variant: kind === 'peace' && peaceVariant() ? 'overline-v' : '',
         report: S.record('v02:report') || { route: route() }, route: route(), choices: S.choices(),
         actions: window.CONTENT.v02.review.actions.filter(function (a) { return S.seen(a[0]); }).map(function (a) { return a[1]; }),
         explored: rooms.filter(function (r) { return S.seen('v02:room:' + r.id); }).length, total: rooms.length,
@@ -52,7 +60,7 @@
     });
   }
   CC.story = { route: route, classify: classify, lockReport: lockReport, decision: decision,
-    hasEvidence: hasEvidence, archiveReady: archiveReady, infinity: infinity, peace: peace, guard: guard, finish: finish,
+    hasEvidence: hasEvidence, archiveReady: archiveReady, infinity: infinity, peace: peace, peaceVariant: peaceVariant, guard: guard, finish: finish,
     blackMap: function () { return S.flag('d4Report') && route() === 'REPORT_BLACK'; },
     oldName: function () { return S.remember('v02:oldName', function () {
       var names = window.CONTENT.v02.oldNames; return names[Math.floor(Math.random() * names.length)];

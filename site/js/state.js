@@ -24,6 +24,12 @@
   // v0.2 adds records without replacing the existing save or its choice keys.
   data.records = data.records || {};
   function clamp(v) { return Math.max(0, Math.min(100, Number(v) || 0)); }
+  // C2 only: once 99 is reached, every score entry point must be monotonic.
+  function assimilation(v) {
+    var report = data.records && data.records['v02:report'];
+    var c2 = report && report.route === 'ANOMALY' && data.choices['v02:d4'] === 'embrace' && !data.flags['v02:reconnect'];
+    return c2 && data.assim >= 99 ? Math.max(data.assim, clamp(v)) : clamp(v);
+  }
   data.assim = clamp(data.assim);
   data.clarity = clamp(data.clarity);
   function copy(v) { return v == null ? v : JSON.parse(JSON.stringify(v)); }
@@ -52,7 +58,7 @@
   // 调试：?assim=75
   try {
     var m = /[?&]assim=(\d+)/.exec(location.search);
-    if (m) { data.assim = Math.max(0, Math.min(100, +m[1])); data.authed = true; save(); }
+    if (m) { data.assim = assimilation(+m[1]); data.authed = true; save(); }
   } catch (e) {}
 
   CC.state = {
@@ -73,7 +79,7 @@
       if (data.seen[key]) return false;
       data.seen[key] = true;
       delta = delta || {};
-      data.assim = clamp(data.assim + (delta.assim || 0));
+      data.assim = assimilation(data.assim + (delta.assim || 0));
       data.clarity = clamp(delta.claritySet === undefined ? data.clarity + (delta.clarity || 0) : delta.claritySet);
       Object.keys(flags || {}).forEach(function (k) { data.flags[k] = flags[k]; });
       save(); apply(); return true;
@@ -89,7 +95,7 @@
     seen: function (k) { return !!data.seen[k]; },
 
     add: function (n) {
-      data.assim = Math.max(0, Math.min(100, data.assim + n));
+      data.assim = assimilation(data.assim + n);
       save(); apply();
     },
     // 只在第一次触发时加值。n 可以是数字（同化值），也可以是 { assim, clarity }
@@ -97,7 +103,7 @@
       if (data.seen[key]) return false;
       data.seen[key] = true;
       var d = typeof n === 'object' && n ? n : { assim: n };
-      if (d.assim) data.assim = Math.max(0, Math.min(100, data.assim + d.assim));
+      if (d.assim) data.assim = assimilation(data.assim + d.assim);
       if (d.clarity) data.clarity = clamp(data.clarity + d.clarity);
       save(); apply();
       return true;
@@ -107,7 +113,7 @@
       var c = data.counters[key] || 0;
       if (c >= max) return false;
       data.counters[key] = c + 1;
-      data.assim = Math.max(0, Math.min(100, data.assim + n));
+      data.assim = assimilation(data.assim + n);
       save(); apply();
       return true;
     },
@@ -117,7 +123,7 @@
       if (data.choices[key]) return false;
       data.choices[key] = value;
       d = d || {};
-      if (d.assim) data.assim = Math.max(0, Math.min(100, data.assim + d.assim));
+      if (d.assim) data.assim = assimilation(data.assim + d.assim);
       if (d.clarity) data.clarity = clamp(data.clarity + d.clarity);
       if (d.claritySet !== undefined) data.clarity = clamp(d.claritySet);
       Object.keys(flags || {}).forEach(function (k) { data.flags[k] = flags[k]; });

@@ -85,3 +85,9 @@
 
 由 `docs/tools/process_church.py` 从 `docs/source-images/church/` 生成：白 / 红 / 更红三张教堂底图、双月神像（左缘树根渗透烘进 alpha）、
 `black-sun.webp`（**小红书作者 無山 的作品，页面上必须署名**）、`red-figure.webp`。
+
+## v02/ · C2 会议厅新增图片
+
+- `c2-hall.png`：作者提供的帷幕会议厅图，用于「拥抱穹顶」路线的会议厅。
+- `c2-portrait.png`：作者提供的银莲花肖像，用于「观看自己的新肖像」。
+- 两张均保留所提供 PNG 原图，不覆盖其他阶段素材。

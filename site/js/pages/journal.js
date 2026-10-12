@@ -44,6 +44,7 @@
       return true;
     }
     function ending() {
+      if (CC.story.peaceVariant()) return Object.assign({}, J.endings.peace, { sub: C.v02.peaceV.name });
       return (CC.story.route() ? CC.story.peace() : CC.state.assim >= J.endingAt) ? J.endings.peace : J.endings.bliss;
     }
     function label(m) {

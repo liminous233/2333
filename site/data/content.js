@@ -598,6 +598,16 @@ window.CONTENT.v02 = {
     discuss: '白发主教提出：前日那支笔的道具效力已经失效，无法绘制有效的神像稿。他怀疑这与你的状态有关。\n你如今头脑清醒，让他再次尝试。', done: '你们决定再次尝试。大门已开放。' },
   prayer: { zh: '主，我在这里。\n主，我信赖你。\n主，愿你的旨意成就。\n主，请接引我来到你的神国。\n一切为你，一切因你，一切归你。', en: 'Lord, I am here.\nLord, I trust in You.\nLord, may Your will be done.\nLord, lead me into Your kingdom.\nAll for You, all because of You, all unto You.' },
   anomaly: {
+    hall: {
+      image: 'assets/img/v02/c2-hall.png', portrait: 'assets/img/v02/c2-portrait.png',
+      enter: '走进会议厅', next: '继续', view: '观看自己的新肖像', church: '前往教堂',
+      stages: [
+        { key: 'v02:hallWelcome', text: '你作为游客却早早地融入了这里', delta: { assim: 5 } },
+        { key: 'v02:hallDevotion', text: '你的虔诚有目共睹，你的信仰至高无上。', delta: { assim: 10 } },
+        { key: 'v02:hallKin', text: '得以进入此地的修士们对你毕恭毕敬，你定会被主列入眷属之列。', delta: { assim: 15 } },
+        { key: 'v02:hallPortrait', text: '欢迎回家  ——致你。', delta: { assim: 20, claritySet: 0 } }
+      ]
+    },
     chat: [{ who: 'ryan', text: '不&;$对……究竟是从哪一步，出/*_现了问题？', scramble: true }, { who: 'wei', text: '', liquid: true }, { who: 'ryan', text: '你在吗？' }, { who: 'wei', text: '……', liquid: true }],
     options: [['embrace', '拥抱穹顶'], ['church', '前往教堂'], ['reconnect', '尝试重连']],
     archive: '地面上散落着残破的纸片与碎屑，唯一一张黑色太阳手稿也变得暗淡扭曲。\n黑色在你的视线里变成了白色。你感到一阵宁静。',
@@ -617,10 +627,11 @@ window.CONTENT.v02 = {
   infinityText: 'After the message was sent, you fulfilled the condition for leaving the Choir. The newly elevated cardinal welcomed a new One into the Choir of Sacred Offering. Yet the descent of a new god is not necessarily a blessing. May there be no more disappearances.',
   infinityTextZh: '消息送出后，你达成了离开唱诗院的条件。新晋的枢机主教迎接一位新的「祂」降临圣献唱诗院。然而，新神的降临未必是一种祝福。愿不再有人失踪。',
   infinitySub: ['Ending II · Ecstasy of the Other God [∞]', '结局二 · 异神极乐 [∞]'],
+  peaceV: { name: '永归宁国【V̅】', sub: ['Ending I · Home, Forever, in the Kingdom of Peace [V̅]', '结局一 · 永归宁国【V̅】'], holyText: '祂的面容愈发清晰，你的灵魂销于地狱。' },
   creditsZh: { 'THE CHOIR OF SACRED OFFERING': '圣献唱诗院', 'Ending I · Home, Forever, in the Kingdom of Peace': '结局一 · 永归宁国', 'Investigation Officer 0110': '调查警员 0110', 'Vicia Karu / You': '维西娅·卡鲁 / 你', 'The Believer': '邪信徒', 'Ryan': '莱恩', 'The Investigator': '调查员', 'Anka': '安卡', 'The Visitors': '游客', 'The Choir': '唱诗班', 'Twenty-Four Voices': '二十四道声音', 'The Twin Moons': '双月', 'Themselves': '祂们', 'Story, World & Design': '故事、世界与设计', 'Code': '代码', 'Recorded at': '录制于', 'The Choir of Sacred Offering': '圣献唱诗院', 'A sub-world of the Creation Domain': '造物域下的副世界', 'Eight days of the Great Hymn': '大颂礼的八日', 'Images': '图像', 'Revolver photograph — Gordon Gartrell, CC BY-SA 2.0, via Wikimedia Commons': '左轮手枪摄影 — Gordon Gartrell，CC BY-SA 2.0，来自维基共享资源', 'Chapel wall photograph — Jyuemim (Xiaohongshu)': '祷告室围墙摄影 — Jyuemim（小红书）', 'Black sun artwork — 無山 Wushan (Xiaohongshu)': '黑日作品 — 無山 Wushan（小红书）', 'No visitor was harmed. Every visitor was kept.': '没有游客受到伤害。每位游客都被留了下来。', 'THE END': '终', 'Thank you for your due contribution to the ecology of the Mirror World.': '感谢您为镜界生态作出应有的贡献。' },
   review: { title: '本局回望', en: 'RUN REVIEW', copy: '复制本局记录', copied: '已复制', fallback: '请选中下方文字复制', home: '前往明天', names: { peace: '永归宁国', bliss: '异神极乐', infinity: '异神极乐 [∞]' },
     routes: { EARLY_MOON: '提前双月', REPORT_BLACK: '原述职路线', ANOMALY: '异常消息', RECONNECT: '尝试重连' }, yes: '已完成', no: '未完成',
     fields: { ending: '结局', assim: '同化', clarity: '明晰', report: 'D4 路线', route: '最终路线', choices: '关键选择', exploration: '探索进度', identity: '身份任务', sent: '消息送出', survived: '存活至第八日', yes: '是', no: '否' },
-    actions: [['v02:hide', '隐匿'], ['v02:search', '取得蜡烛清单'], ['v02:oldId', '收录磨损 ID'], ['v02:nightPrayer', '夜祷'], ['v02:present', '拿出证物'], ['v02:discuss', '商讨对策']],
+    actions: [['v02:hide', '隐匿'], ['v02:search', '取得蜡烛清单'], ['v02:oldId', '收录磨损 ID'], ['v02:nightPrayer', '夜祷'], ['v02:present', '拿出证物'], ['v02:discuss', '商讨对策'], ['v02:hallWelcome', '融入会议厅'], ['v02:hallDevotion', '走进会议厅'], ['v02:hallKin', '列入眷属'], ['v02:hallPortrait', '观看自己的新肖像']],
     decisions: { embrace: '拥抱穹顶', church: '前往教堂', reconnect: '尝试重连', eyes: '睁眼', continue: '继续' } }
 };
