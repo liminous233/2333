@@ -55,6 +55,8 @@
     var r = parse();
     if (!CC.state.authed && r.name !== 'gate') { CC.go('gate'); return; }
     if (!r.name) { CC.go(CC.state.authed ? 'home' : 'gate'); return; }
+    var guarded = CC.story.guard(r.name);
+    if (guarded !== r.name) { CC.go(guarded); return; }
     var page = CC.pages[r.name];
     if (!page) { CC.go('home'); return; }
 
@@ -81,6 +83,7 @@
     app.className = 'page page--' + r.name;
     app.innerHTML = '';
     page(app, r.arg);
+    CC.storyUI.mount(r.name, app);
     if (!samePage) window.scrollTo(0, 0);
     app.classList.remove('enter');
     void app.offsetWidth;

@@ -39,8 +39,8 @@
   function photo() {
     return G.photo ? '<img src="' + CC.esc(G.photo) + '" alt="">' : '';
   }
-  function cardFront() {
-    var c = G.card;
+  function cardFront(data) {
+    var c = data || G.card;
     var f = c.fields.map(function (r) {
       return '<span><small>' + CC.esc(r[0]) + '</small>' + CC.esc(r[1]) + '</span>';
     }).join('');
@@ -55,8 +55,8 @@
         CC.esc(c.lineB) + '</p></div>' +
       '</div>';
   }
-  function cardBack() {
-    var c = G.card;
+  function cardBack(data) {
+    var c = data || G.card;
     return '<div class="idc idc--back">' + frameSvg() +
       '<p class="idc__backtext">' + CC.esc(c.back) + '</p>' +
       '<div class="idc__sign"><span class="idc__sig">' + CC.esc(c.signer) + '</span><i></i><small>' +
@@ -250,9 +250,8 @@
     var press = null;
     letter.addEventListener('pointerdown', function (e) {
       if (e.button !== 0) return;
-      if (e.pointerType === 'touch') startHover();
       crumple.prepare();
-      press = { e: e, x: e.clientX, y: e.clientY, timer: setTimeout(go, 240) };
+      press = { e: e, x: e.clientX, y: e.clientY, timer: setTimeout(go, e.pointerType === 'touch' ? 650 : 240) };
       try { letter.setPointerCapture(e.pointerId); } catch (err) {}
       function go() {
         if (!press) return;
@@ -267,9 +266,14 @@
       press.go = go;
     });
     letter.addEventListener('pointermove', function (e) {
-      if (press && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 6) { clearTimeout(press.timer); press.go(); }
+      if (press && Math.hypot(e.clientX - press.x, e.clientY - press.y) > (e.pointerType === 'touch' ? 14 : 6)) { clearTimeout(press.timer); press.go(); }
     });
-    function letGo() { if (press) { clearTimeout(press.timer); press = null; } }
+    function letGo(e) { if (press) {
+      if (e.type === 'pointerup' && e.pointerType === 'touch') {
+        var on = !letter.classList.contains('is-flash'); endHover(); hovering = on; letter.classList.toggle('is-flash', on);
+      }
+      clearTimeout(press.timer); press = null;
+    } }
     letter.addEventListener('pointerup', letGo);
     letter.addEventListener('pointercancel', letGo);
 
@@ -343,7 +347,10 @@
       document.body.appendChild(layer);
       var item = CC.$('.lift__item', layer);
       var fc = null, tiltEl = CC.$('.lift__tilt', layer);
-      if (kind === 'card') fc = CC.flipCard(CC.$('.lift__card', layer), { tiltMax: 10 });
+      if (kind === 'card') { var cardRoot = CC.$('.lift__card', layer);
+        fc = CC.flipCard(cardRoot, { tiltMax: 10, onTouchTap: function () { CC.storyUI.toggleCard(cardRoot); } });
+        CC.storyUI.card(cardRoot, fc, false);
+      }
 
       // 从桌上的位置飞过来
       var sr = src.getBoundingClientRect(), ir = item.getBoundingClientRect();
@@ -402,7 +409,8 @@
       stage.classList.add('is-scanning');
       setTimeout(function () {
         stage.classList.remove('is-scanning');
-        msg.textContent = G.success;
+        msg.textContent = CC.story.route() === 'RECONNECT' ? window.CONTENT.v02.welcomeBack : G.success;
+        if (CC.story.route() === 'RECONNECT') CC.state.setFlag('v02:reentered');
         CC.state.auth();
         setTimeout(function () { CC.go('home'); }, 1300);
       }, reduce ? 200 : 1600);

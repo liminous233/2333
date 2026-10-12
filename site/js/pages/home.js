@@ -140,6 +140,10 @@
       { id: 'status', en: P.desk, zh: P.deskZh, body: status, ang: -8 },
       { id: 'credits', en: P.credits, zh: P.creditsZh, body: credits, ang: 22 },
     ];
+    if (s.flag('bliss')) {
+      if (!s.record('v02:ending')) CC.story.finish('bliss');
+      list.push({ id: 'review', en: C.v02.review.en, zh: C.v02.review.title, body: CC.storyUI.review(), ang: 52 });
+    }
     return list.map(function (t) {
       var a = t.ang * Math.PI / 180;
       var x = DISC.cx + Math.cos(a) * DISC.r - 74, y = DISC.cy + Math.sin(a) * DISC.r - 19;

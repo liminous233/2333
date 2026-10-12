@@ -153,7 +153,7 @@
 
     /* ---- 转成白底 ---- */
     function showLog() {
-      var bloom = CC.state.assim >= D.bloomAt;
+      var bloom = CC.story.lockReport() === 'EARLY_MOON';
       document.body.classList.add('is-white');
       sec.setAttribute('data-phase', 'log');
       sec.innerHTML =
@@ -172,7 +172,7 @@
             '<div class="d4-acts" hidden></div>' +
           '</div>' +
         '</div>';
-      if (bloom) setupBloom(); else setupReport();
+      if (bloom) { var back = CC.$('.back-arrow', sec); if (back) back.remove(); setupBloom(); } else setupReport();
     }
 
     /* ---- ≥ 50：Game over. → 故障 → 前往教堂 ---- */
@@ -234,14 +234,17 @@
       }
     }
     function say(i) {
-      var m = D.chat[i];
+      var messages = CC.story.route() === 'ANOMALY' ? C.v02.anomaly.chat : D.chat;
+      var m = messages[i];
       var chat = CC.$('.d4-chat', sec);
       var b = document.createElement('button');
       b.className = 'bub bub--' + m.who;
       b.style.setProperty('--i', i);
-      b.innerHTML = CC.esc(m.text) + '<svg class="bub__tail" viewBox="0 0 18 18" aria-hidden="true"><path d="M0 0C0 9 6 15 18 18C9 18.6 3 16.6 0 13.5Z"/></svg>';
+      b.innerHTML = '<span class="v02-chat-text">' + CC.esc(m.text) + '</span><svg class="bub__tail" viewBox="0 0 18 18" aria-hidden="true"><path d="M0 0C0 9 6 15 18 18C9 18.6 3 16.6 0 13.5Z"/></svg>';
       chat.appendChild(b);
-      if (i === D.chat.length - 1) { later(options, 3000); return; }
+      if (m.scramble) { var effect = CC.scramble(CC.$('.v02-chat-text', b), m.text); cleanups.push(function () { effect.destroy(); }); }
+      if (m.liquid) { b.classList.add('v02-liquid'); b.setAttribute('aria-label', m.text || '…'); b.insertAdjacentHTML('beforeend', '<i class="v02-ink-trails" aria-hidden="true"></i>'); }
+      if (i === messages.length - 1) { later(options, 3000); return; }
       b.addEventListener('click', function once() {
         b.removeEventListener('click', once);
         b.classList.add('is-read');
@@ -250,6 +253,16 @@
     }
     function options() {
       var a = CC.$('.d4-acts', sec);
+      if (CC.story.route() === 'ANOMALY') {
+        a.innerHTML = C.v02.anomaly.options.map(function (o) { return '<button class="ev-btn" data-route-choice="' + o[0] + '">' + CC.esc(o[1]) + '</button>'; }).join('');
+        a.hidden = false;
+        a.addEventListener('click', function (e) {
+          var b = e.target.closest('[data-route-choice]'); if (!b) return;
+          CC.story.decision(b.getAttribute('data-route-choice'));
+          var selected = CC.state.choice('v02:d4');
+          CC.go(selected === 'reconnect' ? 'gate' : selected === 'church' ? 'church' : 'journal');
+        }); return;
+      }
       a.innerHTML = '<a class="ev-btn" href="#/journal">' + CC.esc(D.back) + '</a><a class="ev-btn d4-to-church" href="#/church">' + CC.esc(D.toChurch) + '</a>';
       a.hidden = false;
       // 还没看过 DAY 5：提示保留 6 秒，停在提示上可继续阅读或点去地图。

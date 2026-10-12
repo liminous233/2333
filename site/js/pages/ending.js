@@ -10,14 +10,19 @@
     var E = C.ending;
     var reduce = CC.reducedMotion();
     var lines = E.lines.slice();
+    var infinity = CC.story.infinity();
+    CC.story.finish(infinity ? 'infinity' : 'peace');
+    if (infinity) { lines[1] = ['sub', C.v02.infinitySub[0]]; lines.splice(1, 0, ['infinity', C.v02.infinityText]); }
     if (CC.state.clarity >= E.clarityAt) lines.push(['thanks', E.thanks]);
     CC.state.setFlag('ended1', true);
 
+    function bilingual(text) { return CC.storyUI.bilingual(text); }
     var html = lines.map(function (l) {
       switch (l[0]) {
         case 'gap': return '<div class="cr__gap"></div>';
-        case 'role': return '<p class="cr__role"><span>' + CC.esc(l[1]) + '</span><b>' + CC.esc(l[2]) + '</b></p>';
-        default: return '<p class="cr__' + l[0] + '">' + CC.esc(l[1]) + '</p>';
+        case 'role': return '<p class="cr__role"><span>' + bilingual(l[1]) + '</span><b>' + bilingual(l[2]) + '</b></p>';
+        case 'infinity': return '<p class="cr__infinity">' + CC.esc(l[1]) + '</p>';
+        default: return '<p class="cr__' + l[0] + '">' + bilingual(l[1]) + '</p>';
       }
     }).join('');
 
@@ -36,12 +41,18 @@
     var dist = vh + stop;
     var anim = roll.animate([{ transform: 'translateY(' + vh + 'px)' }, { transform: 'translateY(' + (-stop) + 'px)' }],
       { duration: reduce ? 1 : dist / 42 * 1000, easing: 'linear', fill: 'forwards' });
-    anim.onfinish = function () { root.querySelector('.credits').classList.add('is-end'); };
+    var langTimer = setInterval(function () { root.classList.toggle('v02-credits-zh'); }, 1000);
+    anim.onfinish = function () {
+      root.querySelector('.credits').classList.add('is-end');
+      var result = document.createElement('div'); result.className = 'v02-end-review';
+      result.innerHTML = infinity ? '<a class="ev-btn" href="#/home">' + CC.esc(C.v02.review.home) + '</a>' : '<details><summary>' + CC.esc(C.v02.review.title) + '<small>' + CC.esc(C.v02.review.en) + '</small></summary>' + CC.storyUI.review() + '</details>';
+      root.querySelector('.credits').appendChild(result); CC.storyUI.bindReview(result);
+    };
     // 点一下加速
     function fast() { anim.playbackRate = anim.playbackRate > 1 ? 1 : 4; }
-    root.addEventListener('click', function (e) { if (!e.target.closest('a')) fast(); });
+    root.addEventListener('click', function (e) { if (!e.target.closest('a,button,summary,textarea,details')) fast(); });
 
-    CC.cleanup = function () { anim.cancel(); };
+    CC.cleanup = function () { anim.cancel(); clearInterval(langTimer); };
   };
   CC.pages.ending.bare = true;
 })();

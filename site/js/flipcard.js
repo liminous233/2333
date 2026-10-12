@@ -142,7 +142,8 @@
       root.removeAttribute('data-dragging');
       if (e.pointerType === 'touch' || !root.matches(':hover')) rest();
       if (!g.moved) {
-        if (!cancelled) flip(false); else settle(turn.t, 0, false);
+        if (!cancelled && e.pointerType === 'touch' && opts.onTouchTap) opts.onTouchTap();
+        else if (!cancelled) flip(false); else settle(turn.t, 0, false);
         return;
       }
       var here = turn.v, vel = 0;

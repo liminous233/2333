@@ -45,7 +45,7 @@
 
     CC.$('#chJoin', sec).addEventListener('click', function () {
       sec.classList.add('is-joined');
-      if (CC.state.flag('d4Diamond')) holy(); else red();
+      if (CC.state.flag('d4Diamond') || CC.story.peace()) holy(); else red();
     });
 
     /* ---- ♢：神国 ---- */
@@ -96,8 +96,9 @@
       sub.innerHTML = '<button class="ch__line ch__last"><span class="ch__zh">' + CC.esc(H.last.zh) + '</span><span class="ch__en">' + CC.esc(H.last.en) + '</span></button>';
       CC.$('.ch__last', sub).addEventListener('click', function () {
         CC.state.setFlag('bliss', true);
+        CC.story.finish(CC.story.infinity() ? 'infinity' : 'bliss');
         sec.classList.add('is-black');
-        later(function () { CC.go('home'); }, 700);
+        later(function () { CC.go(CC.story.infinity() ? 'ending' : 'home'); }, 700);
       });
     }
 

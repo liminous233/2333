@@ -206,7 +206,10 @@
     var tiltEl = CC.$('.lift__tilt', layer);
     var acts = CC.$('.ev-acts', layer);
     var fc = null;
-    if (kind === 'card') fc = CC.flipCard(CC.$('.lift__card', layer), { tiltMax: 10 });
+    if (kind === 'card') { var cardRoot = CC.$('.lift__card', layer);
+      fc = CC.flipCard(cardRoot, { tiltMax: 10, onTouchTap: function () { CC.storyUI.toggleCard(cardRoot); } });
+      cleanups.push(CC.storyUI.card(cardRoot, fc, false));
+    }
 
     // 从箱子里飞出来
     var dur = reduce ? 1 : 520;

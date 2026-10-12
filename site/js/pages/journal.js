@@ -9,7 +9,10 @@
   var C = window.CONTENT;
 
   CC.pages.journal = function (root) {
-    var J = C.journal;
+    var J = Object.assign({}, C.journal, { moons: C.journal.moons.map(function (m) {
+      var position = m.n === 3 ? C.journal.moons[3] : m.n === 4 ? C.journal.moons[2] : m;
+      return Object.assign({}, m, { x: position.x, y: position.y });
+    }) });
     var reduce = CC.reducedMotion();
     var coarse = window.matchMedia('(pointer: coarse)').matches;
 
@@ -35,11 +38,13 @@
     var pop = null, timer = 0, armed = null;
 
     function done() {
+      if (CC.story.route() === 'EARLY_MOON' || CC.state.flag('v02:peaceLock')) return true;
+      if (CC.story.route() === 'RECONNECT' && !CC.story.infinity()) return false;
       for (var i = 1; i <= 5; i++) if (!CC.state.seen('moon:' + i)) return false;
       return true;
     }
     function ending() {
-      return CC.state.assim > J.endingAt ? J.endings.peace : J.endings.bliss;
+      return (CC.story.route() ? CC.story.peace() : CC.state.assim >= J.endingAt) ? J.endings.peace : J.endings.bliss;
     }
     function label(m) {
       if (!m.twin) return m.label;
@@ -76,7 +81,7 @@
           : CC.esc(m.label);
         pop.className = 'sky__pop';
         // 双月：永归宁国 → 结局 1 谢幕；异神极乐 → 教堂（红色天穹那条线）
-        var route = m.twin ? (CC.state.assim > J.endingAt ? 'ending' : 'church') : m.route;
+        var route = m.twin ? (CC.story.peace() ? 'ending' : 'church') : m.route;
         pop.innerHTML = '<a href="#/' + route + '" data-n="' + m.n + '">' + text + '</a>';
       }
       stage.appendChild(pop);
