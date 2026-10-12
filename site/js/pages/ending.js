@@ -48,6 +48,7 @@
       var result = document.createElement('div'); result.className = 'v02-end-review';
       result.innerHTML = infinity ? '<a class="ev-btn" href="#/home">' + CC.esc(C.v02.review.home) + '</a>' : '<details><summary>' + CC.esc(C.v02.review.title) + '<small>' + CC.esc(C.v02.review.en) + '</small></summary>' + CC.storyUI.review() + '</details>';
       root.querySelector('.credits').appendChild(result); CC.storyUI.bindReview(result);
+      result.insertAdjacentHTML('beforeend', CC.endingStats.render()); CC.endingStats.bind(result);
     };
     // 点一下加速
     function fast() { anim.playbackRate = anim.playbackRate > 1 ? 1 : 4; }

@@ -75,10 +75,14 @@
       var cx = w / 2, cy = ih / 2 + (h - ih) * .52, radius = iw * .17;
       tabs.forEach(function (tab, i) {
         var head = tab.querySelector('.tab__head'), tw = head.offsetWidth, th = head.offsetHeight;
-        var a = [-68, -23, 23, 68][i] * Math.PI / 180;
+        var a = (tabs.length === 5 ? [-85, -43, 0, 43, 85] : [-68, -23, 23, 68])[i] * Math.PI / 180;
         var r = radius + tw / 2 + 16;
         tab.style.left = Math.max(12, Math.min(w - tw - 12, cx + Math.cos(a) * r - tw / 2)) + 'px';
         tab.style.top = Math.max(20, Math.min(h - th - 90, cy + Math.sin(a) * r - th / 2)) + 'px';
+          if (tab.dataset.tab === 'endings') {
+            var panelWidth = Math.min(290, innerWidth * .8), left = parseFloat(tab.style.left);
+            tab.style.setProperty('--stats-left', (Math.max(12, Math.min(w - panelWidth - 12, left + tw - panelWidth)) - left) + 'px');
+          }
       });
     }
     var observer = new ResizeObserver(place); observer.observe(area); img.addEventListener('load', place); place();

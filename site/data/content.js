@@ -571,6 +571,7 @@ window.CONTENT = {
 };
 
 // v0.2 additions. Base scenes above are deliberately kept separate.
+window.CONTENT.endingStats = {title:'结局统计',en:'ENDINGS',mine:'自己',global:'全站',locked:'未解锁',offline:'全站次数暂不可用，本机记录已保留。',names:{peace:'永归宁国','peace-v':'永归宁国【V̅】',bliss:'异神极乐',infinity:'异神极乐 [∞]'}};
 window.CONTENT.v02 = {
   version: 'v0.2',
   images: { studio: 'assets/img/v02/studio.webp', paper: 'assets/img/v02/ref-c.webp', nuns: 'assets/img/v02/studio-exit.png', parlour: 'assets/img/v02/ref-b.webp', bishop: 'assets/img/v02/bishop.webp', sky: 'assets/img/v02/sky.webp' },

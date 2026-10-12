@@ -24,15 +24,14 @@ const c2={assim:45,clarity:60,flags:{d4Report:true,'v02:night':true},choices:{'v
   assert.equal(await p.locator('.map-panel__text').textContent(),'欢迎回家  ——致你。');
   assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   await p.locator('.map-panel:not(.is-leaving)').screenshot({path:path.join(out,'portrait-'+width+'.png')});
-  await act(p,'leave');await p.waitForTimeout(450);await p.locator('.room--chapel').click();await act(p,'pray');await act(p,'eyes');await score(p,100);
-  await p.keyboard.press('Escape');await p.waitForTimeout(450);await p.locator('.room--hall').click();await score(p,100);
+  await p.evaluate(()=>CC.state.choose('v02:prayer','eyes',CONTENT.v02.delta.eyes));await score(p,100);
   await act(p,'hallChurch');await p.waitForURL('**#/church');await p.locator('#chJoin').click();await p.locator('.ch__holy.is-in').waitFor();
   assert.equal(await p.locator('.ch__holy').textContent(),'祂的面容愈发清晰，你的灵魂销于地狱。');await p.locator('.is-idol .v02-hymn-noise').waitFor();
   await p.locator('.ch__holy').screenshot({path:path.join(out,'variant-text-'+width+'.png')});
   await p.locator('.ch__go').click();await p.waitForURL('**#/ending');await p.locator('.v02-end-review').waitFor();
   assert.equal(await p.locator('.v02-hymn-noise').count(),0);assert.equal(await p.evaluate(()=>CC.state.record('v02:ending').variant),'overline-v');
   assert((await p.locator('.cr__sub').textContent()).includes('永归宁国【V̅】'));
-  await p.locator('.v02-end-review summary').click();assert((await p.locator('.v02-review pre').textContent()).includes('永归宁国【V̅】'));
+  await p.locator('.v02-end-review > details:not(.ending-stats) > summary').click();assert((await p.locator('.v02-review pre').textContent()).includes('永归宁国【V̅】'));
   await p.reload();assert((await p.locator('.cr__sub').textContent()).includes('永归宁国【V̅】'));await p.close();
  }
  // No night prayer: 45 + 50 = 95 still uses ordinary E1, even with the portrait.

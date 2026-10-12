@@ -1,4 +1,25 @@
 /* Scoped v0.2 additions; original scene effects keep their own selectors. */
+.ending-stats { margin:18px 0 4px; text-align:left; color:inherit; }
+.ending-stats>summary { cursor:pointer; font-family:var(--f-body); font-size:14px; letter-spacing:.12em; }
+.ending-stats ul { list-style:none; margin:16px 0 0 7px; padding:0 0 0 18px; border-left:1px solid #80889866; }
+.ending-stats li { position:relative; padding:0 0 17px; }
+.ending-stats li::before { content:''; position:absolute; left:-18px; top:9px; width:12px; border-top:1px solid #80889888; }
+.ending-stats__name { display:block; font-size:14px; }
+.ending-stats small { display:block; margin-top:5px; font-size:12px; color:#b8bec9; }
+.ending-stats b { font-weight:400; font-variant-numeric:tabular-nums; }
+.ending-stats__notice { font-size:11px; color:#aab0bb; }
+.ending-stats[open] ul { animation:text-in .35s ease both; }
+.tab[data-tab=endings] .tab__body { left:var(--stats-left,auto); right:auto; width:min(290px,80vw); max-height:60vh; overflow:auto; }
+.tab[data-tab=endings] .ending-stats { margin:0; }
+.assim-melting { transform-origin:50% 0; pointer-events:none!important; animation:assim-map-melt 8s var(--drip-delay,0s) forwards!important; }
+@keyframes assim-map-melt { 0% {filter:blur(0);} 40% {transform:translateY(10px) scale(.88,1.7);filter:blur(1px);opacity:.7;} 85% {transform:translateY(100px) scale(.45,3.5);filter:blur(4px);opacity:.2;} 100% {transform:translateY(160px) scale(.2,4);filter:blur(7px);opacity:0;visibility:hidden;} }
+.full-assim-map .tiles { isolation:isolate; }
+.full-assim-map .tile--flower { position:relative; }
+.assim-flower-eye { position:absolute; inset:0; z-index:1; background-size:190% auto; background-position:50% 62%; mask-image:radial-gradient(ellipse 68% 55%,#000 40%,transparent 95%); animation:assim-blink var(--blink-time) infinite; transform-origin:center; pointer-events:none; }
+@keyframes assim-blink { 0%,78%,100% {transform:scaleY(1);} 84% {transform:scaleY(.05);} 91% {transform:scaleY(1);} }
+.full-assim-map::after { content:''; position:fixed; inset:0; z-index:95; pointer-events:none; opacity:0; background:linear-gradient(transparent 24%,#002fa775 24.5%,transparent 26%,transparent 58%,#315cff66 58.5%,transparent 61%); box-shadow:inset 0 0 120px #002fa740; animation:assim-blue-fault 5.7s infinite; }
+@keyframes assim-blue-fault { 0%,90%,96%,100% {opacity:0;transform:none;} 92%,94% {opacity:.65;transform:translateX(5px);} }
+@media(prefers-reduced-motion:reduce) { .assim-melting {animation:none!important;visibility:hidden;} .assim-flower-eye {animation:none;} .full-assim-map::after {animation:none;} .ending-stats[open] ul {animation:none;} }
 .v02-downflow { position:fixed; inset:0; width:100%; height:100%; z-index:75; pointer-events:none; }
 .v02-hymn-noise { position:absolute; inset:0; width:100%; height:100%; z-index:7; opacity:.15; mix-blend-mode:soft-light; pointer-events:none; }
 .cover--bliss .stage { position:absolute; inset:0; width:100%; height:100%; aspect-ratio:auto; }

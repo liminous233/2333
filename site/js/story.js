@@ -49,7 +49,7 @@
     return page;
   }
   function finish(kind) {
-    return S.remember('v02:ending', function () {
+    var result = S.remember('v02:ending', function () {
       var rooms = window.CONTENT.map.rooms.filter(function (r) { return r.action; });
       return { version: window.CONTENT.v02.version, kind: kind, assim: S.assim, clarity: S.clarity,
         variant: kind === 'peace' && peaceVariant() ? 'overline-v' : '',
@@ -58,6 +58,8 @@
         explored: rooms.filter(function (r) { return S.seen('v02:room:' + r.id); }).length, total: rooms.length,
         identity: infinity(), sent: S.flag('v02:messageSent'), survived: kind !== 'peace' };
     });
+    if (CC.endingStats) CC.endingStats.record(result);
+    return result;
   }
   CC.story = { route: route, classify: classify, lockReport: lockReport, decision: decision,
     hasEvidence: hasEvidence, archiveReady: archiveReady, infinity: infinity, peace: peace, peaceVariant: peaceVariant, guard: guard, finish: finish,

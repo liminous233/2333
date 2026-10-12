@@ -143,6 +143,7 @@
     if (s.flag('bliss')) {
       if (!s.record('v02:ending')) CC.story.finish('bliss');
       list.push({ id: 'review', en: C.v02.review.en, zh: C.v02.review.title, body: CC.storyUI.review(), ang: 52 });
+      list.unshift({ id: 'endings', en: C.endingStats.en, zh: C.endingStats.title, body: CC.endingStats.render(), ang: -68 });
     }
     return list.map(function (t) {
       var a = t.ang * Math.PI / 180;

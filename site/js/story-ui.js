@@ -112,7 +112,9 @@
   }
   function mount(page, root) {
     var cleanups = [], prior = CC.cleanup;
+    if (CC.endingStats) { CC.endingStats.bind(root); if (S.record('v02:ending')) CC.endingStats.record(S.record('v02:ending')); }
     if (page === 'd4' || page === 'map') cleanups.push(CC.storyEffects.downflow(root));
+    if (page === 'map') cleanups.push(CC.fullAssimilation(root));
     if (page === 'home' && S.flag('bliss')) cleanups.push(CC.storyEffects.sunArc(root));
     if (S.flag('v02:peaceLock') || S.flag('d4Diamond') || (S.record('v02:ending') || {}).kind === 'peace') CC.$$('.back-arrow', root).forEach(function (a) { a.remove(); });
     if (page === 'home') {

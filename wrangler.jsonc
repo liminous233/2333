@@ -1,0 +1,10 @@
+{
+  "name": "choir-0110",
+  "pages_build_output_dir": "site",
+  "compatibility_date": "2026-10-12",
+  "d1_databases": [{
+    "binding": "ENDING_DB",
+    "database_name": "choir-ending-stats",
+    "database_id": "3347f608-afd0-4c01-8314-55a51948698b"
+  }]
+}

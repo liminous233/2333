@@ -12,6 +12,7 @@
 
 - 网站全部在 `site/`，**纯静态**：HTML + CSS + 普通 `<script>`，不用模块、不用构建工具、不需要后端。
   双击 `site/index.html` 用 `file://` 打开也要能跑。
+  作者另行要求的「全站结局次数」使用可选的 Pages Function + D1（`functions/api/ending-stats.js`、`wrangler.jsonc`）；游戏与本机统计仍可离线运行，后端不可用不能阻断剧情。
 - 所有文字在 `site/data/content.js`（`window.CONTENT`），页面逻辑在 `site/js/pages/*.js`，样式在 `site/css/`。
 - 进度存在 localStorage（`CC.state`：同化值 assim、隐藏的明晰 clarity、flags 等），见 `site/js/state.js`。
 - 字体：
