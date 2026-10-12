@@ -3,8 +3,8 @@
   function toggleCard(el) { el.classList.toggle('v02-zh'); }
   function dwell(el, delay, on, off) {
     var timer;
-    function enter(e) { if (e && e.pointerType === 'touch') return; clearTimeout(timer); timer = setTimeout(on, delay); }
-    function leave(e) { if (e && e.pointerType === 'touch') return; clearTimeout(timer); off(); }
+    function enter(e) { if (e && (e.pointerType === 'touch' || (e.type === 'focusin' && window.matchMedia('(pointer: coarse)').matches))) return; clearTimeout(timer); timer = setTimeout(on, delay); }
+    function leave(e) { if (e && (e.pointerType === 'touch' || (e.type === 'focusout' && window.matchMedia('(pointer: coarse)').matches))) return; clearTimeout(timer); off(); }
     el.addEventListener('pointerenter', enter); el.addEventListener('pointerleave', leave);
     el.addEventListener('focusin', enter); el.addEventListener('focusout', leave);
     return function () { clearTimeout(timer); el.removeEventListener('pointerenter', enter); el.removeEventListener('pointerleave', leave); el.removeEventListener('focusin', enter); el.removeEventListener('focusout', leave); };
@@ -19,9 +19,17 @@
     var front = CC.$('.fc__front', el), back = CC.$('.fc__back', el);
     front.innerHTML = '<div class="v02-card-en">' + CC.gateLook.cardFront(en) + '</div><div class="v02-card-zh" aria-hidden="true">' + CC.gateLook.cardFront(zh) + '</div><span class="fc__glare"></span>';
     back.innerHTML = '<div class="v02-card-en">' + CC.gateLook.cardBack(en) + '</div><div class="v02-card-zh" aria-hidden="true">' + CC.gateLook.cardBack(zh) + '</div><span class="fc__glare"></span>';
+    if (old) {
+      var prayer = CC.$('.v02-card-zh .idc__backtext', back);
+      prayer.setAttribute('aria-label', V.prayer.zh);
+      prayer.innerHTML = Array.from(V.prayer.zh).map(function (c, i) {
+        if (c === '\n') return '<br>';
+        return '<span aria-hidden="true" style="--delay:' + (1 + i * .045) + 's;--dur:14s;--fall:28cqw;--stretch:2;--drift:2px">' + CC.esc(c) + '</span>';
+      }).join('');
+    }
     var controls = document.createElement('div'); controls.className = 'v02-card-controls';
     controls.innerHTML = '<button type="button" class="ev-btn" data-language>' + CC.esc(V.items.lang) + '</button><button type="button" class="ev-btn" data-flip>' + CC.esc(V.items.flip) + '</button>';
-    el.parentElement.appendChild(controls);
+    el.insertAdjacentElement('afterend', controls);
     CC.$('[data-language]', controls).onclick = function () { toggleCard(el); };
     CC.$('[data-flip]', controls).onclick = function () { fc.flip(); };
     var stop = dwell(el, 1500, function () { el.classList.add('v02-zh'); }, function () { el.classList.remove('v02-zh'); });
@@ -73,11 +81,16 @@
     CC.$(old ? '.lift__card' : '.v02-register', layer).focus({ preventScroll: true });
   }
   function recapText(r) {
-    var R = V.review, choices = Object.keys(r.choices).map(function (k) { return k + '：' + (R.decisions[r.choices[k]] || r.choices[k]); });
-    return [R.title + ' · ' + r.version, '结局：' + R.names[r.kind], '同化：' + r.assim + ' / 明晰：' + r.clarity,
-      'D4 路线：' + (R.routes[r.report.route] || r.report.route), '最终路线：' + (R.routes[r.route] || r.route),
-      '关键选择：' + (choices.join('；') || '—'), '探索进度：' + r.explored + '/' + r.total,
-      '身份任务：' + (r.identity ? R.yes : R.no), '消息送出：' + (r.sent ? R.yes : R.no), '存活至第八日：' + (r.survived ? '是' : '否')].join('\n');
+    var R = V.review, labels = Object.assign({}, R.decisions);
+    Object.keys(window.CONTENT.evidence.items).forEach(function (k) { (window.CONTENT.evidence.items[k].choices || []).forEach(function (c) { labels[c.id] = c.label; }); });
+    (window.CONTENT.missing.choices || []).forEach(function (c) { labels[c.id] = c.label; });
+    var choices = Object.keys(r.choices).map(function (k) { return labels[r.choices[k]] || r.choices[k]; });
+    choices = choices.concat(r.actions || []);
+    var F = R.fields;
+    return [R.title + ' · ' + r.version, F.ending + '：' + R.names[r.kind], F.assim + '：' + r.assim + ' / ' + F.clarity + '：' + r.clarity,
+      F.report + '：' + (R.routes[r.report.route] || r.report.route), F.route + '：' + (R.routes[r.route] || r.route),
+      F.choices + '：' + (choices.join('；') || '—'), F.exploration + '：' + r.explored + '/' + r.total,
+      F.identity + '：' + (r.identity ? R.yes : R.no), F.sent + '：' + (r.sent ? R.yes : R.no), F.survived + '：' + (r.survived ? F.yes : F.no)].join('\n');
   }
   function review() {
     var r = S.record('v02:ending'); if (!r) return '';
@@ -100,7 +113,7 @@
     if (page === 'gate' && CC.story.route() === 'RECONNECT') {
       var welcome = document.createElement('p'); welcome.className = 'v02-return'; welcome.textContent = V.welcomeBack; root.appendChild(welcome);
     }
-    if ((S.flag('v02:peaceLock') || S.flag('d4Diamond')) && !S.record('v02:ending')) CC.$$('.back-arrow', root).forEach(function (a) { a.remove(); });
+    if (S.flag('v02:peaceLock') || S.flag('d4Diamond') || (S.record('v02:ending') || {}).kind === 'peace') CC.$$('.back-arrow', root).forEach(function (a) { a.remove(); });
     if (page === 'home') {
       var party = CC.$('.party', root);
       if (party) {
@@ -109,8 +122,10 @@
         function reveal() { if (S.once('v02:party')) { party.classList.add('v02-flash'); } }
         party.setAttribute('role', 'button'); party.setAttribute('aria-expanded', 'false');
         party.addEventListener('pointerenter', reveal); party.addEventListener('focus', reveal);
-        party.addEventListener('click', function () { reveal(); var on = party.classList.toggle('v02-open'); party.setAttribute('aria-expanded', String(on)); });
+        party.addEventListener('click', function () { reveal(); var on = party.classList.toggle('v02-open'); party.setAttribute('aria-expanded', String(on)); if (!on) party.blur(); });
         party.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); party.click(); } });
+        function outside(e) { if (!party.contains(e.target)) { party.classList.remove('v02-open'); party.setAttribute('aria-expanded', 'false'); party.blur(); } }
+        document.addEventListener('pointerdown', outside); cleanups.push(function () { document.removeEventListener('pointerdown', outside); });
       }
       bindReview(root);
     }
@@ -119,7 +134,7 @@
       ['candleList', 'oldId'].forEach(function (kind, i) {
         if (!S.flag('v02:' + kind)) return;
         var b = document.createElement('button'); b.className = 'v02-case-item v02-case-item--' + kind; b.setAttribute('aria-label', V.items[kind]);
-        b.innerHTML = kind === 'candleList' ? '<img src="' + V.images.paper + '" alt=""><span>CANDLE<br>REGISTER</span>' : CC.gateLook.cardFront(Object.assign({}, window.CONTENT.gate.card, { fields: [[V.items.oldLabel[0], CC.story.oldName()]] }));
+        b.innerHTML = kind === 'candleList' ? '<img src="' + V.images.paper + '" alt=""><span>' + CC.esc(V.items.listTitle[0]).replace(' ', '<br>') + '</span>' : CC.gateLook.cardFront(Object.assign({}, window.CONTENT.gate.card, { fields: [[V.items.oldLabel[0], CC.story.oldName()]] }));
         b.onclick = function () { openItem(kind); }; stage.appendChild(b);
       });
     }

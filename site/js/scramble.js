@@ -16,11 +16,12 @@
     var chars = Array.from(text);
     el.textContent = '';
     el.setAttribute('aria-label', text);
-    var spans = chars.map(function (ch) {
+    var spans = chars.map(function (ch, i) {
       var s = document.createElement('span');
       s.className = 'scr__c';
       s.setAttribute('aria-hidden', 'true');
       s.textContent = ch;
+      if (opts.decorate) opts.decorate(s, i);
       el.appendChild(s);
       return { el: s, ch: ch, until: 0, blank: /\s/.test(ch) };
     });

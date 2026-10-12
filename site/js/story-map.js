@@ -13,8 +13,11 @@
       if (reconnect && !/^(bell|studio|parlour|gate)$/.test(name)) { A.card(btn, V.locked, true); return true; }
       var additions = reconnect || T.blackMap();
       if (additions && name === 'studio') {
-        if (S.flag('v02:studioLocked')) { A.card(btn, V.studio.locked, true); return true; }
-        S.once('day:5');
+        if (S.flag('v02:studioLocked')) {
+          var locked = panel(btn, V.images.nuns, 5, V.studio.locked, [['leave', V.leave]]);
+          A.acts(locked, { leave: A.closeAll }); return true;
+        }
+        S.once('v02:day:5');
         var p = panel(btn, V.images.studio, 5, V.studio.intro, V.studio.options);
         A.acts(p, {
           hide: function () { A.say(p, V.studio.hide); S.once('v02:hide', V.delta.hide); },
@@ -30,7 +33,7 @@
         }); return true;
       }
       if (additions && name === 'parlour') {
-        S.once('day:6');
+        S.once('v02:day:6');
         var p = panel(btn, V.images.bishop, 6, V.parlour.intro, [['take', V.parlour.take]]);
         A.acts(p, { take: function () {
           T.oldName(); S.settle('v02:oldId', V.delta.oldId, { 'v02:oldId': true });
@@ -39,7 +42,7 @@
         }, inspect: function () { CC.storyItems.open('oldId'); }, leave: A.closeAll }); return true;
       }
       if (reconnect && name === 'gate') {
-        if (!S.flag('v02:archiveDone')) { A.card(btn, V.gateLocked, true); return true; }
+        if (!S.flag('v02:archiveDone')) { var lockedGate = panel(btn, M.gate.image, 0, V.gateLocked, [['leave', V.leave]]); CC.$('.map-panel__text', lockedGate).classList.add('v02-shake'); A.acts(lockedGate, { leave: A.closeAll }); return true; }
         S.once('day:7');
         var p = panel(btn, V.images.sky, 7, V.ourSky, [['action', V.action]]);
         A.acts(p, { action: function () {
@@ -47,7 +50,7 @@
         }, journal: function () { CC.go('journal'); } }); return true;
       }
       if (name === 'bell' && (reconnect || route === 'ANOMALY' || !S.flag('d4Report'))) {
-        var B = M.bell, p = panel(btn, B.image, 0, '', [['up', B.up]]);
+        var B = M.bell, p = panel(btn, B.image, S.flag('d4Report') ? 5 : 0, '', [['up', B.up]]);
         A.acts(p, {
           up: function () { A.say(p, S.flag('d4Report') ? B.day5.upText : ''); choices(p, [['archive', B.archive], ['gaze', B.gaze]]); },
           gaze: function () { A.say(p, route === 'ANOMALY' ? V.anomaly.gaze : B.gazeText, true, 'calm'); S.once('map:gaze', 2); },
@@ -80,7 +83,7 @@
       if (name === 'field') { A.card(btn, H.field, true); return true; }
       if (name === 'hall') { A.card(btn, M.hall, true); return true; }
       if (name === 'dining') {
-        var D = M.dining, p = panel(btn, D.image, 0, D.text, [['forward', H.forward]]);
+        var D = M.dining, p = panel(btn, D.image, 0, H.diningIntro, [['forward', H.forward]]);
         A.acts(p, { forward: function () {
           A.swap(p, D.girlImage); A.melt(p, H.girl); choices(p, [['leave', V.leave]]);
           var head = document.createElement('button'); head.className = 'v02-girl-head'; head.setAttribute('aria-label', H.girlAlt);
@@ -101,9 +104,9 @@
         return true;
       }
       if (name === 'dorm' && S.flag('v02:night')) {
-        var p = panel(btn, M.dorm.image, 0, H.night, [['enter', M.dorm.enter]]);
-        A.acts(p, { enter: function () { A.say(p, H.night); choices(p, [['pray', H.nightLabel]]); },
-          pray: function () { S.settle('v02:nightPrayer', V.delta.night, { 'v02:nightPrayer': true }); A.melt(p, H.night + '\n' + V.prayer.zh); choices(p, [['evidence', H.evidence]]); },
+        var p = panel(btn, M.dorm.image, 0, H.nightIntro, [['enter', M.dorm.enter]]);
+        A.acts(p, { enter: function () { A.say(p, H.nightIntro); choices(p, [['pray', H.nightLabel]]); },
+          pray: function () { S.settle('v02:nightPrayer', V.delta.night, { 'v02:nightPrayer': true }); A.flowScramble(p, H.night + '\n' + V.prayer.zh); choices(p, [['evidence', H.evidence]]); },
           evidence: function () { CC.go('evidence'); } }); return true;
       }
       return false;

@@ -113,12 +113,14 @@
     },
     // 一次性的选择：记下选了什么，同时加减同化值 / 明晰。已经选过就不再算
     choice: function (key) { return data.choices[key] || ''; },
-    choose: function (key, value, d) {
+    choose: function (key, value, d, flags) {
       if (data.choices[key]) return false;
       data.choices[key] = value;
       d = d || {};
       if (d.assim) data.assim = Math.max(0, Math.min(100, data.assim + d.assim));
       if (d.clarity) data.clarity = clamp(data.clarity + d.clarity);
+      if (d.claritySet !== undefined) data.clarity = clamp(d.claritySet);
+      Object.keys(flags || {}).forEach(function (k) { data.flags[k] = flags[k]; });
       save(); apply();
       return true;
     },
@@ -130,7 +132,7 @@
     // 已读到的最远一天
     maxDay: function () {
       var d = 0;
-      for (var i = 1; i <= 8; i++) if (data.seen['day:' + i]) d = i;
+      for (var i = 1; i <= 8; i++) if (data.seen['day:' + i] || data.seen['v02:day:' + i]) d = i;
       return d;
     },
     reset: function () {

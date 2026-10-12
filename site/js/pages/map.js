@@ -113,7 +113,7 @@
       var el = document.createElement('p'); el.className = 'v02-map-status'; el.setAttribute('role', 'status'); el.textContent = text; root.appendChild(el);
     }
     status();
-    var newScene = CC.storyMap({ panel: panel, figure: figure, choices: choices, say: say, melt: melt, card: card, swap: swap, acts: acts, closeAll: closeAll, status: status });
+    var newScene = CC.storyMap({ panel: panel, figure: figure, choices: choices, say: say, melt: melt, flowScramble: flowScramble, card: card, swap: swap, acts: acts, closeAll: closeAll, status: status });
 
     function closeAll() {
       scr.forEach(function (s) { s.destroy(); });
@@ -222,6 +222,13 @@
       }).join('') + meltFilter();
     }
     // 水波扭曲：位移强度 0.3 秒后从 0 慢慢涨到 10（SMIL 动画）
+    function flowScramble(p, value) {
+      melt(p, value);
+      var el = CC.$('.map-panel__text', p), filter = el.querySelector('svg');
+      var styles = Array.from(el.querySelectorAll('span')).map(function (s) { return s.style.cssText; });
+      scr.push(CC.scramble(el, value, { decorate: function (s, i) { s.style.cssText = styles[i]; } }));
+      el.appendChild(filter);
+    }
     function meltFilter() {
       return '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="diningMelt" x="-10%" y="-20%" width="120%" height="300%">' +
         '<feTurbulence type="fractalNoise" baseFrequency="0.012 0.09" numOctaves="2" seed="7" result="n">' +
@@ -243,13 +250,13 @@
 
       studio: function (btn) { card(btn, M.studio, true); },
       field: function (btn) {
-        if (!CC.state.flag('d4Report')) { card(btn, M.field, true); return; }   // 地图异动后马上变 DAY 7
+        if (!CC.story.blackMap()) { card(btn, M.field, true); return; }   // 原红线地图异动后马上变 DAY 7
         dayCard(btn, M.day7);
         CC.state.once('day:7');
       },
       parlour: function (btn) { card(btn, M.parlour, true); },
       hall: function (btn) {
-        if (!CC.state.flag('d4Report')) { card(btn, M.hall, true); return; }    // 地图异动后马上变 DAY 6
+        if (!CC.story.blackMap()) { card(btn, M.hall, true); return; }    // 原红线地图异动后马上变 DAY 6
         dayCard(btn, M.day6);
         CC.state.once('day:6', { clarity: 1 });
       },
@@ -312,7 +319,7 @@
       chapel: function (btn) {
         var H = M.chapel;
         // 地图异动后换成 DAY 6 版本（图、文案），没写的字段沿用原版；没异动时原样不动
-        var d6 = CC.state.flag('d4Report');
+        var d6 = CC.story.blackMap();
         if (d6) H = Object.assign({}, M.chapel, M.chapel.day6);
         var p = panel(btn, figure(H.image) + (d6 ? '<p class="map-panel__day mono">' + CC.esc(H.label) + '</p>' : '') +
           '<p class="map-panel__text">' + CC.esc(H.text.join('\n')) + '</p>' +
@@ -423,7 +430,8 @@
       if (!b) return;
       if (b.classList.contains('is-open')) { closeAll(); return; }
       var room = M.rooms.filter(function (r) { return r.id === b.getAttribute('data-room'); })[0];
-      if (!CC.state.record('v02:ending')) CC.state.once('v02:room:' + room.id);
+      var accessible = CC.story.route() !== 'RECONNECT' || /^(bell|studio|parlour)$/.test(room.action) || (room.action === 'gate' && CC.state.flag('v02:archiveDone'));
+      if (accessible && !CC.state.record('v02:ending')) CC.state.once('v02:room:' + room.id);
       if (!newScene(b, room.action)) actions[room.action](b);
     });
     function onDoc(e) {

@@ -578,7 +578,7 @@ window.CONTENT.v02 = {
   oldNames: ['Mara Voss', 'Elias Arden', 'Irene Vale', 'Noel Maren', 'Silas Dorn'],
   leave: '离开', tryDoor: '尝试', tryText: '你与你的造物尝试了几种方法，都没能打开。',
   locked: '此刻无法进入。', gateLocked: '大门尚未开放。先完成档案室的调查。',
-  archiveLocked: '似乎锁门了。工作室与会客室仍有尚未取得的证物。',
+  archiveLocked: '似乎还有别的地方待探寻。',
   update: '调查记录已更新：地图上出现了新的可疑区域。',
   cluesReady: '两件证物已收录，可以前往钟楼档案室。', gateReady: '档案室调查已完成，大门已开放。',
   messageReady: '消息已送出。前往穹顶。',
@@ -590,9 +590,9 @@ window.CONTENT.v02 = {
     options: [['hide', '隐匿'], ['search', '搜查'], ['down', '向下走去']],
     hide: '楼下人声隐隐约约。修女与神父们正在谈论最近唱诗院的异常。\n“游客……香烛……制作……”\n“……红色……蜡烛？……丢弃……”',
     after: '你沉思了一会。', wait: '你的造物拉住了你，提醒你这里似乎还有尚未搜查之处。',
-    expel: '修女发现了你们，将你们押送离开。', locked: '巡查力度加深，不可再进入。'
+    expel: '修女与神父神色慌张，强硬地将你们赶走。修女一路押送你们出去，并告诫你们不要擅闯。', locked: '巡查力度加深，不可再进入。'
   },
-  parlour: { intro: '白发主教遣散了其他人，将一张旧调查局 ID 卡交给你。', take: '接过 ID 卡', inspect: '查看旧 ID', after: '你将卡片交给你的造物。\n外观：磨损\n年份：约 3 年前' },
+  parlour: { intro: '白发主教提前屏退其余人员，交给你一张塞拉维亚调查局 ID 卡。', take: '接过 ID 卡', inspect: '查看旧 ID', after: '你随手将卡交给身边的造物。她观察一番，将报告传输至你的终端。\n外观：磨损\n年份：约 3 年前' },
   archive: { intro: '你按照约定时间取回自己的笔。敲门后，白发主教将你们迎入。', presentLabel: '拿出证物', discussLabel: '商讨对策', solve: '破局？',
     present: '你打开手提箱，将蜡烛清单、磨损的 ID 卡、失踪档案与便签一一陈列。\n答案不言而喻。',
     discuss: '白发主教提出：前日那支笔的道具效力已经失效，无法绘制有效的神像稿。他怀疑这与你的状态有关。\n你如今头脑清醒，让他再次尝试。', done: '你们决定再次尝试。大门已开放。' },
@@ -602,12 +602,12 @@ window.CONTENT.v02 = {
     options: [['embrace', '拥抱穹顶'], ['church', '前往教堂'], ['reconnect', '尝试重连']],
     archive: '地面上散落着残破的纸片与碎屑，唯一一张黑色太阳手稿也变得暗淡扭曲。\n黑色在你的视线里变成了白色。你感到一阵宁静。',
     gaze: '银莲花田簇拥着卡塔西斯圣堂，你的心中感到一阵宁静。', gate: '祂永远的神国。', cathedral: '祂的眼眸如此深邃。', enterChurch: '进入教堂', tomorrow: '前往明日？', yes: '是', no: '否',
-    forward: '前进', girl: '你好，现在这里是你的家了吗？你好，你好，你好你好……', girlAlt: '女孩', head: '你干什么嘛！',
+    diningIntro: '现在正是用餐时间', forward: '前进', girl: '你好，现在这里是你的家了吗？你好，你好，你好你好……', girlAlt: '女孩', head: '你干什么嘛！',
     field: '白色在你的视野里摇曳。它轻轻拉拽，你坠入其间。', pray: '月光定定地注视着你。', eyesLabel: '睁眼', continueLabel: '继续',
     eyes: '你的心中明明躁动不安，却又像被强制压下，逐渐趋于平静。', continue: '投落的视线挪移，你似乎忘却了什么事情。',
     walk: '其中出现了许多不像原本唱诗院的人，似乎是游客。他们低低念着“饶恕”“朝圣”与“献祭”。', out: '靠近交界之处，你听到一段又一段白噪音。你的内心感到一阵安宁。',
     leave: '你的造物拉住了你，似乎想提醒什么。\n你没有询问的意图。她拉不住你，只能看着你越走越远。',
-    night: '你点燃白色香烛，开始夜祷。', nightLabel: '夜祷', evidence: '打开证物箱'
+    nightIntro: '入夜。', night: '你点燃白色香烛，开始夜祷。', nightLabel: '夜祷', evidence: '打开证物箱'
   },
   items: { candleList: '蜡烛清单', oldId: '磨损的调查局 ID', lang: '中文 / EN', flip: '翻面', close: '放回',
     listTitle: ['CANDLE REGISTER', '蜡烛清单'], headers: [['NAME', 'SEX', 'BURN LIMIT', 'DEVOTION'], ['姓名', '性别', '燃烧时限', '虔诚度']],
@@ -619,5 +619,7 @@ window.CONTENT.v02 = {
   creditsZh: { 'THE CHOIR OF SACRED OFFERING': '圣献唱诗院', 'Ending I · Home, Forever, in the Kingdom of Peace': '结局一 · 永归宁国', 'Investigation Officer 0110': '调查警员 0110', 'Vicia Karu': '维西娅·卡鲁', 'The Believer': '邪信徒', 'Ryan': '莱恩', 'The Investigator': '调查员', 'Anka': '安卡', 'The Visitors': '游客', 'The Choir': '唱诗班', 'Twenty-Four Voices': '二十四道声音', 'The Twin Moons': '双月', 'Themselves': '祂们', 'Story, World & Design': '故事、世界与设计', 'Code': '代码', 'Recorded at': '录制于', 'The Choir of Sacred Offering': '圣献唱诗院', 'A sub-world of the Creation Domain': '造物域下的副世界', 'Eight days of the Great Hymn': '大颂礼的八日', 'Images': '图像', 'Revolver photograph — Gordon Gartrell, CC BY-SA 2.0, via Wikimedia Commons': '左轮手枪摄影 — Gordon Gartrell，CC BY-SA 2.0，来自维基共享资源', 'Chapel wall photograph — Jyuemim (Xiaohongshu)': '祷告室围墙摄影 — Jyuemim（小红书）', 'Black sun artwork — 無山 Wushan (Xiaohongshu)': '黑日作品 — 無山 Wushan（小红书）', 'No visitor was harmed. Every visitor was kept.': '没有游客受到伤害。每位游客都被留了下来。', 'THE END': '终', 'Thank you for your due contribution to the ecology of the Mirror World.': '感谢您为镜界生态作出应有的贡献。' },
   review: { title: '本局回望', en: 'RUN REVIEW', copy: '复制本局记录', copied: '已复制', fallback: '请选中下方文字复制', home: '前往明天', names: { peace: '永归宁国', bliss: '异神极乐', infinity: '异神极乐 [∞]' },
     routes: { EARLY_MOON: '提前双月', REPORT_BLACK: '原述职路线', ANOMALY: '异常消息', RECONNECT: '尝试重连' }, yes: '已完成', no: '未完成',
+    fields: { ending: '结局', assim: '同化', clarity: '明晰', report: 'D4 路线', route: '最终路线', choices: '关键选择', exploration: '探索进度', identity: '身份任务', sent: '消息送出', survived: '存活至第八日', yes: '是', no: '否' },
+    actions: [['v02:hide', '隐匿'], ['v02:search', '取得蜡烛清单'], ['v02:oldId', '收录磨损 ID'], ['v02:nightPrayer', '夜祷'], ['v02:present', '拿出证物'], ['v02:discuss', '商讨对策']],
     decisions: { embrace: '拥抱穹顶', church: '前往教堂', reconnect: '尝试重连', eyes: '睁眼', continue: '继续' } }
 };

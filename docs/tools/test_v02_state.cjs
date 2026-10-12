@@ -6,20 +6,21 @@ function run(seed = {}) {
   const body = { getAttribute(){return '0'}, setAttribute(){}, style:{setProperty(){}}, classList:{toggle(){}} };
   const c = { window:{CC:{},localStorage:{getItem(){return storage},setItem(k,v){storage=v},removeItem(){storage=null}}}, document:{body,dispatchEvent(){}}, CustomEvent:class{}, location:{search:''}, Math, console };
   vm.createContext(c);
-  for(const f of ['data/content.js','js/state.js','js/story.js']) vm.runInContext(fs.readFileSync(path.join(root,'site',f),'utf8'),c);
-  return { S:c.window.CC.state, T:c.window.CC.story, saved:()=>JSON.parse(storage), content:c.window.CONTENT };
+  for(const f of ['data/content.js','js/state.js','js/story.js','js/story-ui.js']) vm.runInContext(fs.readFileSync(path.join(root,'site',f),'utf8'),c);
+  return { S:c.window.CC.state, T:c.window.CC.story, UI:c.window.CC.storyUI, saved:()=>JSON.parse(storage), content:c.window.CONTENT };
 }
 for (const [n,route] of [[39,'REPORT_BLACK'],[40,'ANOMALY'],[49,'ANOMALY'],[50,'EARLY_MOON'],[51,'EARLY_MOON']]) {
   const {S,T,saved}=run({assim:n}); assert.equal(T.lockReport(),route); S.add(-30); assert.equal(T.lockReport(),route); assert.equal(run(saved()).T.route(),route);
 }
 for (const [flags,r] of [[{d4Report:true},'REPORT_BLACK'],[{d4Diamond:true},'EARLY_MOON']]) assert.equal(run({assim:45,flags}).T.lockReport(),r);
 {
-  const {S,T,saved}=run({assim:49,clarity:2,flags:{forever:true},choices:{'ev:candle':'light'}});
+  const {S,T,UI,saved}=run({assim:49,clarity:2,flags:{forever:true},choices:{'ev:candle':'light'}});
   T.lockReport(); S.setFlag('d4Report'); assert(T.decision('reconnect')); assert.equal(S.assim,29); assert.equal(S.clarity,70); assert(!T.decision('reconnect')); assert(!T.decision('church'));
   assert(S.flag('forever')); assert.equal(S.choice('ev:candle'),'light'); assert.equal(T.guard('home'),'gate');
   S.setFlag('v02:reentered'); assert.equal(T.guard('church'),'map'); S.setFlag('v02:candleList'); assert(!T.hasEvidence()); S.setFlag('v02:oldId'); assert(T.hasEvidence());
   S.once('v02:present'); assert(!T.archiveReady()); S.once('v02:discuss'); assert(T.archiveReady()); S.setFlag('v02:archiveDone'); assert(!T.infinity()); S.setFlag('v02:messageSent'); assert(T.infinity());
   assert.equal(T.oldName(),run(saved()).T.oldName()); const result=T.finish('infinity'); S.add(60); assert.equal(T.finish('peace').assim,result.assim); assert.equal(result.total,10);
+  assert(UI.recapText(result).includes('拿出证物')); assert(UI.recapText(result).includes('异神极乐 [∞]')); assert(!UI.recapText(result).includes('v02:'));
 }
 {
  const {S,T}=run({assim:45,clarity:99}); T.lockReport(); S.setFlag('d4Report'); T.decision('embrace'); assert(S.flag('v02:night'));
