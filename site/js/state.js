@@ -21,6 +21,13 @@
     try { window.localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {}
   }
 
+  // v0.2 adds records without replacing the existing save or its choice keys.
+  data.records = data.records || {};
+  function clamp(v) { return Math.max(0, Math.min(100, Number(v) || 0)); }
+  data.assim = clamp(data.assim);
+  data.clarity = clamp(data.clarity);
+  function copy(v) { return v == null ? v : JSON.parse(JSON.stringify(v)); }
+
   function stageOf(v) {
     var s = 0;
     for (var i = 0; i < THRESHOLDS.length; i++) if (v >= THRESHOLDS[i]) s = i + 1;
@@ -49,6 +56,29 @@
   } catch (e) {}
 
   CC.state = {
+    record: function (key) { return copy((data.records || {})[key]); },
+    putRecord: function (key, value) {
+      data.records = data.records || {};
+      data.records[key] = copy(value); save(); return copy(value);
+    },
+    remember: function (key, create) {
+      data.records = data.records || {};
+      if (!Object.prototype.hasOwnProperty.call(data.records, key)) {
+        data.records[key] = create(); save();
+      }
+      return copy(data.records[key]);
+    },
+    // Reconnect is an atomic, once-only adjustment; it never resets this run.
+    settle: function (key, delta, flags) {
+      if (data.seen[key]) return false;
+      data.seen[key] = true;
+      delta = delta || {};
+      data.assim = clamp(data.assim + (delta.assim || 0));
+      data.clarity = clamp(delta.claritySet === undefined ? data.clarity + (delta.clarity || 0) : delta.claritySet);
+      Object.keys(flags || {}).forEach(function (k) { data.flags[k] = flags[k]; });
+      save(); apply(); return true;
+    },
+    choices: function () { return copy(data.choices); },
     THRESHOLDS: THRESHOLDS,
     get assim() { return data.assim; },
     get stage() { return stageOf(data.assim); },
@@ -68,7 +98,7 @@
       data.seen[key] = true;
       var d = typeof n === 'object' && n ? n : { assim: n };
       if (d.assim) data.assim = Math.max(0, Math.min(100, data.assim + d.assim));
-      if (d.clarity) data.clarity = Math.max(0, data.clarity + d.clarity);
+      if (d.clarity) data.clarity = clamp(data.clarity + d.clarity);
       save(); apply();
       return true;
     },
@@ -88,7 +118,7 @@
       data.choices[key] = value;
       d = d || {};
       if (d.assim) data.assim = Math.max(0, Math.min(100, data.assim + d.assim));
-      if (d.clarity) data.clarity = Math.max(0, data.clarity + d.clarity);
+      if (d.clarity) data.clarity = clamp(data.clarity + d.clarity);
       save(); apply();
       return true;
     },

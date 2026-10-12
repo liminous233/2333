@@ -557,3 +557,55 @@ window.CONTENT = {
   ],
 
 };
+
+// v0.2 additions. Base scenes above are deliberately kept separate.
+window.CONTENT.v02 = {
+  version: 'v0.2',
+  images: { studio: 'assets/img/v02/studio.webp', paper: 'assets/img/v02/ref-c.webp', nuns: 'assets/img/v02/ref-b.webp', bishop: 'assets/img/v02/bishop.webp', sky: 'assets/img/v02/sky.webp' },
+  delta: { hide: { assim: -10, clarity: 5 }, search: { assim: -8, clarity: 8 }, oldId: { assim: -5 }, archive: { assim: 10 }, eyes: { assim: -3, clarity: -5 }, continue: { assim: 2 }, out: { assim: 5 }, night: { assim: 15 }, reconnect: { assim: -20, claritySet: 70 } },
+  oldNames: ['Mara Voss', 'Elias Arden', 'Irene Vale', 'Noel Maren', 'Silas Dorn'],
+  leave: '离开', tryDoor: '尝试', tryText: '你与你的造物尝试了几种方法，都没能打开。',
+  locked: '此刻无法进入。', gateLocked: '大门尚未开放。先完成档案室的调查。',
+  archiveLocked: '似乎锁门了。工作室与会客室仍有尚未取得的证物。',
+  update: '调查记录已更新：地图上出现了新的可疑区域。',
+  cluesReady: '两件证物已收录，可以前往钟楼档案室。', gateReady: '档案室调查已完成，大门已开放。',
+  messageReady: '消息已送出。前往穹顶。',
+  party: '注视。\n您的朋友和您的造物亦在其列。', welcomeBack: '欢迎再次回来',
+  ourSky: '我们的天空', action: '行动', toDome: '回望穹顶',
+  sent: '你将线索备份藏匿于文书箱中，借主教之便托人运走。',
+  studio: {
+    intro: '你的造物找到了从后门前往阁楼的捷径。\n厚重的书本、放着纯白蜡烛的铁箱子，以及宗卷与文书陈列其间。',
+    options: [['hide', '隐匿'], ['search', '搜查'], ['down', '向下走去']],
+    hide: '楼下人声隐隐约约。修女与神父们正在谈论最近唱诗院的异常。\n“游客……香烛……制作……”\n“……红色……蜡烛？……丢弃……”',
+    after: '你沉思了一会。', wait: '你的造物拉住了你，提醒你这里似乎还有尚未搜查之处。',
+    expel: '修女发现了你们，将你们押送离开。', locked: '巡查力度加深，不可再进入。'
+  },
+  parlour: { intro: '白发主教遣散了其他人，将一张旧调查局 ID 卡交给你。', take: '接过 ID 卡', inspect: '查看旧 ID', after: '你将卡片交给你的造物。\n外观：磨损\n年份：约 3 年前' },
+  archive: { intro: '你按照约定时间取回自己的笔。敲门后，白发主教将你们迎入。', presentLabel: '拿出证物', discussLabel: '商讨对策', solve: '破局？',
+    present: '你打开手提箱，将蜡烛清单、磨损的 ID 卡、失踪档案与便签一一陈列。\n答案不言而喻。',
+    discuss: '白发主教提出：前日那支笔的道具效力已经失效，无法绘制有效的神像稿。他怀疑这与你的状态有关。\n你如今头脑清醒，让他再次尝试。', done: '你们决定再次尝试。大门已开放。' },
+  prayer: { zh: '主，我在这里。\n主，我信赖你。\n主，愿你的旨意成就。\n主，请接引我来到你的神国。\n一切为你，一切因你，一切归你。', en: 'Lord, I am here.\nLord, I trust in You.\nLord, may Your will be done.\nLord, lead me into Your kingdom.\nAll for You, all because of You, all unto You.' },
+  anomaly: {
+    chat: [{ who: 'ryan', text: '不&;$对……究竟是从哪一步，出/*_现了问题？', scramble: true }, { who: 'wei', text: '', liquid: true }, { who: 'ryan', text: '你在吗？' }, { who: 'wei', text: '……', liquid: true }],
+    options: [['embrace', '拥抱穹顶'], ['church', '前往教堂'], ['reconnect', '尝试重连']],
+    archive: '地面上散落着残破的纸片与碎屑，唯一一张黑色太阳手稿也变得暗淡扭曲。\n黑色在你的视线里变成了白色。你感到一阵宁静。',
+    gaze: '银莲花田簇拥着卡塔西斯圣堂，你的心中感到一阵宁静。', gate: '祂永远的神国。', cathedral: '祂的眼眸如此深邃。', enterChurch: '进入教堂', tomorrow: '前往明日？', yes: '是', no: '否',
+    forward: '前进', girl: '你好，现在这里是你的家了吗？你好，你好，你好你好……', girlAlt: '女孩', head: '你干什么嘛！',
+    field: '白色在你的视野里摇曳。它轻轻拉拽，你坠入其间。', pray: '月光定定地注视着你。', eyesLabel: '睁眼', continueLabel: '继续',
+    eyes: '你的心中明明躁动不安，却又像被强制压下，逐渐趋于平静。', continue: '投落的视线挪移，你似乎忘却了什么事情。',
+    walk: '其中出现了许多不像原本唱诗院的人，似乎是游客。他们低低念着“饶恕”“朝圣”与“献祭”。', out: '靠近交界之处，你听到一段又一段白噪音。你的内心感到一阵安宁。',
+    leave: '你的造物拉住了你，似乎想提醒什么。\n你没有询问的意图。她拉不住你，只能看着你越走越远。',
+    night: '你点燃白色香烛，开始夜祷。', nightLabel: '夜祷', evidence: '打开证物箱'
+  },
+  items: { candleList: '蜡烛清单', oldId: '磨损的调查局 ID', lang: '中文 / EN', flip: '翻面', close: '放回',
+    listTitle: ['CANDLE REGISTER', '蜡烛清单'], headers: [['NAME', 'SEX', 'BURN LIMIT', 'DEVOTION'], ['姓名', '性别', '燃烧时限', '虔诚度']],
+    rows: [['Mireille Voss', 'F', 17, '96%'], ['Ilya Seraphin', 'M', 11, '82%'], ['Elena Maren', 'F', 23, '74%'], ['Rafael Dorn', 'M', 7, '61%'], ['Nadia Lenk', 'F', 14, '88%']],
+    worn: '外观：磨损 · 年份：约 3 年前', oldLabel: ['NAME', '姓名'] },
+  cardZh: { bureau: '塞拉维亚调查局', ministry: '塞拉维亚司法部', subordinate: '隶属于塞拉维亚司法部', lineA: '本证所载签名及照片之持有人为正式任命的', title: '警员', lineB: '任职于塞拉维亚司法部所属调查局', fields: [['代号', '0110'], ['证件编号', '∞'], ['部门', '塞拉维亚情报部'], ['职务', '警员']], back: '兹委任持证人调查塞拉维亚境内违法行为，收集调查局涉及或可能涉及案件的证据，并履行法律赋予的其他职责。', signer: '首席司法官', order: '奉塞拉维亚首席司法官之命', issued: '签发 —— · 有效期至 ∞', signatureLabel: '签名' },
+  infinityText: 'After the message was sent, you fulfilled the condition for leaving the Choir. The newly elevated cardinal welcomed a new One into the Choir of Sacred Offering. Yet the descent of a new god is not necessarily a blessing. May there be no more disappearances.',
+  infinitySub: ['Ending II · Ecstasy of the Other God [∞]', '结局二 · 异神极乐 [∞]'],
+  creditsZh: { 'THE CHOIR OF SACRED OFFERING': '圣献唱诗院', 'Ending I · Home, Forever, in the Kingdom of Peace': '结局一 · 永归宁国', 'Investigation Officer 0110': '调查警员 0110', 'Vicia Karu': '维西娅·卡鲁', 'The Believer': '邪信徒', 'Ryan': '莱恩', 'The Investigator': '调查员', 'Anka': '安卡', 'The Visitors': '游客', 'The Choir': '唱诗班', 'Twenty-Four Voices': '二十四道声音', 'The Twin Moons': '双月', 'Themselves': '祂们', 'Story, World & Design': '故事、世界与设计', 'Code': '代码', 'Recorded at': '录制于', 'The Choir of Sacred Offering': '圣献唱诗院', 'A sub-world of the Creation Domain': '造物域下的副世界', 'Eight days of the Great Hymn': '大颂礼的八日', 'Images': '图像', 'Revolver photograph — Gordon Gartrell, CC BY-SA 2.0, via Wikimedia Commons': '左轮手枪摄影 — Gordon Gartrell，CC BY-SA 2.0，来自维基共享资源', 'Chapel wall photograph — Jyuemim (Xiaohongshu)': '祷告室围墙摄影 — Jyuemim（小红书）', 'Black sun artwork — 無山 Wushan (Xiaohongshu)': '黑日作品 — 無山 Wushan（小红书）', 'No visitor was harmed. Every visitor was kept.': '没有游客受到伤害。每位游客都被留了下来。', 'THE END': '终', 'Thank you for your due contribution to the ecology of the Mirror World.': '感谢您为镜界生态作出应有的贡献。' },
+  review: { title: '本局回望', en: 'RUN REVIEW', copy: '复制本局记录', copied: '已复制', fallback: '请选中下方文字复制', home: '前往明天', names: { peace: '永归宁国', bliss: '异神极乐', infinity: '异神极乐 [∞]' },
+    routes: { EARLY_MOON: '提前双月', REPORT_BLACK: '原述职路线', ANOMALY: '异常消息', RECONNECT: '尝试重连' }, yes: '已完成', no: '未完成',
+    decisions: { embrace: '拥抱穹顶', church: '前往教堂', reconnect: '尝试重连', eyes: '睁眼', continue: '继续' } }
+};
