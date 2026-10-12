@@ -6,9 +6,9 @@
 @media (min-width:861px) {
   .grounds__welcome { position:relative; align-self:stretch; min-width:0; }
   .map-panel-dock { position:absolute; top:220px; bottom:0; left:0; right:0; display:flex; align-items:flex-end; justify-content:flex-end; }
-  .map-panel-dock .map-panel { position:relative; right:auto; bottom:auto; --pw:100%; width:100%; min-width:0; max-height:100%; overflow-y:auto; overflow-x:hidden; scrollbar-width:thin; }
+  .map-panel-dock .map-panel { position:relative; right:auto; bottom:auto; max-width:100%; min-width:0; max-height:100%; overflow-y:auto; overflow-x:hidden; scrollbar-width:thin; }
   .map-panel-dock .map-panel__fig { flex-shrink:0; }
-  .map-panel-dock .map-panel__fig img { margin-left:auto; max-width:100%; max-height:min(280px,30vh); }
+  .map-panel-dock .map-panel__fig img { margin-left:auto; max-width:min(var(--pw),100%); }
   .map-panel-dock .map-panel__x { position:sticky; top:0; align-self:flex-end; margin-bottom:-32px; z-index:3; flex-shrink:0; }
 }
 .v02-map-status { position:fixed; right:28px; bottom:64px; max-width:min(290px,70vw); font-size:12px; line-height:1.7; color:#c0c5d0; pointer-events:none; z-index:15; text-align:right; }
