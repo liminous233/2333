@@ -25,7 +25,7 @@ const c2={assim:45,clarity:60,flags:{d4Report:true,'v02:night':true},choices:{'v
   assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   await p.locator('.map-panel:not(.is-leaving)').screenshot({path:path.join(out,'portrait-'+width+'.png')});
   await p.evaluate(()=>CC.state.choose('v02:prayer','eyes',CONTENT.v02.delta.eyes));await score(p,100);
-  await act(p,'hallChurch');await p.waitForURL('**#/church');await p.locator('#chJoin').click();await p.locator('.ch__holy.is-in').waitFor();
+  await act(p,'hallChurch');assert(p.url().endsWith('#/map'));await act(p,'church');await act(p,'yes');await p.waitForURL('**#/church');await p.locator('#chJoin').click();await p.locator('.ch__holy.is-in').waitFor();
   assert.equal(await p.locator('.ch__holy').textContent(),'祂的面容愈发清晰，你的灵魂销于地狱。');await p.locator('.is-idol .v02-hymn-noise').waitFor();
   await p.locator('.ch__holy').screenshot({path:path.join(out,'variant-text-'+width+'.png')});
   await p.locator('.ch__go').click();await p.waitForURL('**#/ending');await p.locator('.v02-end-review').waitFor();
@@ -38,7 +38,7 @@ const c2={assim:45,clarity:60,flags:{d4Report:true,'v02:night':true},choices:{'v
  let p=await page(c2);await p.locator('.room--hall').click();for(const a of ['hallEnter','hallNext','hallPortrait'])await act(p,a);await score(p,95);
  await act(p,'hallChurch');await p.locator('#chJoin').click();await p.locator('.ch__holy.is-in').waitFor();assert.equal(await p.locator('.ch__holy').textContent(),await p.evaluate(()=>CONTENT.church.holyText));await p.close();
  // C2 at 100 via other activities also selects the variant, without forcing map exit.
- p=await page({...c2,assim:100});assert(p.url().endsWith('#/map'));await p.evaluate(()=>CC.go('ending'));await p.waitForURL('**#/church');await p.locator('#chJoin').click();await p.locator('.ch__holy.is-in').waitFor();assert((await p.locator('.ch__holy').textContent()).includes('地狱'));await p.close();
+ p=await page({...c2,assim:100,seen:{'moon:1':true,'moon:2':true,'moon:3':true,'moon:4':true}});assert(p.url().endsWith('#/map'));await p.evaluate(()=>CC.go('ending'));await p.waitForURL('**#/church');await p.locator('#chJoin').click();await p.locator('.ch__holy.is-in').waitFor();assert((await p.locator('.ch__holy').textContent()).includes('地狱'));await p.close();
  for(const seed of [{},{flags:{d4Report:true}},{...c2,choices:{'v02:d4':'reconnect'},flags:{'v02:reconnect':true,'v02:reentered':true}}]){
   p=await page(seed);await p.locator('.room--hall').click();assert.equal(await p.locator('[data-act=hallEnter]').count(),0);await p.close();
  }

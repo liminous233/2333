@@ -201,6 +201,7 @@
       (page ? '' : '<button class="lift__put mono" data-put>' + CC.esc(E.putBack) + '</button>') +
       (kind === 'hymn' ? meltDefs() : '');
     (page || document.body).appendChild(layer);
+    if (kind === 'clue') CC.storyUI.clue(layer);
 
     var item = CC.$('.lift__item', layer);
     var tiltEl = CC.$('.lift__tilt', layer);

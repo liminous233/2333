@@ -13,7 +13,11 @@
     var infinity = CC.story.infinity();
     CC.story.finish(infinity ? 'infinity' : 'peace');
     if (infinity) { lines[1] = ['sub', C.v02.infinitySub[0]]; lines.splice(1, 0, ['infinity', C.v02.infinityText]); }
-    else if (CC.story.peaceVariant()) lines[1] = ['sub', C.v02.peaceV.sub[0]];
+    else if (CC.story.peaceVariant()) {
+      lines[1] = ['sub', C.v02.peaceV.sub[0]];
+      var after=lines.findIndex(function(l){return l[1]==='No visitor was harmed. Every visitor was kept.';});
+      lines.splice(after+1,0,['line',C.v02.peaceV.welcome[0]]);
+    }
     if (CC.state.clarity >= E.clarityAt) lines.push(['thanks', E.thanks]);
     CC.state.setFlag('ended1', true);
 

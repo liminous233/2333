@@ -345,6 +345,7 @@
           (kind === 'card' ? '<em>' + CC.esc(G.card.flipHint) + '</em>' : '') + '</figcaption>' +
         '<button class="lift__put mono" data-put>' + CC.esc(G.objects.putBack) + '</button>';
       document.body.appendChild(layer);
+      if (kind === 'clue') CC.storyUI.clue(layer);
       var item = CC.$('.lift__item', layer);
       var fc = null, tiltEl = CC.$('.lift__tilt', layer);
       if (kind === 'card') { var cardRoot = CC.$('.lift__card', layer);

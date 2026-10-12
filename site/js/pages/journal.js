@@ -73,7 +73,9 @@
       pop = document.createElement('div');
       pop.style.left = m.x + '%';
       pop.style.top = m.y + '%';
-      if (m.twin && !done()) {
+      if (m.route==='church' && !CC.story.churchOpen()) {
+        pop.className='sky__nope';pop.setAttribute('role','status');pop.textContent=J.churchClosed;
+      } else if (m.twin && !done()) {
         pop.className = 'sky__nope';
         pop.innerHTML = '<em>' + CC.esc(J.unfinished) + '</em>';
       } else {
@@ -124,6 +126,7 @@
     document.addEventListener('pointerdown', onDoc);
     document.addEventListener('keydown', onKey);
     if (coarse) stage.classList.add('is-touch');
+    if(CC.churchClosed){CC.churchClosed=false;open(CC.$('.sky__moon[data-n="5"]',stage));}
 
     CC.cleanup = function () {
       clearTimeout(timer);

@@ -114,7 +114,8 @@
       var el = document.createElement('p'); el.className = 'v02-map-status'; el.setAttribute('role', 'status'); el.textContent = text; root.appendChild(el);
     }
     status();
-    var newScene = CC.storyMap({ panel: panel, figure: figure, choices: choices, say: say, melt: melt, flowScramble: flowScramble, card: card, swap: swap, acts: acts, closeAll: closeAll, status: status });
+    var sceneCleanups=[];
+    var newScene = CC.storyMap({ panel: panel, figure: figure, choices: choices, say: say, melt: melt, flowScramble: flowScramble, card: card, swap: swap, acts: acts, closeAll: closeAll, status: status, onCleanup:function(f){sceneCleanups.push(f);} });
 
     function closeAll() {
       scr.forEach(function (s) { s.destroy(); });
@@ -184,7 +185,7 @@
     function acts(p, handlers) {
       p.addEventListener('click', function (e) {
         var a = e.target.closest('[data-act]');
-        if (a && handlers[a.getAttribute('data-act')]) handlers[a.getAttribute('data-act')](a);
+        if (a && handlers[a.getAttribute('data-act')]) handlers[a.getAttribute('data-act')](a,e);
       });
     }
     function choices(list) {
@@ -451,6 +452,7 @@
     });
 
     CC.cleanup = function () {
+      sceneCleanups.forEach(function(f){f();});
       timers.forEach(clearTimeout);
       document.removeEventListener('click', onDoc);
       document.removeEventListener('keydown', onKey);

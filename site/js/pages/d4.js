@@ -243,13 +243,7 @@
       b.innerHTML = '<span class="v02-chat-text">' + CC.esc(m.text) + '</span><svg class="bub__tail" viewBox="0 0 18 18" aria-hidden="true"><path d="M0 0C0 9 6 15 18 18C9 18.6 3 16.6 0 13.5Z"/></svg>';
       chat.appendChild(b);
       if (m.scramble) { var effect = CC.scramble(CC.$('.v02-chat-text', b), m.text); cleanups.push(function () { effect.destroy(); }); }
-      if (m.liquid) { b.classList.add('v02-liquid'); b.setAttribute('aria-label', m.text || '…'); b.insertAdjacentHTML('beforeend', '<i class="v02-ink-trails" aria-hidden="true"></i>'); }
-      if (i === 2 && messages === C.v02.anomaly.chat && !reduce) {
-        var empty = chat.children[1], trail = CC.$('.v02-ink-trails', empty);
-        var reach = Math.max(90, b.getBoundingClientRect().left - empty.getBoundingClientRect().left + 90);
-        trail.style.width = reach + 'px'; trail.classList.add('v02-ink-cross');
-        trail.innerHTML = '<svg viewBox="0 0 600 600" preserveAspectRatio="none"><path d="M20 0C18 80 510 42 520 130S510 300 560 600M35 0C36 90 535 50 530 130S565 310 575 600M50 0C42 65 550 65 550 140S520 330 595 600" fill="none" stroke="currentColor" stroke-width="3"/></svg>';
-      }
+      if (m.liquid) { b.classList.add('v02-liquid'); b.setAttribute('aria-label', m.text || '…'); }
       if (i === messages.length - 1) { later(options, 3000); return; }
       b.addEventListener('click', function once() {
         b.removeEventListener('click', once);
@@ -271,6 +265,7 @@
       }
       a.innerHTML = '<a class="ev-btn" href="#/journal">' + CC.esc(D.back) + '</a><a class="ev-btn d4-to-church" href="#/church">' + CC.esc(D.toChurch) + '</a>';
       a.hidden = false;
+      CC.$('.d4-to-church',a).addEventListener('click',function(){CC.state.setFlag('v02:churchFromReport');});
       // 还没看过 DAY 5：提示保留 6 秒，停在提示上可继续阅读或点去地图。
       if (CC.state.seen('day:5')) return;
       var go = CC.$('.d4-to-church', a), tip = null, hideT = 0;

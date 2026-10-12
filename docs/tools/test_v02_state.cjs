@@ -38,9 +38,15 @@ for(const seed of [{},{records:{'v02:report':{route:'EARLY_MOON'}}},{...c2,choic
 }
 {
  const {S,T,UI,saved}=run({...c2,assim:98,clarity:70});S.add(1);S.add(-99);assert.equal(S.assim,99);assert(!T.peaceVariant());S.add(1);assert(T.peaceVariant());
- assert.equal(T.guard('map'),'map');assert.equal(T.guard('ending'),'church');
+ assert.equal(T.guard('map'),'map');assert.equal(T.guard('ending'),'journal');
+ S.setFlag('v02:peaceLock');assert.equal(T.guard('ending'),'church');
  S.settle('v02:hallPortrait',{assim:20,claritySet:0});assert.equal(S.assim,100);assert.equal(S.clarity,0);assert(!S.settle('v02:hallPortrait',{assim:20,claritySet:0}));
  S.setFlag('v02:hymnComplete');const result=T.finish('peace');assert.equal(result.variant,'overline-v');assert(UI.recapText(result).includes('永归宁国【V̅】'));assert(run(saved()).T.peaceVariant());
  S.reset();assert.equal(S.assim,0);assert(!T.peaceVariant());
 }
-console.log('PASS: boundaries, old saves, route persistence, reconnect once, all task gates, score clamps, ending snapshots, 10 locations, reset.');
+{
+ const {S,T}=run();assert(!T.churchOpen());assert.equal(T.guard('church'),'journal');assert.equal(T.guard('ending'),'journal');
+ for(let i=1;i<=3;i++)S.once('moon:'+i);assert(!T.churchOpen());S.once('moon:4');assert(T.churchOpen());assert.equal(T.guard('church'),'church');
+}
+for(const flag of ['d4Diamond','v02:peaceLock','v02:churchFromReport'])assert(run({flags:{[flag]:true}}).T.churchOpen());
+console.log('PASS: boundaries, old saves, route persistence, reconnect once, church opening conditions, score clamps, ending snapshots, 10 locations, reset.');

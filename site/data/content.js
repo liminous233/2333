@@ -110,6 +110,7 @@ window.CONTENT = {
       'The scent of the candles reminds me of an old friend…',
       'Perhaps he has already set out upon the Path of Purification.',
     ],
+    clueZh: ['蜡烛的气味让我想起了一位故人……', '或许，他早已踏上了净化之路。'],
 
     // ---- 半张牛皮纸（另一半 "Forever" 以后放在别的角色页）
     kraft: 'WE',
@@ -353,6 +354,7 @@ window.CONTENT = {
     ],
     // 第六个（双月）：前五个没点完时，斜体小字晃动
     unfinished: '副本未完成',
+    churchClosed: '未到开放时间',
     // 分结局：同化值 > endingAt 永归宁国，否则异神极乐
     // （以后：明晰 ≥ 35 时异神极乐里有个小彩蛋，用户到时候再说）
     endingAt: 50,
@@ -594,6 +596,11 @@ window.CONTENT.v02 = {
     expel: '修女与神父神色慌张，强硬地将你们赶走。修女一路押送你们出去，并告诫你们不要擅闯。', locked: '巡查力度加深，不可再进入。'
   },
   parlour: { intro: '白发主教提前屏退其余人员，交给你一张塞拉维亚调查局 ID 卡。', take: '接过 ID 卡', inspect: '查看旧 ID', after: '你随手将卡交给身边的造物。她观察一番，将报告传输至你的终端。\n外观：磨损\n年份：约 3 年前' },
+  tribunalHall: {
+    day6:'今日审判团来到此处与新主教相谈甚欢，座下修士们面面相觑，垂首不作言语。',
+    listen:'再次探听',day7:'审判团再次前来，仅主教一人接待。',
+    messages:['他们打算封停唱诗院。','我倒是好奇你们说了什么。','让他们明天来看大戏....这是我们原本的计划，不是么？']
+  },
   archive: { intro: '你按照约定时间取回自己的笔。敲门后，白发主教将你们迎入。', presentLabel: '拿出证物', discussLabel: '商讨对策', solve: '破局？',
     present: '你打开手提箱，将蜡烛清单、磨损的 ID 卡、失踪档案与便签一一陈列。\n答案不言而喻。',
     discuss: '白发主教提出：前日那支笔的道具效力已经失效，无法绘制有效的神像稿。他怀疑这与你的状态有关。\n你如今头脑清醒，让他再次尝试。', done: '你们决定再次尝试。大门已开放。' },
@@ -628,7 +635,7 @@ window.CONTENT.v02 = {
   infinityText: 'After the message was sent, you fulfilled the condition for leaving the Choir. The newly elevated cardinal welcomed a new One into the Choir of Sacred Offering. Yet the descent of a new god is not necessarily a blessing. May there be no more disappearances.',
   infinityTextZh: '消息送出后，你达成了离开唱诗院的条件。新晋的枢机主教迎接一位新的「祂」降临圣献唱诗院。然而，新神的降临未必是一种祝福。愿不再有人失踪。',
   infinitySub: ['Ending II · Ecstasy of the Other God [∞]', '结局二 · 异神极乐 [∞]'],
-  peaceV: { name: '永归宁国【V̅】', sub: ['Ending I · Home, Forever, in the Kingdom of Peace [V̅]', '结局一 · 永归宁国【V̅】'], holyText: '祂的面容愈发清晰，你的灵魂销于地狱。' },
+  peaceV: { name: '永归宁国【V̅】', sub: ['Ending I · Home, Forever, in the Kingdom of Peace [V̅]', '结局一 · 永归宁国【V̅】'], holyText: '祂的面容愈发清晰，你的灵魂销于地狱。', welcome: ['Welcome to the Kingdom of God, kin of the Twin Moons.', '欢迎来到神国，双月的眷属。'] },
   creditsZh: { 'THE CHOIR OF SACRED OFFERING': '圣献唱诗院', 'Ending I · Home, Forever, in the Kingdom of Peace': '结局一 · 永归宁国', 'Investigation Officer 0110': '调查警员 0110', 'Vicia Karu / You': '维西娅·卡鲁 / 你', 'The Believer': '邪信徒', 'Ryan': '莱恩', 'The Investigator': '调查员', 'Anka': '安卡', 'The Visitors': '游客', 'The Choir': '唱诗班', 'Twenty-Four Voices': '二十四道声音', 'The Twin Moons': '双月', 'Themselves': '祂们', 'Story, World & Design': '故事、世界与设计', 'Code': '代码', 'Recorded at': '录制于', 'The Choir of Sacred Offering': '圣献唱诗院', 'A sub-world of the Creation Domain': '造物域下的副世界', 'Eight days of the Great Hymn': '大颂礼的八日', 'Images': '图像', 'Revolver photograph — Gordon Gartrell, CC BY-SA 2.0, via Wikimedia Commons': '左轮手枪摄影 — Gordon Gartrell，CC BY-SA 2.0，来自维基共享资源', 'Chapel wall photograph — Jyuemim (Xiaohongshu)': '祷告室围墙摄影 — Jyuemim（小红书）', 'Black sun artwork — 無山 Wushan (Xiaohongshu)': '黑日作品 — 無山 Wushan（小红书）', 'No visitor was harmed. Every visitor was kept.': '没有游客受到伤害。每位游客都被留了下来。', 'THE END': '终', 'Thank you for your due contribution to the ecology of the Mirror World.': '感谢您为镜界生态作出应有的贡献。' },
   review: { title: '本局回望', en: 'RUN REVIEW', copy: '复制本局记录', copied: '已复制', fallback: '请选中下方文字复制', home: '前往明天', names: { peace: '永归宁国', bliss: '异神极乐', infinity: '异神极乐 [∞]' },
     routes: { EARLY_MOON: '提前双月', REPORT_BLACK: '原述职路线', ANOMALY: '异常消息', RECONNECT: '尝试重连' }, yes: '已完成', no: '未完成',

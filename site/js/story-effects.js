@@ -2,52 +2,48 @@
 (function () {
   var CC = window.CC;
   function downflow(root) {
-    if (CC.reducedMotion()) return function () {};
-    var canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');
-    canvas.className = 'v02-downflow'; canvas.setAttribute('aria-hidden', 'true');
-    var drops = [], active = null, x = 0, y = 0, raf = 0, last = 0, emit = 0, w, h;
-    function resize() { w = innerWidth; h = innerHeight; canvas.width = w; canvas.height = h; drops = []; }
-    function move(e) {
-      var bubble = e.target.closest('.bub--wei, .map-chat--blue');
-      if (!bubble || !root.contains(bubble)) { active = null; return; }
-      active = bubble; x = e.clientX; y = Math.max(e.clientY, bubble.getBoundingClientRect().bottom - 5);
-      if (!canvas.isConnected) document.body.appendChild(canvas);
-      if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); }
+    if (CC.reducedMotion() || CC.story.route()==='REPORT_BLACK') return function () {};
+    var defs=document.createElement('div');defs.className='v02-chat-melt-defs';
+    defs.innerHTML='<svg width="0" height="0" aria-hidden="true"><filter id="chatLetterMelt" x="-15%" y="-25%" width="130%" height="650%"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.09" numOctaves="2" seed="7" result="n"><animate attributeName="baseFrequency" dur="9s" values="0.012 0.09;0.016 0.05;0.012 0.09" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="10" xChannelSelector="R" yChannelSelector="G"/></filter></svg>';
+    root.appendChild(defs);
+    function prepare(bubble) {
+      if (bubble.dataset.letterMelt) return;
+      bubble.dataset.letterMelt='true';
+      var text=bubble.querySelector('.v02-chat-text');
+      if(!text){text=document.createElement('span');text.className='v02-chat-text';text.textContent=bubble.textContent;bubble.replaceChildren(text);}
+      var value=text.textContent;
+      if(!value.trim()){bubble.classList.add('v02-empty-melt');return;}
+      bubble.setAttribute('aria-label',value);text.setAttribute('aria-hidden','true');text.classList.add('v02-melt-letters');
+      var rand=CC.rng(value.length+110);
+      text.innerHTML=Array.from(value).map(function(ch){return '<span style="--dur:'+(8+rand()*3).toFixed(2)+'s;--delay:'+(rand()*.7).toFixed(2)+'s;--fall:'+(65+rand()*55).toFixed(0)+'px;--stretch:'+(1.6+rand()).toFixed(2)+';--drift:'+(rand()*6-3).toFixed(2)+'px">'+CC.esc(ch)+'</span>';}).join('');
     }
-    function leave() { active = null; }
-    function frame(t) {
-      var dt = Math.min((t - last) / 1000, .04); last = t;
-      ctx.clearRect(0, 0, w, h);
-      if (active && (!active.isConnected || document.hidden)) active = null;
-      if (active && t - emit > 85) {
-        emit = t;
-        drops.push({ x: x + (Math.random() - .5) * 12, y: y, age: 0, speed: 105 + Math.random() * 60, width: 5 + Math.random() * 12, phase: Math.random() * 6.28 });
-      }
-      drops = drops.filter(function (d) { return d.age < 4.2 && d.y < h + 180; });
-      drops.forEach(function (d) {
-        d.age += dt;
-        // Positive gravity only. Local curls stay within 18px of the source x.
-        var head = d.y + d.speed * d.age + 19 * d.age * d.age;
-        var length = Math.min(head - d.y, 85 + d.age * 38);
-        var top = Math.max(d.y, head - length), points = [], n = 14;
-        for (var i = 0; i <= n; i++) {
-          var k = i / n, yy = top + length * k;
-          points.push({ x: d.x + Math.sin(yy * .025 + d.phase + d.age) * (7 + 8 * k), y: yy, r: d.width * Math.sin(Math.PI * k) * (.4 + .6 * k) });
-        }
-        var edge = points.map(function (p) { return { x:p.x - p.r, y:p.y }; }).concat(points.slice().reverse().map(function (p) { return { x:p.x + p.r, y:p.y }; }));
-        ctx.beginPath(); ctx.moveTo(edge[0].x, edge[0].y);
-        edge.forEach(function (p, i) { var next = edge[(i + 1) % edge.length]; ctx.quadraticCurveTo(p.x, p.y, (p.x + next.x) / 2, (p.y + next.y) / 2); });
-        ctx.closePath();
-        ctx.fillStyle = 'rgba(0,47,167,' + (.19 * Math.min(1, d.age * 5) * Math.max(0, 1 - d.age / 4.2)) + ')';
-        ctx.filter = 'blur(2px)'; ctx.shadowColor = 'rgba(0,47,167,.28)'; ctx.shadowBlur = 9; ctx.fill();
+    function scan(){if(CC.story.route()==='REPORT_BLACK')return;root.querySelectorAll('.v02-liquid').forEach(prepare);}
+    function enter(e){if(CC.story.route()==='REPORT_BLACK')return;var b=e.target.closest('.bub--wei,.map-chat--blue');if(b&&root.contains(b)){prepare(b);b.classList.add('v02-text-flow');}}
+    function leave(e){var b=e.target.closest('.bub--wei,.map-chat--blue');if(b&&(!e.relatedTarget||!b.contains(e.relatedTarget)))b.classList.remove('v02-text-flow');}
+    var observer=new MutationObserver(scan);observer.observe(root,{childList:true,subtree:true});scan();
+    root.addEventListener('pointerover',enter);root.addEventListener('pointerout',leave);root.addEventListener('focusin',enter);root.addEventListener('focusout',leave);
+    return function(){observer.disconnect();defs.remove();root.removeEventListener('pointerover',enter);root.removeEventListener('pointerout',leave);root.removeEventListener('focusin',enter);root.removeEventListener('focusout',leave);};
+  }
+  function mapPanelLayout(root) {
+    var dock=root.querySelector('.map-panel-dock'), pending=0;
+    function schedule(){if(!pending)pending=requestAnimationFrame(fit);}
+    function fit(){
+      pending=0;
+      dock.querySelectorAll('.map-panel:not(.is-leaving)').forEach(function(panel){
+        if(innerWidth<=860){panel.style.removeProperty('--map-image-height');return;}
+        var fig=panel.querySelector('.map-panel__fig');if(!fig)return;
+        // Use document position, so scrolling does not change image size.
+        var top=dock.getBoundingClientRect().top+scrollY;
+        var below=panel.offsetHeight-fig.offsetHeight;
+        var height=Math.max(140,Math.floor(innerHeight-top-below-30))+'px';
+        if(panel.style.getPropertyValue('--map-image-height')!==height)panel.style.setProperty('--map-image-height',height);
       });
-      if (active || drops.length) raf = requestAnimationFrame(frame);
-      else { raf = 0; canvas.remove(); }
     }
-    resize(); root.addEventListener('pointermove', move); root.addEventListener('pointerover', move);
-    root.addEventListener('pointerleave', leave); root.addEventListener('pointerup', function up(e) { if (e.pointerType === 'touch') leave(); });
-    window.addEventListener('scroll', leave, true); window.addEventListener('resize', resize);
-    return function () { cancelAnimationFrame(raf); canvas.remove(); root.removeEventListener('pointermove', move); root.removeEventListener('pointerover', move); root.removeEventListener('pointerleave', leave); window.removeEventListener('scroll', leave, true); window.removeEventListener('resize', resize); drops = []; };
+    var resize=new ResizeObserver(schedule);resize.observe(root.querySelector('.grounds__welcome'));
+    function watch(){resize.disconnect();resize.observe(root.querySelector('.grounds__welcome'));dock.querySelectorAll('.map-panel').forEach(function(panel){resize.observe(panel);});schedule();}
+    var mutation=new MutationObserver(watch);mutation.observe(dock,{childList:true});
+    dock.addEventListener('load',schedule,true);window.addEventListener('resize',schedule);watch();
+    return function(){cancelAnimationFrame(pending);resize.disconnect();mutation.disconnect();dock.removeEventListener('load',schedule,true);window.removeEventListener('resize',schedule);};
   }
   function noise(root) {
     var canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');
@@ -88,5 +84,5 @@
     var observer = new ResizeObserver(place); observer.observe(area); img.addEventListener('load', place); place();
     return function () { observer.disconnect(); img.removeEventListener('load', place); };
   }
-  CC.storyEffects = { downflow: downflow, noise: noise, sunArc: sunArc };
+  CC.storyEffects = { downflow: downflow, noise: noise, sunArc: sunArc, mapPanelLayout: mapPanelLayout };
 })();

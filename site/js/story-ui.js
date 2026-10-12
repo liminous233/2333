@@ -1,6 +1,16 @@
 (function () {
   var CC = window.CC, S = CC.state, V = window.CONTENT.v02;
   function toggleCard(el) { el.classList.toggle('v02-zh'); }
+  function clue(layer) {
+    var ink=layer.querySelector('.clue__ink'), original=ink.innerHTML;
+    var controls=document.createElement('div');controls.className='v02-card-controls clue-controls';
+    controls.innerHTML='<button type="button" class="ev-btn" data-clue-language aria-pressed="false">'+CC.esc(V.items.lang)+'</button>';
+    layer.querySelector('.lift__item').insertAdjacentElement('afterend',controls);
+    controls.querySelector('button').onclick=function(){
+      var zh=ink.classList.toggle('clue__ink--zh');this.setAttribute('aria-pressed',String(zh));ink.lang=zh?'zh-CN':'en';
+      ink.innerHTML=zh?window.CONTENT.gate.clueZh.map(function(line,i){return '<p style="--i:'+i+'">'+CC.esc(line)+'</p>';}).join(''):original;
+    };
+  }
   function dwell(el, delay, on, off) {
     var timer;
     function enter(e) { if (e && (e.pointerType === 'touch' || (e.type === 'focusin' && window.matchMedia('(pointer: coarse)').matches))) return; clearTimeout(timer); timer = setTimeout(on, delay); }
@@ -107,6 +117,7 @@
   function bilingual(text) {
     var zh = text === V.infinityText ? V.infinityTextZh : text === V.infinitySub[0] ? V.infinitySub[1] : V.creditsZh[text];
     if (text === V.peaceV.sub[0]) zh = V.peaceV.sub[1];
+    if (text === V.peaceV.welcome[0]) zh = V.peaceV.welcome[1];
     if (!zh) return CC.esc(text);
     return '<span class="v02-bilingual"><span class="v02-en" lang="en">' + CC.esc(text) + '</span><span class="v02-cn" lang="zh">' + CC.esc(zh) + '</span></span>';
   }
@@ -115,6 +126,7 @@
     if (CC.endingStats) { CC.endingStats.bind(root); if (S.record('v02:ending')) CC.endingStats.record(S.record('v02:ending')); }
     if (page === 'd4' || page === 'map') cleanups.push(CC.storyEffects.downflow(root));
     if (page === 'map') cleanups.push(CC.fullAssimilation(root));
+    if (page === 'map') cleanups.push(CC.storyEffects.mapPanelLayout(root));
     if (page === 'home' && S.flag('bliss')) cleanups.push(CC.storyEffects.sunArc(root));
     if (S.flag('v02:peaceLock') || S.flag('d4Diamond') || (S.record('v02:ending') || {}).kind === 'peace') CC.$$('.back-arrow', root).forEach(function (a) { a.remove(); });
     if (page === 'home') {
@@ -144,5 +156,5 @@
     CC.cleanup = function () { closeItem(); cleanups.forEach(function (f) { f(); }); if (prior) prior(); };
   }
   CC.storyItems = { open: openItem, close: closeItem };
-  CC.storyUI = { card: card, toggleCard: toggleCard, review: review, bindReview: bindReview, bilingual: bilingual, mount: mount, recapText: recapText };
+  CC.storyUI = { card: card, clue: clue, toggleCard: toggleCard, review: review, bindReview: bindReview, bilingual: bilingual, mount: mount, recapText: recapText };
 })();

@@ -3,6 +3,18 @@
   var CC = window.CC, S = CC.state;
   CC.storyMap = function (A) {
     var V = window.CONTENT.v02, M = window.CONTENT.map, T = CC.story;
+    var chatCleanup=null;
+    A.onCleanup(function(){if(chatCleanup)chatCleanup();});
+    function hallMessages(){
+      if(chatCleanup)chatCleanup();
+      var overlay=document.createElement('div');overlay.className='hall-messages';overlay.setAttribute('aria-live','polite');
+      document.body.appendChild(overlay);var timers=[],ready=false;
+      function show(i){var bubble=document.createElement('p');bubble.className='hall-message'+(i===1?' hall-message--blue':'');bubble.textContent=V.tribunalHall.messages[i];overlay.appendChild(bubble);if(i===2)ready=true;}
+      function close(){timers.forEach(clearTimeout);overlay.remove();document.removeEventListener('keydown',key);chatCleanup=null;}
+      function key(e){if(ready&&e.key==='Escape')close();}
+      overlay.addEventListener('click',function(e){if(ready&&e.target===overlay)close();});document.addEventListener('keydown',key);
+      chatCleanup=close;show(0);timers.push(setTimeout(function(){show(1);},1000),setTimeout(function(){show(2);},2000));
+    }
     function panel(btn, image, day, text, options) {
       return A.panel(btn, (image ? A.figure(image) : '') + (day ? '<p class="map-panel__day mono">DAY ' + day + '</p>' : '') +
         '<p class="map-panel__text">' + CC.esc(text) + '</p>' + A.choices(options || []));
@@ -12,6 +24,15 @@
       var route = T.route(), reconnect = route === 'RECONNECT';
       if (reconnect && !/^(bell|studio|parlour|gate)$/.test(name)) { A.card(btn, V.locked, true); return true; }
       var additions = reconnect || T.blackMap();
+      if(route==='REPORT_BLACK' && name==='hall'){
+        var H6=V.tribunalHall,read=S.seen('v02:hallEavesdrop');
+        S.once('day:6',{clarity:1});S.once('v02:hallTribunal',{assim:-3});
+        var tribunal=panel(btn,V.anomaly.hall.image,read?7:6,read?H6.day7:H6.day6,read?[['tribunalLeave',V.leave]]:[['listen',H6.listen]]);
+        A.acts(tribunal,{
+          listen:function(){S.once('v02:hallEavesdrop');CC.$('.map-panel__day',tribunal).textContent='DAY 7';A.say(tribunal,H6.day7);choices(tribunal,[['tribunalLeave',V.leave]]);},
+          tribunalLeave:function(){A.closeAll();hallMessages();}
+        });return true;
+      }
       if (additions && name === 'studio') {
         if (S.flag('v02:studioLocked')) {
           var locked = panel(btn, V.images.nuns, 5, V.studio.locked, [['leave', V.leave]]);
@@ -87,6 +108,7 @@
         var hp = panel(btn, step === 3 ? hall.portrait : hall.image, 0, '', []);
         function showHall() {
           var stage = hall.stages[step];
+          hp.classList.toggle('is-c2-portrait',step===3);
           S.settle(stage.key, stage.delta);
           A.say(hp, stage.text);
           choices(hp, step === 0 ? [['hallEnter', hall.enter]] : step === 1 ? [['hallNext', hall.next]] :
@@ -96,7 +118,16 @@
           hallEnter: function () { if (step !== 0) return; step = 1; showHall(); },
           hallNext: function () { if (step !== 1) return; step = 2; showHall(); },
           hallPortrait: function () { if (step !== 2) return; step = 3; A.swap(hp, hall.portrait); showHall(); },
-          hallChurch: function () { if (step !== 3) return; S.setFlag('v02:peaceLock'); CC.go('church'); },
+          hallChurch: function (button,event) {
+            if (step !== 3) return;
+            if (S.assim===100) {
+              event.stopPropagation();
+              var cathedral=document.querySelector('.room--cathedral');
+              if(!S.record('v02:ending'))S.once('v02:room:'+cathedral.dataset.room);
+              scene(cathedral,'cathedral');return;
+            }
+            S.setFlag('v02:peaceLock');CC.go('church');
+          },
           leave: A.closeAll
         });
         showHall(); return true;
