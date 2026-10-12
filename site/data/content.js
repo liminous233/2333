@@ -573,7 +573,7 @@ window.CONTENT = {
 // v0.2 additions. Base scenes above are deliberately kept separate.
 window.CONTENT.v02 = {
   version: 'v0.2',
-  images: { studio: 'assets/img/v02/studio.webp', paper: 'assets/img/v02/ref-c.webp', nuns: 'assets/img/v02/ref-b.webp', bishop: 'assets/img/v02/bishop.webp', sky: 'assets/img/v02/sky.webp' },
+  images: { studio: 'assets/img/v02/studio.webp', paper: 'assets/img/v02/ref-c.webp', nuns: 'assets/img/v02/studio-exit.png', parlour: 'assets/img/v02/ref-b.webp', bishop: 'assets/img/v02/bishop.webp', sky: 'assets/img/v02/sky.webp' },
   delta: { hide: { assim: -10, clarity: 5 }, search: { assim: -8, clarity: 8 }, oldId: { assim: -5 }, archive: { assim: 10 }, eyes: { assim: -3, clarity: -5 }, continue: { assim: 2 }, out: { assim: 5 }, night: { assim: 15 }, reconnect: { assim: -20, claritySet: 70 } },
   oldNames: ['Mara Voss', 'Elias Arden', 'Irene Vale', 'Noel Maren', 'Silas Dorn'],
   leave: '离开', tryDoor: '尝试', tryText: '你与你的造物尝试了几种方法，都没能打开。',

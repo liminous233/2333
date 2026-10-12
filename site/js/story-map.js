@@ -34,7 +34,7 @@
       }
       if (additions && name === 'parlour') {
         S.once('v02:day:6');
-        var p = panel(btn, V.images.bishop, 6, V.parlour.intro, [['take', V.parlour.take]]);
+        var p = panel(btn, V.images.parlour, 6, V.parlour.intro, [['take', V.parlour.take]]);
         A.acts(p, { take: function () {
           T.oldName(); S.settle('v02:oldId', V.delta.oldId, { 'v02:oldId': true });
           A.say(p, V.parlour.after); choices(p, [['inspect', V.parlour.inspect], ['leave', V.leave]]); A.status();

@@ -16,6 +16,7 @@
       zh.fields = [[V.items.oldLabel[1], CC.story.oldName()]].concat(V.cardZh.fields.slice(1));
       en.back = V.prayer.en; zh.back = V.prayer.zh; el.classList.add('v02-worn');
     } else if (CC.story.route() === 'ANOMALY' && S.flag('v02:nightPrayer')) { en.back = V.prayer.en; zh.back = V.prayer.zh; }
+    el.classList.toggle('v02-prayer-card', old || en.back === V.prayer.en);
     var front = CC.$('.fc__front', el), back = CC.$('.fc__back', el);
     front.innerHTML = '<div class="v02-card-en">' + CC.gateLook.cardFront(en) + '</div><div class="v02-card-zh" aria-hidden="true">' + CC.gateLook.cardFront(zh) + '</div><span class="fc__glare"></span>';
     back.innerHTML = '<div class="v02-card-en">' + CC.gateLook.cardBack(en) + '</div><div class="v02-card-zh" aria-hidden="true">' + CC.gateLook.cardBack(zh) + '</div><span class="fc__glare"></span>';
