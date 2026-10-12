@@ -17,7 +17,7 @@
     var reduce = CC.reducedMotion();
     // 不管从月相页第五个月亮，还是从 DAY4 的「前往教堂」进来，都算看过第五个月亮（不然双月一直是「副本未完成」）
     CC.state.once('moon:5');
-    var timers = [];
+    var timers = [], stopNoise = null;
     function later(f, ms) { var t = setTimeout(f, reduce ? Math.min(ms, 300) : ms); timers.push(t); return t; }
 
     root.innerHTML =
@@ -52,11 +52,12 @@
     function holy() {
       var t = CC.$('.ch__holy', sec);
       later(function () { t.textContent = H.holyText; t.classList.add('is-in'); }, 600);
-      later(function () { sec.classList.add('is-idol'); }, 900);
+      later(function () { sec.classList.add('is-idol'); stopNoise = CC.storyEffects.noise(sec); }, 900);
       later(function () {
         var go = document.createElement('a');
         go.className = 'ch__go';
         go.href = '#/ending';
+        go.addEventListener('click', function () { CC.state.setFlag('v02:hymnComplete'); });
         go.innerHTML = '<span>' + CC.esc(H.holyGo) + '</span>';
         sec.appendChild(go);
         later(function () { go.classList.add('is-melting'); }, 2200);
@@ -102,7 +103,7 @@
       });
     }
 
-    CC.cleanup = function () { timers.forEach(clearTimeout); };
+    CC.cleanup = function () { timers.forEach(clearTimeout); if (stopNoise) stopNoise(); };
   };
   CC.pages.church.bare = true;
 

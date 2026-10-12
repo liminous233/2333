@@ -99,6 +99,7 @@
         '<aside class="grounds__welcome">' +
           '<p class="welcome__zh">' + W.zh.map(function (l, i) { return '<span' + (i === 0 ? ' class="welcome__big"' : '') + '>' + CC.esc(l) + '</span>'; }).join('') + '</p>' +
           '<p class="welcome__en">' + W.en.map(function (l, i) { return '<span' + (i === 0 ? ' class="welcome__big"' : '') + '>' + CC.esc(l) + '</span>'; }).join('') + '</p>' +
+          '<div class="map-panel-dock"></div>' +
         '</aside>' +
       '</section>';
 
@@ -163,7 +164,7 @@
       layer = document.createElement('div');
       layer.className = 'map-panel';
       layer.innerHTML = '<button class="map-panel__x" data-close aria-label="' + CC.esc(M.close) + '">✕</button>' + html;
-      document.body.appendChild(layer);
+      CC.$('.map-panel-dock', root).appendChild(layer);
       btn.classList.add('is-open');
       return layer;
     }

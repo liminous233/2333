@@ -30,7 +30,7 @@
   function guard(page) {
     var ending = S.record('v02:ending');
     if (ending) return ending.kind === 'peace' ? 'ending' : page;
-    if (S.flag('v02:peaceLock')) return 'ending';
+    if (S.flag('v02:peaceLock')) return S.flag('v02:hymnComplete') ? 'ending' : 'church';
     if (S.flag('d4Diamond')) return /^(church|ending)$/.test(page) ? page : 'church';
     if (route() === 'EARLY_MOON') return page === 'd4' ? page : 'd4';
     if (route() === 'ANOMALY' && !S.choice('v02:d4')) return page === 'd4' ? page : 'd4';

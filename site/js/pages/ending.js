@@ -21,7 +21,7 @@
       switch (l[0]) {
         case 'gap': return '<div class="cr__gap"></div>';
         case 'role': return '<p class="cr__role"><span>' + bilingual(l[1]) + '</span><b>' + bilingual(l[2]) + '</b></p>';
-        case 'infinity': return '<p class="cr__infinity">' + CC.esc(l[1]) + '</p>';
+        case 'infinity': return '<p class="cr__infinity">' + bilingual(l[1]) + '</p>';
         default: return '<p class="cr__' + l[0] + '">' + bilingual(l[1]) + '</p>';
       }
     }).join('');

@@ -266,7 +266,7 @@
           var b = e.target.closest('[data-route-choice]'); if (!b) return;
           CC.story.decision(b.getAttribute('data-route-choice'));
           var selected = CC.state.choice('v02:d4');
-          CC.go(selected === 'reconnect' ? 'gate' : selected === 'church' ? 'ending' : 'journal');
+          CC.go(selected === 'reconnect' ? 'gate' : selected === 'church' ? 'church' : 'journal');
         }); return;
       }
       a.innerHTML = '<a class="ev-btn" href="#/journal">' + CC.esc(D.back) + '</a><a class="ev-btn d4-to-church" href="#/church">' + CC.esc(D.toChurch) + '</a>';

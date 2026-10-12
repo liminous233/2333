@@ -78,7 +78,7 @@
         CC.$('.map-panel__text', p).classList.add('v02-soft');
         S.once('day:7');
         A.acts(p, { church: function () { A.say(p, H.tomorrow); choices(p, [['no', H.no], ['yes', H.yes]]); },
-          no: A.closeAll, yes: function () { S.setFlag('v02:peaceLock'); CC.go('ending'); } }); return true;
+          no: A.closeAll, yes: function () { S.setFlag('v02:peaceLock'); CC.go('church'); } }); return true;
       }
       if (name === 'field') { A.card(btn, H.field, true); return true; }
       if (name === 'hall') { A.card(btn, M.hall, true); return true; }

@@ -105,15 +105,14 @@
     }; });
   }
   function bilingual(text) {
-    var zh = text === V.infinitySub[0] ? V.infinitySub[1] : V.creditsZh[text];
+    var zh = text === V.infinityText ? V.infinityTextZh : text === V.infinitySub[0] ? V.infinitySub[1] : V.creditsZh[text];
     if (!zh) return CC.esc(text);
     return '<span class="v02-bilingual"><span class="v02-en" lang="en">' + CC.esc(text) + '</span><span class="v02-cn" lang="zh">' + CC.esc(zh) + '</span></span>';
   }
   function mount(page, root) {
     var cleanups = [], prior = CC.cleanup;
-    if (page === 'gate' && CC.story.route() === 'RECONNECT') {
-      var welcome = document.createElement('p'); welcome.className = 'v02-return'; welcome.textContent = V.welcomeBack; root.appendChild(welcome);
-    }
+    if (page === 'd4' || page === 'map') cleanups.push(CC.storyEffects.downflow(root));
+    if (page === 'home' && S.flag('bliss')) cleanups.push(CC.storyEffects.sunArc(root));
     if (S.flag('v02:peaceLock') || S.flag('d4Diamond') || (S.record('v02:ending') || {}).kind === 'peace') CC.$$('.back-arrow', root).forEach(function (a) { a.remove(); });
     if (page === 'home') {
       var party = CC.$('.party', root);

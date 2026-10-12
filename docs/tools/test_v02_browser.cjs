@@ -40,7 +40,7 @@ await room(p,'dining'); await act(p,'forward'); assert.equal(await p.locator('[d
 p=await start({assim:45},1440,'d4'); await p.locator('.d4-core').click(); await p.locator('.d4-done').waitFor(); await p.locator('.d4-done').click();
 for(let i=0;i<3;i++)await p.locator('.bub').last().click(); await p.locator('[data-route-choice=reconnect]').waitFor();
 await p.locator('.d4-log').screenshot({path:path.join(out,'abnormal-messages.png')});
-await p.locator('[data-route-choice=reconnect]').click(); await p.locator('.v02-return').waitFor(); assert.equal((await score(p))[0],25);
+await p.locator('[data-route-choice=reconnect]').click(); await p.locator('#authBtn').waitFor(); assert.equal(await p.locator('.v02-return').count(),0); assert.equal((await score(p))[0],25);
 // Actual gate authorization uses the existing button, with no resetting the save.
 await p.locator('#authBtn').click(); await p.waitForURL('**#/home');
 await p.evaluate(()=>CC.go('map')); await p.locator('.tiles').waitFor();
