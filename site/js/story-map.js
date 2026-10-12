@@ -1,0 +1,113 @@
+/* New map scenes use the original panel, scramble and flowing-ink renderer. */
+(function () {
+  var CC = window.CC, S = CC.state;
+  CC.storyMap = function (A) {
+    var V = window.CONTENT.v02, M = window.CONTENT.map, T = CC.story;
+    function panel(btn, image, day, text, options) {
+      return A.panel(btn, (image ? A.figure(image) : '') + (day ? '<p class="map-panel__day mono">DAY ' + day + '</p>' : '') +
+        '<p class="map-panel__text">' + CC.esc(text) + '</p>' + A.choices(options || []));
+    }
+    function choices(p, list) { CC.$('.map-panel__acts', p).outerHTML = A.choices(list); }
+    function scene(btn, name) {
+      var route = T.route(), reconnect = route === 'RECONNECT';
+      if (reconnect && !/^(bell|studio|parlour|gate)$/.test(name)) { A.card(btn, V.locked, true); return true; }
+      var additions = reconnect || T.blackMap();
+      if (additions && name === 'studio') {
+        if (S.flag('v02:studioLocked')) { A.card(btn, V.studio.locked, true); return true; }
+        S.once('day:5');
+        var p = panel(btn, V.images.studio, 5, V.studio.intro, V.studio.options);
+        A.acts(p, {
+          hide: function () { A.say(p, V.studio.hide); S.once('v02:hide', V.delta.hide); },
+          search: function () {
+            S.settle('v02:search', V.delta.search, { 'v02:candleList': true });
+            A.say(p, V.studio.after); CC.storyItems.open('candleList'); A.status();
+          },
+          down: function () {
+            if (!S.flag('v02:candleList')) { A.say(p, V.studio.wait); return; }
+            A.swap(p, V.images.nuns); A.say(p, V.studio.expel); choices(p, [['exit', V.leave]]);
+          },
+          exit: function () { S.setFlag('v02:studioLocked'); A.closeAll(); }
+        }); return true;
+      }
+      if (additions && name === 'parlour') {
+        S.once('day:6');
+        var p = panel(btn, V.images.bishop, 6, V.parlour.intro, [['take', V.parlour.take]]);
+        A.acts(p, { take: function () {
+          T.oldName(); S.settle('v02:oldId', V.delta.oldId, { 'v02:oldId': true });
+          A.say(p, V.parlour.after); choices(p, [['inspect', V.parlour.inspect], ['leave', V.leave]]); A.status();
+          CC.storyItems.open('oldId');
+        }, inspect: function () { CC.storyItems.open('oldId'); }, leave: A.closeAll }); return true;
+      }
+      if (reconnect && name === 'gate') {
+        if (!S.flag('v02:archiveDone')) { A.card(btn, V.gateLocked, true); return true; }
+        S.once('day:7');
+        var p = panel(btn, V.images.sky, 7, V.ourSky, [['action', V.action]]);
+        A.acts(p, { action: function () {
+          S.setFlag('v02:messageSent'); A.say(p, V.sent); choices(p, [['journal', V.toDome]]); A.status();
+        }, journal: function () { CC.go('journal'); } }); return true;
+      }
+      if (name === 'bell' && (reconnect || route === 'ANOMALY' || !S.flag('d4Report'))) {
+        var B = M.bell, p = panel(btn, B.image, 0, '', [['up', B.up]]);
+        A.acts(p, {
+          up: function () { A.say(p, S.flag('d4Report') ? B.day5.upText : ''); choices(p, [['archive', B.archive], ['gaze', B.gaze]]); },
+          gaze: function () { A.say(p, route === 'ANOMALY' ? V.anomaly.gaze : B.gazeText, true, 'calm'); S.once('map:gaze', 2); },
+          archive: function () {
+            if (!S.flag('d4Report') || (reconnect && !T.hasEvidence())) {
+              A.say(p, reconnect ? V.archiveLocked : B.archiveText); choices(p, [['try', V.tryDoor], ['up', B.up]]); return;
+            }
+            if (reconnect) { A.say(p, V.archive.intro); archiveOptions(); return; }
+            A.say(p, B.day5.archiveText); choices(p, [['open', B.day5.open]]);
+          },
+          try: function () { A.say(p, V.tryText); },
+          open: function () { A.say(p, V.anomaly.archive); S.once('v02:archive', V.delta.archive); S.once('day:5'); choices(p, [['up', B.up]]); },
+          present: function () { A.say(p, V.archive.present); S.once('v02:present'); archiveOptions(); },
+          discuss: function () { A.say(p, V.archive.discuss); S.once('v02:discuss'); archiveOptions(); },
+          solve: function () { if (!T.archiveReady()) return; S.setFlag('v02:archiveDone'); A.say(p, V.archive.done); choices(p, [['leave', V.leave]]); A.status(); },
+          leave: A.closeAll
+        });
+        function archiveOptions() { S.once('day:5'); choices(p, [['present', V.archive.presentLabel], ['discuss', V.archive.discussLabel]].concat(T.archiveReady() ? [['solve', V.archive.solve]] : [])); }
+        return true;
+      }
+      if (route !== 'ANOMALY' || S.choice('v02:d4') !== 'embrace') return false;
+      var H = V.anomaly;
+      if (name === 'gate' || name === 'cathedral') {
+        var p = panel(btn, M[name].image, 7, H[name], name === 'cathedral' ? [['church', H.enterChurch]] : []);
+        CC.$('.map-panel__text', p).classList.add('v02-soft');
+        S.once('day:7');
+        A.acts(p, { church: function () { A.say(p, H.tomorrow); choices(p, [['no', H.no], ['yes', H.yes]]); },
+          no: A.closeAll, yes: function () { S.setFlag('v02:peaceLock'); CC.go('ending'); } }); return true;
+      }
+      if (name === 'field') { A.card(btn, H.field, true); return true; }
+      if (name === 'hall') { A.card(btn, M.hall, true); return true; }
+      if (name === 'dining') {
+        var D = M.dining, p = panel(btn, D.image, 0, D.text, [['forward', H.forward]]);
+        A.acts(p, { forward: function () {
+          A.swap(p, D.girlImage); A.melt(p, H.girl); choices(p, [['leave', V.leave]]);
+          var head = document.createElement('button'); head.className = 'v02-girl-head'; head.setAttribute('aria-label', H.girlAlt);
+          head.addEventListener('click', function () { A.say(p, H.head); }); CC.$('.map-panel__fig', p).appendChild(head);
+        }, leave: A.closeAll }); return true;
+      }
+      if (name === 'chapel') {
+        var C = M.chapel, p = panel(btn, C.image, 6, C.text.join('\n'), [['pray', C.pray], ['walk', C.walk], ['leave', C.leave]]);
+        S.once('day:6');
+        A.acts(p, { pray: function () {
+          var selected = S.choice('v02:prayer'); A.say(p, selected ? H[selected] : H.pray);
+          choices(p, selected ? [['walk', C.walk], ['leave', C.leave]] : [['eyes', H.eyesLabel], ['continue', H.continueLabel]]);
+        }, eyes: function () { prayChoice('eyes'); }, continue: function () { prayChoice('continue'); },
+          walk: function () { A.say(p, H.walk); choices(p, [['out', C.out], ['leave', C.leave]]); },
+          out: function () { A.swap(p, C.walkImage); A.say(p, H.out); S.once('v02:out', V.delta.out); choices(p, [['leave', C.leave]]); },
+          leave: function () { A.say(p, H.leave, true); choices(p, [['exit', V.leave]]); }, exit: A.closeAll });
+        function prayChoice(k) { S.choose('v02:prayer', k, V.delta[k]); A.say(p, H[S.choice('v02:prayer')]); choices(p, [['walk', C.walk], ['leave', C.leave]]); }
+        return true;
+      }
+      if (name === 'dorm' && S.flag('v02:night')) {
+        var p = panel(btn, M.dorm.image, 0, H.night, [['enter', M.dorm.enter]]);
+        A.acts(p, { enter: function () { A.say(p, H.night); choices(p, [['pray', H.nightLabel]]); },
+          pray: function () { S.settle('v02:nightPrayer', V.delta.night, { 'v02:nightPrayer': true }); A.melt(p, H.night + '\n' + V.prayer.zh); choices(p, [['evidence', H.evidence]]); },
+          evidence: function () { CC.go('evidence'); } }); return true;
+      }
+      return false;
+    }
+    return scene;
+  };
+})();

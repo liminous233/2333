@@ -104,6 +104,16 @@
 
     var map = CC.$('.tiles', root);
     var layer = null, scr = [], timers = [];
+    function status() {
+      var old = CC.$('.v02-map-status', root);
+      if (old) old.remove();
+      if (!CC.state.flag('d4Report')) return;
+      var V = C.v02, text = V.update;
+      if (CC.story.route() === 'RECONNECT') text = CC.state.flag('v02:messageSent') ? V.messageReady : CC.state.flag('v02:archiveDone') ? V.gateReady : CC.story.hasEvidence() ? V.cluesReady : V.update;
+      var el = document.createElement('p'); el.className = 'v02-map-status'; el.setAttribute('role', 'status'); el.textContent = text; root.appendChild(el);
+    }
+    status();
+    var newScene = CC.storyMap({ panel: panel, figure: figure, choices: choices, say: say, melt: melt, card: card, swap: swap, acts: acts, closeAll: closeAll, status: status });
 
     function closeAll() {
       scr.forEach(function (s) { s.destroy(); });
@@ -224,7 +234,7 @@
     var actions = {
       gate: function (btn) {
         var G = M.gate;
-        var report = CC.state.flag('d4Report');
+        var report = CC.story.blackMap();
         var p = panel(btn, figure(report ? G.reportImage : G.image) + (report ? day7Label() : '') +
           '<p class="map-panel__text">' + CC.esc(G.text) + '</p>');
         if (report) melt(p, G.text);
@@ -247,7 +257,7 @@
       // 居室：点那句话，下面才弹出选项
       dorm: function (btn) {
         var D = M.dorm;
-        if (CC.state.flag('d4Report')) {
+        if (CC.story.blackMap()) {
           var R = D.report;
           var chat = panel(btn, figure(D.image) + day7Label() +
             '<div class="map-panel__message" aria-live="polite"><p class="map-panel__text">' + CC.esc(R.text) + '</p></div>' +
@@ -364,7 +374,7 @@
 
       dining: function (btn) {
         var D = M.dining;
-        var day7 = CC.state.flag('d4Report');          // 述职分支走完才是 DAY 7 桌布，否则还是女孩
+        var day7 = CC.story.blackMap();              // 原红线保留桌布；异常线独立处理
         var p = panel(btn, figure(D.image) + '<p class="map-panel__day mono" hidden>' + CC.esc(D.label) + '</p>' +
           (day7 ? '' : '<span class="map-panel__hi" aria-hidden="true">' + CC.esc(D.hi) + '</span>') +
           '<p class="map-panel__text">' + CC.esc(D.text) + '</p>' + choices([['forward', D.forward]]));
@@ -395,7 +405,7 @@
       },
 
       cathedral: function (btn) {
-        var report = CC.state.flag('d4Report');
+        var report = CC.story.blackMap();
         var p = panel(btn, figure(report ? M.cathedral.reportImage : M.cathedral.image) +
           (report ? day7Label() : '') + '<p class="map-panel__text"></p>');
         say(p, M.cathedral.text, true, report ? 'unrest' : undefined);
@@ -407,7 +417,9 @@
       var b = e.target.closest('.room.is-active');
       if (!b) return;
       if (b.classList.contains('is-open')) { closeAll(); return; }
-      actions[M.rooms.filter(function (r) { return r.id === b.getAttribute('data-room'); })[0].action](b);
+      var room = M.rooms.filter(function (r) { return r.id === b.getAttribute('data-room'); })[0];
+      if (!CC.state.record('v02:ending')) CC.state.once('v02:room:' + room.id);
+      if (!newScene(b, room.action)) actions[room.action](b);
     });
     function onDoc(e) {
       if (!layer || !e.target.isConnected) return;     // 点的按钮已经被换掉了（比如"上楼"），不算点外面
