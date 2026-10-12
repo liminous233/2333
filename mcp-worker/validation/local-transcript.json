@@ -1,0 +1,2490 @@
+{
+  "endpoint": "http://127.0.0.1:8787/mcp",
+  "note": "Actual local test. Ephemeral run IDs redacted; no production requests.",
+  "calls": [
+    {
+      "tool": "start_game",
+      "arguments": {},
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 0,
+        "scene_id": "gate",
+        "title": "身份录入",
+        "narrative": "维西娅·卡鲁的桌面档案夹。左侧是一封欢迎信，右侧摆着调查用物件。",
+        "inventory": [],
+        "actions": [
+          {
+            "id": "inspect_letter",
+            "label": "查看欢迎信"
+          },
+          {
+            "id": "inspect_card",
+            "label": "调查局证件"
+          },
+          {
+            "id": "inspect_gun",
+            "label": "银色左轮"
+          },
+          {
+            "id": "inspect_clue",
+            "label": "线索便签"
+          },
+          {
+            "id": "inspect_pen",
+            "label": "蘸水笔"
+          },
+          {
+            "id": "inspect_kraft",
+            "label": "半张牛皮纸"
+          },
+          {
+            "id": "authenticate",
+            "label": "AUTHENTICATE"
+          }
+        ],
+        "concluded": false,
+        "save_hint": "请保存 run_id；它也是读取和继续此局的凭据。未完成局保留 7 天，完成局保留 30 天。"
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 0,
+        "action_id": "authenticate"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 1,
+        "scene_id": "home",
+        "title": "圣献唱诗院",
+        "narrative": "圣献唱诗院是著名的灵魂疗愈圣地，宣称通过颂歌仪式可以洗涤心灵的罪孽。随着唱诗院一年一度的大颂礼将近，大量信教者以及游客被吸引前来寻求内心的平静。\n\n点燃神圣的白色香烛，在这里，飘渺的灵烟与神圣的颂歌或许能洗去您尘世的疲惫与情感的负累，引领您的灵魂抵达无垢的宁静之境。\n宣传册写得真好。好到我开始算这一本印刷成本多少钱了。",
+        "inventory": [],
+        "actions": [
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "inspect_party",
+            "label": "共 7 人：4 游客、2 调查员、1 邪信徒"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "authenticate",
+          "label": "AUTHENTICATE"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 1,
+        "action_id": "go_evidence"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 2,
+        "scene_id": "evidence",
+        "title": "证物柜",
+        "narrative": "一只打开的手提箱。",
+        "inventory": [],
+        "actions": [
+          {
+            "id": "inspect_candle",
+            "label": "白色香烛"
+          },
+          {
+            "id": "inspect_anemone",
+            "label": "银莲花"
+          },
+          {
+            "id": "inspect_hymn",
+            "label": "颂歌谱子"
+          },
+          {
+            "id": "inspect_rules",
+            "label": "游客守则"
+          },
+          {
+            "id": "inspect_missing",
+            "label": "失踪档案"
+          },
+          {
+            "id": "inspect_gun",
+            "label": "银色左轮"
+          },
+          {
+            "id": "inspect_card",
+            "label": "调查局证件"
+          },
+          {
+            "id": "inspect_pen",
+            "label": "蘸水笔"
+          },
+          {
+            "id": "inspect_clue",
+            "label": "线索便签"
+          },
+          {
+            "id": "inspect_kraft",
+            "label": "半张牛皮纸"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "go_evidence",
+          "label": "证物柜"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 2,
+        "action_id": "inspect_candle"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 3,
+        "scene_id": "item:candle:front",
+        "title": "白色香烛",
+        "narrative": "今日的你状态如何？",
+        "inventory": [
+          "白色香烛"
+        ],
+        "actions": [
+          {
+            "id": "light",
+            "label": "点燃"
+          },
+          {
+            "id": "back",
+            "label": "放回"
+          },
+          {
+            "id": "put_back",
+            "label": "放回"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "inspect_candle",
+          "label": "白色香烛"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 3,
+        "action_id": "light"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 4,
+        "scene_id": "item:candle:front",
+        "title": "白色香烛",
+        "narrative": "今日的你状态如何？",
+        "inventory": [
+          "白色香烛"
+        ],
+        "actions": [
+          {
+            "id": "put_back",
+            "label": "放回"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "light",
+          "label": "点燃"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 4,
+        "action_id": "put_back"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 5,
+        "scene_id": "evidence",
+        "title": "证物柜",
+        "narrative": "一只打开的手提箱。",
+        "inventory": [
+          "白色香烛"
+        ],
+        "actions": [
+          {
+            "id": "inspect_candle",
+            "label": "白色香烛"
+          },
+          {
+            "id": "inspect_anemone",
+            "label": "银莲花"
+          },
+          {
+            "id": "inspect_hymn",
+            "label": "颂歌谱子"
+          },
+          {
+            "id": "inspect_rules",
+            "label": "游客守则"
+          },
+          {
+            "id": "inspect_missing",
+            "label": "失踪档案"
+          },
+          {
+            "id": "inspect_gun",
+            "label": "银色左轮"
+          },
+          {
+            "id": "inspect_card",
+            "label": "调查局证件"
+          },
+          {
+            "id": "inspect_pen",
+            "label": "蘸水笔"
+          },
+          {
+            "id": "inspect_clue",
+            "label": "线索便签"
+          },
+          {
+            "id": "inspect_kraft",
+            "label": "半张牛皮纸"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "put_back",
+          "label": "放回"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 5,
+        "action_id": "inspect_hymn"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 6,
+        "scene_id": "item:hymn:front",
+        "title": "颂歌谱子",
+        "narrative": "灵魂升华之道。\n双月是我的牧者，我必不致缺乏。祂使我躺卧在银莲花田地上，领我在可安歇的水边。祂使我的灵魂苏醒，为自己的名引导我走义路。我虽然行过死荫的幽谷，也不怕遭害，因为你与我同在；你的烛火，你的引言，都引导我前往神国。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子"
+        ],
+        "actions": [
+          {
+            "id": "sing",
+            "label": "颂唱"
+          },
+          {
+            "id": "fold",
+            "label": "折叠"
+          },
+          {
+            "id": "put_back",
+            "label": "放回"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "inspect_hymn",
+          "label": "颂歌谱子"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 6,
+        "action_id": "sing"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 7,
+        "scene_id": "item:hymn:front",
+        "title": "颂歌谱子",
+        "narrative": "灵魂升华之道。\n双月是我的牧者，我必不致缺乏。祂使我躺卧在银莲花田地上，领我在可安歇的水边。祂使我的灵魂苏醒，为自己的名引导我走义路。我虽然行过死荫的幽谷，也不怕遭害，因为你与我同在；你的烛火，你的引言，都引导我前往神国。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子"
+        ],
+        "actions": [
+          {
+            "id": "put_back",
+            "label": "放回"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "sing",
+          "label": "颂唱"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 7,
+        "action_id": "put_back"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 8,
+        "scene_id": "evidence",
+        "title": "证物柜",
+        "narrative": "一只打开的手提箱。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子"
+        ],
+        "actions": [
+          {
+            "id": "inspect_candle",
+            "label": "白色香烛"
+          },
+          {
+            "id": "inspect_anemone",
+            "label": "银莲花"
+          },
+          {
+            "id": "inspect_hymn",
+            "label": "颂歌谱子"
+          },
+          {
+            "id": "inspect_rules",
+            "label": "游客守则"
+          },
+          {
+            "id": "inspect_missing",
+            "label": "失踪档案"
+          },
+          {
+            "id": "inspect_gun",
+            "label": "银色左轮"
+          },
+          {
+            "id": "inspect_card",
+            "label": "调查局证件"
+          },
+          {
+            "id": "inspect_pen",
+            "label": "蘸水笔"
+          },
+          {
+            "id": "inspect_clue",
+            "label": "线索便签"
+          },
+          {
+            "id": "inspect_kraft",
+            "label": "半张牛皮纸"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "put_back",
+          "label": "放回"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 8,
+        "action_id": "inspect_missing"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 9,
+        "scene_id": "item:missing:front",
+        "title": "失踪档案",
+        "narrative": "点击纸袋，抽出一张",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "pull_file",
+            "label": "抽出旧纸"
+          },
+          {
+            "id": "forget",
+            "label": "忘却"
+          },
+          {
+            "id": "put_back",
+            "label": "放回"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "inspect_missing",
+          "label": "失踪档案"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 9,
+        "action_id": "forget"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 10,
+        "scene_id": "item:missing:front",
+        "title": "失踪档案",
+        "narrative": "纸袋再也抽不出纸。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "put_back",
+            "label": "放回"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "forget",
+          "label": "忘却"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 10,
+        "action_id": "put_back"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 11,
+        "scene_id": "evidence",
+        "title": "证物柜",
+        "narrative": "一只打开的手提箱。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "inspect_candle",
+            "label": "白色香烛"
+          },
+          {
+            "id": "inspect_anemone",
+            "label": "银莲花"
+          },
+          {
+            "id": "inspect_hymn",
+            "label": "颂歌谱子"
+          },
+          {
+            "id": "inspect_rules",
+            "label": "游客守则"
+          },
+          {
+            "id": "inspect_missing",
+            "label": "失踪档案"
+          },
+          {
+            "id": "inspect_gun",
+            "label": "银色左轮"
+          },
+          {
+            "id": "inspect_card",
+            "label": "调查局证件"
+          },
+          {
+            "id": "inspect_pen",
+            "label": "蘸水笔"
+          },
+          {
+            "id": "inspect_clue",
+            "label": "线索便签"
+          },
+          {
+            "id": "inspect_kraft",
+            "label": "半张牛皮纸"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "put_back",
+          "label": "放回"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 11,
+        "action_id": "go_map"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 12,
+        "scene_id": "map",
+        "title": "唱诗院地图",
+        "narrative": "欢迎到来\n愿您安宁，愿神护佑您。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "visit_studio",
+            "label": "工作室"
+          },
+          {
+            "id": "visit_gate",
+            "label": "大门"
+          },
+          {
+            "id": "visit_dining",
+            "label": "餐厅"
+          },
+          {
+            "id": "visit_hall",
+            "label": "会议厅"
+          },
+          {
+            "id": "visit_chapel",
+            "label": "祈祷室"
+          },
+          {
+            "id": "visit_dorm",
+            "label": "居室"
+          },
+          {
+            "id": "visit_bell",
+            "label": "钟楼"
+          },
+          {
+            "id": "visit_parlour",
+            "label": "会客室"
+          },
+          {
+            "id": "visit_cathedral",
+            "label": "卡塔西斯圣堂"
+          },
+          {
+            "id": "visit_field",
+            "label": "银莲花田"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "go_map",
+          "label": "唱诗院地图"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 12,
+        "action_id": "visit_chapel"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 13,
+        "scene_id": "room:chapel",
+        "title": "祈祷室",
+        "narrative": "唱诗院的老人们平日会来到这里。\n你踏入此地，无人望向你。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "pray",
+            "label": "做礼拜"
+          },
+          {
+            "id": "walk",
+            "label": "逛逛"
+          },
+          {
+            "id": "leave_chapel",
+            "label": "离开"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          },
+          {
+            "id": "close_room",
+            "label": "返回地图"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "visit_chapel",
+          "label": "祈祷室"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 13,
+        "action_id": "leave_chapel"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 14,
+        "scene_id": "room:chapel",
+        "title": "祈祷室",
+        "narrative": "月光饶有兴致地瞥视了你。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          },
+          {
+            "id": "close_room",
+            "label": "返回地图"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "leave_chapel",
+          "label": "离开"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 14,
+        "action_id": "close_room"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 15,
+        "scene_id": "map",
+        "title": "唱诗院地图",
+        "narrative": "欢迎到来\n愿您安宁，愿神护佑您。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "visit_studio",
+            "label": "工作室"
+          },
+          {
+            "id": "visit_gate",
+            "label": "大门"
+          },
+          {
+            "id": "visit_dining",
+            "label": "餐厅"
+          },
+          {
+            "id": "visit_hall",
+            "label": "会议厅"
+          },
+          {
+            "id": "visit_chapel",
+            "label": "祈祷室"
+          },
+          {
+            "id": "visit_dorm",
+            "label": "居室"
+          },
+          {
+            "id": "visit_bell",
+            "label": "钟楼"
+          },
+          {
+            "id": "visit_parlour",
+            "label": "会客室"
+          },
+          {
+            "id": "visit_cathedral",
+            "label": "卡塔西斯圣堂"
+          },
+          {
+            "id": "visit_field",
+            "label": "银莲花田"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "close_room",
+          "label": "返回地图"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 15,
+        "action_id": "go_journal"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 16,
+        "scene_id": "journal",
+        "title": "八日日志",
+        "narrative": "森林上方，月相依次展开。\n未到开放时间",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "moon_1",
+            "label": "前往证物柜"
+          },
+          {
+            "id": "moon_2",
+            "label": "游客守则"
+          },
+          {
+            "id": "moon_3",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "moon_4",
+            "label": "D4 日志"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "go_journal",
+          "label": "回望穹顶"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 16,
+        "action_id": "moon_4"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 17,
+        "scene_id": "d4",
+        "title": "DAY 4",
+        "narrative": "莫比乌斯环月亮悬在蓝色十字架之下。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "open_report",
+            "label": "展开报告"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "moon_4",
+          "label": "D4 日志"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 17,
+        "action_id": "open_report"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 18,
+        "scene_id": "report",
+        "title": "述职报告",
+        "narrative": "大颂礼 · 第四日\n塞拉维亚调查局\n档案 0110 · 圣献唱诗院\n致审判长：\n第四日，唱诗院按计划进行颂歌排练，未见异常。游客出勤人数下降，团中两人除被问话外已不再开口。东侧走廊的香烛存量多于登记在册的住院人数。银莲花田每日都有采摘，却丝毫不见稀疏。我尚未受邀进入内围。调查继续，本人神志清醒。\n谨呈\n警员 维西娅·卡鲁\n0110",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "complete_report",
+            "label": "本次述职结束"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "open_report",
+          "label": "展开报告"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 18,
+        "action_id": "complete_report"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 19,
+        "scene_id": "messages",
+        "title": "消息",
+        "narrative": "您的朋友正在试图联系您…\n莱恩：不&;$对……究竟是从哪一步，出/*_现了问题？",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "next_message",
+            "label": "查看下一条消息"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "complete_report",
+          "label": "本次述职结束"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 19,
+        "action_id": "next_message"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 20,
+        "scene_id": "messages",
+        "title": "消息",
+        "narrative": "维西娅：（蓝色空白气泡缓慢扭曲。）",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "next_message",
+            "label": "查看下一条消息"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "next_message",
+          "label": "查看下一条消息"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 20,
+        "action_id": "next_message"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 21,
+        "scene_id": "messages",
+        "title": "消息",
+        "narrative": "莱恩：你在吗？",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "next_message",
+            "label": "查看下一条消息"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "next_message",
+          "label": "查看下一条消息"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 21,
+        "action_id": "next_message"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 22,
+        "scene_id": "messages",
+        "title": "消息",
+        "narrative": "维西娅：……",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "decide_embrace",
+            "label": "拥抱穹顶"
+          },
+          {
+            "id": "decide_church",
+            "label": "前往教堂"
+          },
+          {
+            "id": "decide_reconnect",
+            "label": "尝试重连"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "next_message",
+          "label": "查看下一条消息"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 22,
+        "action_id": "decide_reconnect"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 23,
+        "scene_id": "gate",
+        "title": "身份录入",
+        "narrative": "欢迎再次回来",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "inspect_letter",
+            "label": "查看欢迎信"
+          },
+          {
+            "id": "inspect_card",
+            "label": "调查局证件"
+          },
+          {
+            "id": "inspect_gun",
+            "label": "银色左轮"
+          },
+          {
+            "id": "inspect_clue",
+            "label": "线索便签"
+          },
+          {
+            "id": "inspect_pen",
+            "label": "蘸水笔"
+          },
+          {
+            "id": "inspect_kraft",
+            "label": "半张牛皮纸"
+          },
+          {
+            "id": "authenticate",
+            "label": "AUTHENTICATE"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "decide_reconnect",
+          "label": "尝试重连"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 23,
+        "action_id": "authenticate"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 24,
+        "scene_id": "home",
+        "title": "圣献唱诗院",
+        "narrative": "圣献唱诗院是著名的灵魂疗愈圣地，宣称通过颂歌仪式可以洗涤心灵的罪孽。随着唱诗院一年一度的大颂礼将近，大量信教者以及游客被吸引前来寻求内心的平静。\n\n点燃神圣的白色香烛，在这里，飘渺的灵烟与神圣的颂歌或许能洗去您尘世的疲惫与情感的负累，引领您的灵魂抵达无垢的宁静之境。\n宣传册写得真好。好到我开始算这一本印刷成本多少钱了。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "inspect_party",
+            "label": "共 7 人：4 游客、2 调查员、1 邪信徒"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "authenticate",
+          "label": "AUTHENTICATE"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 24,
+        "action_id": "go_map"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 25,
+        "scene_id": "map",
+        "title": "唱诗院地图",
+        "narrative": "欢迎到来\n愿您安宁，愿神护佑您。\n调查记录已更新：地图上出现了新的可疑区域。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "visit_studio",
+            "label": "工作室"
+          },
+          {
+            "id": "visit_gate",
+            "label": "大门"
+          },
+          {
+            "id": "visit_dining",
+            "label": "餐厅"
+          },
+          {
+            "id": "visit_hall",
+            "label": "会议厅"
+          },
+          {
+            "id": "visit_chapel",
+            "label": "祈祷室"
+          },
+          {
+            "id": "visit_dorm",
+            "label": "居室"
+          },
+          {
+            "id": "visit_bell",
+            "label": "钟楼"
+          },
+          {
+            "id": "visit_parlour",
+            "label": "会客室"
+          },
+          {
+            "id": "visit_cathedral",
+            "label": "卡塔西斯圣堂"
+          },
+          {
+            "id": "visit_field",
+            "label": "银莲花田"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "go_map",
+          "label": "唱诗院地图"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 25,
+        "action_id": "visit_studio"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 26,
+        "scene_id": "room:studio",
+        "title": "工作室",
+        "narrative": "你的造物找到了从后门前往阁楼的捷径。\n厚重的书本、放着纯白蜡烛的铁箱子，以及宗卷与文书陈列其间。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "hide",
+            "label": "隐匿"
+          },
+          {
+            "id": "search",
+            "label": "搜查"
+          },
+          {
+            "id": "down",
+            "label": "向下走去"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          },
+          {
+            "id": "close_room",
+            "label": "返回地图"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "visit_studio",
+          "label": "工作室"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 26,
+        "action_id": "hide"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 27,
+        "scene_id": "room:studio",
+        "title": "工作室",
+        "narrative": "楼下人声隐隐约约。修女与神父们正在谈论最近唱诗院的异常。\n“游客……香烛……制作……”\n“……红色……蜡烛？……丢弃……”",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案"
+        ],
+        "actions": [
+          {
+            "id": "hide",
+            "label": "隐匿"
+          },
+          {
+            "id": "search",
+            "label": "搜查"
+          },
+          {
+            "id": "down",
+            "label": "向下走去"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          },
+          {
+            "id": "close_room",
+            "label": "返回地图"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "hide",
+          "label": "隐匿"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 27,
+        "action_id": "search"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 28,
+        "scene_id": "room:studio",
+        "title": "工作室",
+        "narrative": "你沉思了一会。\n蜡烛清单\n姓名 / 性别 / 燃烧时限 / 虔诚度\nMireille Voss / F / 17 / 96%\nIlya Seraphin / M / 11 / 82%\nElena Maren / F / 23 / 74%\nRafael Dorn / M / 7 / 61%\nNadia Lenk / F / 14 / 88%",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单"
+        ],
+        "actions": [
+          {
+            "id": "hide",
+            "label": "隐匿"
+          },
+          {
+            "id": "search",
+            "label": "搜查"
+          },
+          {
+            "id": "down",
+            "label": "向下走去"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          },
+          {
+            "id": "close_room",
+            "label": "返回地图"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "search",
+          "label": "搜查"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 28,
+        "action_id": "down"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 29,
+        "scene_id": "room:studio",
+        "title": "工作室",
+        "narrative": "修女与神父神色慌张，强硬地将你们赶走。修女一路押送你们出去，并告诫你们不要擅闯。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单"
+        ],
+        "actions": [
+          {
+            "id": "exit_studio",
+            "label": "离开"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          },
+          {
+            "id": "close_room",
+            "label": "返回地图"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "down",
+          "label": "向下走去"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 29,
+        "action_id": "exit_studio"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 30,
+        "scene_id": "map",
+        "title": "唱诗院地图",
+        "narrative": "欢迎到来\n愿您安宁，愿神护佑您。\n调查记录已更新：地图上出现了新的可疑区域。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单"
+        ],
+        "actions": [
+          {
+            "id": "visit_studio",
+            "label": "工作室"
+          },
+          {
+            "id": "visit_gate",
+            "label": "大门"
+          },
+          {
+            "id": "visit_dining",
+            "label": "餐厅"
+          },
+          {
+            "id": "visit_hall",
+            "label": "会议厅"
+          },
+          {
+            "id": "visit_chapel",
+            "label": "祈祷室"
+          },
+          {
+            "id": "visit_dorm",
+            "label": "居室"
+          },
+          {
+            "id": "visit_bell",
+            "label": "钟楼"
+          },
+          {
+            "id": "visit_parlour",
+            "label": "会客室"
+          },
+          {
+            "id": "visit_cathedral",
+            "label": "卡塔西斯圣堂"
+          },
+          {
+            "id": "visit_field",
+            "label": "银莲花田"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "exit_studio",
+          "label": "离开"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 30,
+        "action_id": "visit_parlour"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 31,
+        "scene_id": "room:parlour",
+        "title": "会客室",
+        "narrative": "白发主教提前屏退其余人员，交给你一张塞拉维亚调查局 ID 卡。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单"
+        ],
+        "actions": [
+          {
+            "id": "take_id",
+            "label": "接过 ID 卡"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          },
+          {
+            "id": "close_room",
+            "label": "返回地图"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "visit_parlour",
+          "label": "会客室"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 31,
+        "action_id": "take_id"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 32,
+        "scene_id": "room:parlour",
+        "title": "会客室",
+        "narrative": "你随手将卡交给身边的造物。她观察一番，将报告传输至你的终端。\n外观：磨损\n年份：约 3 年前\n姓名：Mara Voss",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单",
+          "磨损的调查局 ID"
+        ],
+        "actions": [
+          {
+            "id": "inspect_oldId",
+            "label": "查看旧 ID"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          },
+          {
+            "id": "close_room",
+            "label": "返回地图"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "take_id",
+          "label": "接过 ID 卡"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 32,
+        "action_id": "close_room"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 33,
+        "scene_id": "map",
+        "title": "唱诗院地图",
+        "narrative": "欢迎到来\n愿您安宁，愿神护佑您。\n两件证物已收录，可以前往钟楼档案室。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单",
+          "磨损的调查局 ID"
+        ],
+        "actions": [
+          {
+            "id": "visit_studio",
+            "label": "工作室"
+          },
+          {
+            "id": "visit_gate",
+            "label": "大门"
+          },
+          {
+            "id": "visit_dining",
+            "label": "餐厅"
+          },
+          {
+            "id": "visit_hall",
+            "label": "会议厅"
+          },
+          {
+            "id": "visit_chapel",
+            "label": "祈祷室"
+          },
+          {
+            "id": "visit_dorm",
+            "label": "居室"
+          },
+          {
+            "id": "visit_bell",
+            "label": "钟楼"
+          },
+          {
+            "id": "visit_parlour",
+            "label": "会客室"
+          },
+          {
+            "id": "visit_cathedral",
+            "label": "卡塔西斯圣堂"
+          },
+          {
+            "id": "visit_field",
+            "label": "银莲花田"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "close_room",
+          "label": "返回地图"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 33,
+        "action_id": "visit_bell"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 34,
+        "scene_id": "room:bell",
+        "title": "钟楼",
+        "narrative": "钟楼。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单",
+          "磨损的调查局 ID"
+        ],
+        "actions": [
+          {
+            "id": "up",
+            "label": "上楼"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          },
+          {
+            "id": "close_room",
+            "label": "返回地图"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "visit_bell",
+          "label": "钟楼"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 34,
+        "action_id": "up"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 35,
+        "scene_id": "room:bell",
+        "title": "钟楼",
+        "narrative": "…我的朋友利用职务之便给了我一把钥匙。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单",
+          "磨损的调查局 ID"
+        ],
+        "actions": [
+          {
+            "id": "archive",
+            "label": "档案室"
+          },
+          {
+            "id": "gaze",
+            "label": "眺望"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          },
+          {
+            "id": "close_room",
+            "label": "返回地图"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "up",
+          "label": "上楼"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 35,
+        "action_id": "archive"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 36,
+        "scene_id": "room:bell",
+        "title": "钟楼",
+        "narrative": "你按照约定时间取回自己的笔。敲门后，白发主教将你们迎入。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单",
+          "磨损的调查局 ID"
+        ],
+        "actions": [
+          {
+            "id": "present",
+            "label": "拿出证物"
+          },
+          {
+            "id": "discuss",
+            "label": "商讨对策"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          },
+          {
+            "id": "close_room",
+            "label": "返回地图"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "archive",
+          "label": "档案室"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 36,
+        "action_id": "present"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 37,
+        "scene_id": "room:bell",
+        "title": "钟楼",
+        "narrative": "你打开手提箱，将蜡烛清单、磨损的 ID 卡、失踪档案与便签一一陈列。\n答案不言而喻。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单",
+          "磨损的调查局 ID"
+        ],
+        "actions": [
+          {
+            "id": "present",
+            "label": "拿出证物"
+          },
+          {
+            "id": "discuss",
+            "label": "商讨对策"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          },
+          {
+            "id": "close_room",
+            "label": "返回地图"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "present",
+          "label": "拿出证物"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 37,
+        "action_id": "discuss"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 38,
+        "scene_id": "room:bell",
+        "title": "钟楼",
+        "narrative": "白发主教提出：前日那支笔的道具效力已经失效，无法绘制有效的神像稿。他怀疑这与你的状态有关。\n你如今头脑清醒，让他再次尝试。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单",
+          "磨损的调查局 ID"
+        ],
+        "actions": [
+          {
+            "id": "present",
+            "label": "拿出证物"
+          },
+          {
+            "id": "discuss",
+            "label": "商讨对策"
+          },
+          {
+            "id": "solve",
+            "label": "破局？"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          },
+          {
+            "id": "close_room",
+            "label": "返回地图"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "discuss",
+          "label": "商讨对策"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 38,
+        "action_id": "solve"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 39,
+        "scene_id": "room:bell",
+        "title": "钟楼",
+        "narrative": "你们决定再次尝试。大门已开放。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单",
+          "磨损的调查局 ID"
+        ],
+        "actions": [
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          },
+          {
+            "id": "close_room",
+            "label": "返回地图"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "solve",
+          "label": "破局？"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 39,
+        "action_id": "close_room"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 40,
+        "scene_id": "map",
+        "title": "唱诗院地图",
+        "narrative": "欢迎到来\n愿您安宁，愿神护佑您。\n档案室调查已完成，大门已开放。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单",
+          "磨损的调查局 ID"
+        ],
+        "actions": [
+          {
+            "id": "visit_studio",
+            "label": "工作室"
+          },
+          {
+            "id": "visit_gate",
+            "label": "大门"
+          },
+          {
+            "id": "visit_dining",
+            "label": "餐厅"
+          },
+          {
+            "id": "visit_hall",
+            "label": "会议厅"
+          },
+          {
+            "id": "visit_chapel",
+            "label": "祈祷室"
+          },
+          {
+            "id": "visit_dorm",
+            "label": "居室"
+          },
+          {
+            "id": "visit_bell",
+            "label": "钟楼"
+          },
+          {
+            "id": "visit_parlour",
+            "label": "会客室"
+          },
+          {
+            "id": "visit_cathedral",
+            "label": "卡塔西斯圣堂"
+          },
+          {
+            "id": "visit_field",
+            "label": "银莲花田"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "close_room",
+          "label": "返回地图"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 40,
+        "action_id": "visit_gate"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 41,
+        "scene_id": "room:gate",
+        "title": "大门",
+        "narrative": "我们的天空",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单",
+          "磨损的调查局 ID"
+        ],
+        "actions": [
+          {
+            "id": "send_message",
+            "label": "行动"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          },
+          {
+            "id": "close_room",
+            "label": "返回地图"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "visit_gate",
+          "label": "大门"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 41,
+        "action_id": "send_message"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 42,
+        "scene_id": "room:gate",
+        "title": "大门",
+        "narrative": "你将线索备份藏匿于文书箱中，借主教之便托人运走。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单",
+          "磨损的调查局 ID"
+        ],
+        "actions": [
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "close_room",
+            "label": "返回地图"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "send_message",
+          "label": "行动"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 42,
+        "action_id": "go_journal"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 43,
+        "scene_id": "journal",
+        "title": "八日日志",
+        "narrative": "森林上方，月相依次展开。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单",
+          "磨损的调查局 ID"
+        ],
+        "actions": [
+          {
+            "id": "moon_1",
+            "label": "前往证物柜"
+          },
+          {
+            "id": "moon_2",
+            "label": "游客守则"
+          },
+          {
+            "id": "moon_3",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "moon_4",
+            "label": "D4 日志"
+          },
+          {
+            "id": "moon_5",
+            "label": "前往教堂"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "go_journal",
+          "label": "回望穹顶"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 43,
+        "action_id": "moon_5"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 44,
+        "scene_id": "church",
+        "title": "教堂",
+        "narrative": "Welcome\n白色的教堂中，大颂礼即将开始。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单",
+          "磨损的调查局 ID"
+        ],
+        "actions": [
+          {
+            "id": "join_hymn",
+            "label": "参加大颂礼"
+          },
+          {
+            "id": "go_map",
+            "label": "唱诗院地图"
+          },
+          {
+            "id": "go_evidence",
+            "label": "证物柜"
+          },
+          {
+            "id": "go_journal",
+            "label": "回望穹顶"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "moon_5",
+          "label": "前往教堂"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 44,
+        "action_id": "join_hymn"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 45,
+        "scene_id": "rite",
+        "title": "大颂礼",
+        "narrative": "主教砸碎了神像…\n其他主教们失去了安宁，疯狂撕扯这被红光沐浴的白发主教……\n啊，新的主降临了。\n所有人陷入了极乐！包括我！\n「还会有失踪吗？」「也许吧。」",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单",
+          "磨损的调查局 ID"
+        ],
+        "actions": [
+          {
+            "id": "complete_hymn",
+            "label": "前往明天？"
+          }
+        ],
+        "concluded": false,
+        "event": {
+          "action": "join_hymn",
+          "label": "参加大颂礼"
+        }
+      }
+    },
+    {
+      "tool": "act",
+      "arguments": {
+        "run_id": "<local-run-id>",
+        "expected_revision": 45,
+        "action_id": "complete_hymn"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 46,
+        "scene_id": "ending",
+        "title": "终",
+        "narrative": "异神极乐 [∞]\n消息送出后，你达成了离开唱诗院的条件。新晋的枢机主教迎接一位新的「祂」降临圣献唱诗院。然而，新神的降临未必是一种祝福。愿不再有人失踪。\n感谢您为镜界生态作出应有的贡献。",
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单",
+          "磨损的调查局 ID"
+        ],
+        "actions": [],
+        "concluded": true,
+        "ending": "异神极乐 [∞]",
+        "record_hint": "调用 get_run_record 阅读本局回望。",
+        "event": {
+          "action": "complete_hymn",
+          "label": "前往明天？"
+        }
+      }
+    },
+    {
+      "tool": "get_run_record",
+      "arguments": {
+        "run_id": "<local-run-id>"
+      },
+      "result": {
+        "run_id": "<local-run-id>",
+        "revision": 46,
+        "concluded": true,
+        "days": [
+          5,
+          6,
+          7
+        ],
+        "areas": [
+          "工作室",
+          "大门",
+          "祈祷室",
+          "钟楼",
+          "会客室"
+        ],
+        "inventory": [
+          "白色香烛",
+          "颂歌谱子",
+          "失踪档案",
+          "蜡烛清单",
+          "磨损的调查局 ID"
+        ],
+        "choices": [
+          "点燃",
+          "颂唱",
+          "忘却",
+          "尝试重连"
+        ],
+        "ending": "异神极乐 [∞]",
+        "recap": "本局回望 · v0.2\n结局：异神极乐 [∞]\n同化：0 / 明晰：83\nD4 路线：异常消息\n最终路线：尝试重连\n关键选择：点燃；颂唱；忘却；尝试重连；隐匿；取得蜡烛清单；收录磨损 ID；拿出证物；商讨对策\n探索进度：5/10\n身份任务：已完成\n消息送出：已完成\n存活至第八日：是",
+        "global_counts": {
+          "peace": 1,
+          "peace-v": 1,
+          "bliss": 1,
+          "infinity": 1
+        }
+      }
+    }
+  ]
+}
