@@ -8,6 +8,61 @@ const walk = (ids: string[]) => ids.reduce((s, id) => transition(s, id).state, f
 const report = ["authenticate", "go_journal", "moon_4", "open_report", "complete_report",
   "next_message", "next_message", "next_message"];
 
+test("desktop items never borrow evidence captions at either assimilation level", () => {
+  for (const assim of [0, 80]) for (const locale of ["zh-CN", "en", "bilingual"] as const) {
+    for (const kind of ["gun", "pen", "card"] as const) {
+      const initial = createRun("desktop-check", locale);
+      initial.assim = assim;
+      const s = transition(initial, "inspect_" + kind).state;
+      const view = observe(s), evidence = C.evidence.items[kind];
+      assert(!view.narrative.includes(evidence.lo));
+      assert(!view.narrative.includes(evidence.hi));
+      assert(!view.narrative.includes(C.evidence.items.pen.loanHint));
+      assert(view.narrative.includes(locale === "en" ? C.gate.objects[kind].en : C.gate.objects[kind].zh));
+      assert.equal(transition(s, "put_back").state.sceneId, "gate");
+      if (kind === "card") {
+        const back = transition(s, "turn_card").state;
+        assert(observe(back).narrative.includes(locale === "en" ? C.gate.card.back : C.v02.cardZh.back));
+        assert(observe(transition(back, "turn_card").state).narrative.includes(locale === "en" ? C.gate.card.bureau : C.v02.cardZh.bureau));
+      }
+      const evidenceState = transition(transition(transition(initial, "authenticate").state, "go_evidence").state, "inspect_" + kind).state;
+      assert(observe(evidenceState).narrative.includes(assim >= C.evidence.highAt ? evidence.hi : evidence.lo));
+    }
+  }
+});
+
+test("desktop clue, letter and kraft remain readable without evidence-only actions", () => {
+  const clue = walk(["inspect_clue"]);
+  assert.equal(observe(clue).narrative, C.gate.clueZh.join("\n"));
+  const letter = walk(["inspect_letter"]);
+  assert(observe(letter).narrative.includes(C.gate.letter.zh.title));
+  assert(observe(transition(letter, "crumple_letter").state).actions.some(a => a.id === "unfold_letter"));
+  const initial = fresh(); initial.flags.forever = true;
+  const kraft = transition(initial, "inspect_kraft").state;
+  assert.equal(observe(kraft).narrative, C.gate.kraft);
+  assert(!observe(kraft).actions.some(a => a.id === "merge"));
+  assert.throws(() => transition(kraft, "merge"), /UNAVAILABLE_ACTION/);
+  const evidence = transition(transition(transition(initial, "authenticate").state, "go_evidence").state, "inspect_kraft").state;
+  assert(observe(evidence).actions.some(a => a.id === "merge"));
+});
+
+test("cached desktop item saves are corrected on observe without rewriting progress", () => {
+  for (const kind of ["gun", "pen", "card"] as const) {
+    const s = walk(["inspect_" + kind]);
+    s.text = C.evidence.items[kind].lo;
+    const before = structuredClone(s), view = observe(s);
+    assert(!view.narrative.includes(C.evidence.items[kind].lo));
+    assert.equal(view.revision, before.revision);
+    assert.deepEqual(s, before);
+  }
+  const kraft = walk(["inspect_kraft"]);
+  kraft.flags.forever = true; kraft.text = "WE Forever"; kraft.options.push(["merge", C.evidence.items.merge.label]);
+  const before = structuredClone(kraft);
+  assert.equal(observe(kraft).narrative, C.gate.kraft);
+  assert.throws(() => transition(kraft, "merge"), /UNAVAILABLE_ACTION/);
+  assert.deepEqual(kraft, before);
+});
+
 test("pen foreshadows the loan only after lighting, then disappears on entering D4", () => {
   let s = walk(["authenticate", "go_evidence", "inspect_pen"]);
   assert(!observe(s).narrative.includes("一天后借走"));

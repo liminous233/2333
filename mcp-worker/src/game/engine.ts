@@ -54,6 +54,7 @@ function addNav(s: RunState): Pair[] {
   ) as Pair[];
 }
 function itemChoices(s: RunState, k: string): Pair[] {
+  if (s.returnTo === "gate") return [];
   const key = k === "kraft" || k === "forever" ? "ev:merge" : "ev:" + k;
   if (s.choices[key]) return [];
   if (k === "kraft" || k === "forever")
@@ -69,8 +70,12 @@ function itemChoices(s: RunState, k: string): Pair[] {
 }
 function item(s: RunState, k: string, side = "front") {
   const it = (E.items as Record<string, any>)[k] || {},
-    old = k === "oldId";
-  let text = it.text || (it.hi ? (s.assim >= E.highAt ? it.hi : it.lo) : "");
+    old = k === "oldId",
+    atGate = s.returnTo === "gate";
+  const gateLabel = (C.gate.objects as Record<string, any>)[k];
+  let text = atGate
+    ? (gateLabel?.zh ? bilingual(s, gateLabel.zh, gateLabel.en) : "")
+    : it.text || (it.hi ? (s.assim >= E.highAt ? it.hi : it.lo) : "");
   const actions: Pair[] = [];
   if (k === "letter") {
     if (side === "hidden") text = C.gate.letter.hidden;
@@ -101,7 +106,7 @@ function item(s: RunState, k: string, side = "front") {
     if (side === "crumpled") text = "欢迎信被揉成了纸团。";
   } else if (k === "card" || old) {
     const prayer =
-      old || (storyFor(s).route() === "ANOMALY" && s.flags["v02:nightPrayer"]);
+      old || (!atGate && storyFor(s).route() === "ANOMALY" && s.flags["v02:nightPrayer"]);
     const zh = V.cardZh,
       en = C.gate.card;
     if (side === "back")
@@ -145,7 +150,7 @@ function item(s: RunState, k: string, side = "front") {
         .map((r, i) => i + 1 + ". " + bilingual(s, r.zh, r.en))
         .join("\n");
   else if (k === "kraft" || k === "forever")
-    text = s.choices["ev:merge"]
+    text = !atGate && s.choices["ev:merge"]
       ? "WE Forever"
       : k === "kraft"
         ? C.gate.kraft
@@ -519,6 +524,13 @@ export function createRun(
   return s;
 }
 export function observe(s: RunState): PublicScene {
+  // Old saves may be paused on a desktop item with cached evidence captions.
+  // Re-render that public view without mutating the save or its revision.
+  if (s.returnTo === "gate" && s.sceneId.startsWith("item:")) {
+    s = structuredClone(s);
+    const [, kind, side] = s.sceneId.split(":");
+    item(s, kind, side);
+  }
   const actions = [...s.options, ...addNav(s)];
   if (s.sceneId.startsWith("room:")) actions.push(["close_room", "返回地图"]);
   // Keep scene-specific labels (such as the report's map-change hint) instead
