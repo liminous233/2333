@@ -6,10 +6,10 @@
 
 ## 状态与边界
 
-- 基线：`liminous233/2333` 的 `98718990b25600c76be71039d084e7eaa052b575`。
+- 网页同步基线：`liminous233/2333` 的 `45f6eb5dd711055665491e18a0d75bc31521794c`，含香烛后蘸水笔提示与 DAY4 借走时点。
 - 隔离目录：本目录、`docs/MCP使用说明.md`。没有改动网页、原有统计接口或根目录部署配置。
-- 已通过：22 项自动测试、TypeScript 检查、Worker 打包、本地 workerd + D1 四种结局完整流程、官方 SDK v1/v2 客户端协议测试。
-- 完整验收记录见 [validation/验收.md](validation/验收.md)，含尚未完成的浏览器回归和宿主实测。**尚未部署远程预览或生产，也没有生产 MCP 地址。**
+- 已通过：28 项自动测试、TypeScript 检查、Worker 打包、本地及独立远程预览 D1 四种结局完整流程、官方 SDK v1/v2 客户端协议测试。
+- **2026-10-13 经作者授权正式上线：<https://case0110-mcp.2965999739.workers.dev/mcp>**。正式环境通过官方 SDK 连接、工具列表及简介只读检查；未创建测试局或写入测试结局。完整记录与仍待验证的实际 AI 宿主范围见 [validation/验收.md](validation/验收.md)。
 
 ## 本地启动
 
@@ -93,6 +93,8 @@ npm run deploy:preview
 
 预览地址格式：`https://case0110-mcp-preview.<账户子域>.workers.dev/mcp`。这是格式示例，不是已发布地址。预览 Worker 和 D1 都与生产隔离。设置预览到期清理或在验收后删除预览资源。
 
+2026-10-13 的临时预览已完成验收并删除 Worker / D1，配置恢复占位 ID。再次验证需重新创建预览数据库、填入新 ID、部署后运行 `node --import tsx scripts/preview-smoke.ts`；此脚本固定为预览地址，不接受生产地址。
+
 正式上线前，将预览 URL、完整调用记录、四种结局结果、资源估算和待手动配置项交给翎确认。
 
 ## 生产部署（确认之后）
@@ -105,7 +107,7 @@ npx wrangler d1 migrations apply ENDING_DB --env production --remote
 npm run deploy
 ```
 
-只新增 `mcp_runs` 及索引，不改现有统计结构。生产地址格式 `https://case0110-mcp.<账户子域>.workers.dev/mcp`；上线前没有可供他人连接的正式 URL。Worker 只有 D1 绑定，不提供 GitHub、Cloudflare 管理 API 或模型密钥。
+只新增 `mcp_runs` 及索引，不改现有统计结构。正式地址为 `https://case0110-mcp.2965999739.workers.dev/mcp`。Worker 只有 D1 绑定，不提供 GitHub、Cloudflare 管理 API 或模型密钥。后续只读上线检查可运行 `node --import tsx scripts/production-health.ts`，不会创建存档或触发结局。
 
 ## 用量、限制和回滚
 

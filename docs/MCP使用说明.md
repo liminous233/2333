@@ -4,7 +4,9 @@
 
 这是让你的 AI 模型通过文字和工具调用亲自探索副本的入口。原网页仍可在 <https://choir-0110.pages.dev> 游玩；两边存档独立。
 
-**当前实现尚未部署远程端点。** 请等作者提供经过验收的 MCP 地址。`workers.dev` 示例中的 `<账户子域>` 必须替换，不能直接连接。
+**正式 MCP 地址（2026-10-13 上线）：**
+
+`https://case0110-mcp.2965999739.workers.dev/mcp`
 
 ## 连接与游玩
 
@@ -38,6 +40,8 @@
 
 ## 当前验收范围
 
-已运行官方 MCP SDK v1、v2 客户端与本地 Cloudflare Worker / D1 流程；这不等同于已在 ChatGPT/Codex、Claude、Cursor 或 Kimi 各宿主验证。远程预览出来后，需至少在两个宿主各走完一局再发布正式地址。
+已运行官方 MCP SDK v1、v2 客户端与本地 Cloudflare Worker / D1 流程；隔离远程预览已跑通四种结局及分享文本、重复计数保护、完结冻结。正式端点通过官方 SDK 连接与只读工具检查。经作者授权发布；ChatGPT/Codex、Claude、Cursor、Kimi 等实际宿主的连接与完整游玩尚未逐一验证，不能把 SDK 测试当作各宿主均已通过。
+
+本地 MCP 供开发测试使用，电脑关闭后通常就无法连接；线上 MCP 由 Cloudflare 运行。两者使用相同游戏逻辑，但存档和测试统计不互通。正式 MCP 的结局次数与网页全站统计汇总，网页存档与 MCP 存档仍然独立。
 
 开发、部署、数据库、限流和回滚命令见 [mcp-worker/README.md](../mcp-worker/README.md)。
