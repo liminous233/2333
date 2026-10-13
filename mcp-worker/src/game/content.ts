@@ -850,7 +850,8 @@ export const CONTENT = {
       "pen": {
         "name": "蘸水笔",
         "hi": "书写您的诗篇。",
-        "lo": "创造我道的一切。"
+        "lo": "创造我道的一切。",
+        "loanHint": "你的朋友将会在一天后借走它。"
       },
       "clue": {
         "name": "线索便签"

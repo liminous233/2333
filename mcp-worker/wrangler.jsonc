@@ -22,7 +22,7 @@
         {
           "binding": "ENDING_DB",
           "database_name": "case0110-mcp-preview",
-          "database_id": "00000000-0000-0000-0000-000000000000",
+          "database_id": "57987b41-c40a-410e-80a9-61723a1ae8ed",
           "migrations_dir": "migrations",
         },
       ],

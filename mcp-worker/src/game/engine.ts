@@ -171,7 +171,7 @@ function item(s: RunState, k: string, side = "front") {
     text += "\n" + (s.choices["ev:candle"] === "light"
       ? "白色香烛已点燃。" : "你选择不点燃香烛，将它放回。" );
   if (k === "pen" && s.returnTo === "evidence" && s.flags.candleLit && !penBorrowed(s))
-    text += "\n你的朋友将会在一天后借走它。";
+    text += "\n" + E.items.pen.loanHint;
   actions.push(...itemChoices(s, k));
   actions.push(["put_back", itemChoices(s, k).some(([, text]) => text === "放回")
     ? "暂时收起（不作选择）" : "放回"]);
