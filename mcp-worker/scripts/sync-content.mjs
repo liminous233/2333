@@ -4,7 +4,10 @@ import fs from "node:fs";
 import vm from "node:vm";
 import crypto from "node:crypto";
 const root = new URL("../", import.meta.url);
-const read = (p) => fs.readFileSync(new URL("../" + p, root), "utf8");
+// Git may check text files out as CRLF on Windows. Hash and compare the same
+// canonical text on every platform; substantive source changes still fail.
+const normalize = (text) => text.replace(/\r\n/g, "\n");
+const read = (p) => normalize(fs.readFileSync(new URL("../" + p, root), "utf8"));
 const sources = [
   "site/data/content.js",
   "site/js/story.js",
@@ -56,7 +59,7 @@ const files = {
 for (const [p, content] of Object.entries(files)) {
   const path = new URL(p, root);
   if (process.argv.includes("--check")) {
-    if (!fs.existsSync(path) || fs.readFileSync(path, "utf8") !== content)
+    if (!fs.existsSync(path) || normalize(fs.readFileSync(path, "utf8")) !== content)
       throw Error(
         "Upstream changed; audit the adapter before running sync-content: " + p,
       );

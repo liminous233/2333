@@ -17,12 +17,16 @@ export function fullIdentity(s: RunState) {
 const reportText = (r: typeof C.d4.report.zh) =>
   [r.date, ...r.head, r.to, r.body, r.close, r.sign, r.code].join("\n");
 const label = (k: string) =>
+  (k === "letter" ? "欢迎信" : "") ||
   (E.items as Record<string, any>)[k]?.name ||
   (V.items as Record<string, any>)[k] ||
   k;
 function rememberItem(s: RunState, k: string) {
   if (!s.inventory.includes(k)) s.inventory.push(k);
 }
+// Include historical saves that reached the report before this scene detail existed.
+const penBorrowed = (s: RunState) => !!(s.seen["moon:4"] ||
+  s.visited.includes("d4") || s.flags.d4Report || s.flags.d4Diamond || s.records["v02:report"]);
 const bilingual = (s: RunState, zh: string, en?: string) =>
   s.locale === "zh-CN"
     ? zh
@@ -163,8 +167,14 @@ function item(s: RunState, k: string, side = "front") {
       actions.push(["pull_file", "抽出旧纸"]);
     }
   }
+  if (k === "candle" && s.choices["ev:candle"])
+    text += "\n" + (s.choices["ev:candle"] === "light"
+      ? "白色香烛已点燃。" : "你选择不点燃香烛，将它放回。" );
+  if (k === "pen" && s.returnTo === "evidence" && s.flags.candleLit && !penBorrowed(s))
+    text += "\n你的朋友将会在一天后借走它。";
   actions.push(...itemChoices(s, k));
-  actions.push(["put_back", "放回"]);
+  actions.push(["put_back", itemChoices(s, k).some(([, text]) => text === "放回")
+    ? "暂时收起（不作选择）" : "放回"]);
   screen(s, "item:" + k + ":" + side, text, actions);
 }
 function enter(s: RunState, page: string) {
@@ -223,6 +233,7 @@ function enter(s: RunState, page: string) {
     const ks = Object.keys(E.items).filter(
       (k) =>
         k !== "merge" &&
+        (k !== "pen" || !penBorrowed(s)) &&
         (k !== "forever" || (s.flags.forever && !s.choices["ev:merge"])),
     );
     for (const k of ["candleList", "oldId"])
@@ -250,15 +261,22 @@ function enter(s: RunState, page: string) {
       s,
       "journal",
       "森林上方，月相依次展开。" +
-        (!T.churchOpen() ? "\n" + C.journal.churchClosed : ""),
+        (!T.churchOpen() ? "\n教堂：" + C.journal.churchClosed : "") +
+        "\n月相入口记录（从对应月相进入后标为已读）：\n" +
+        C.journal.moons.filter((m) => m.n <= 4).map((m) =>
+          m.label + "：" + (s.seen["moon:" + m.n] ? "已读" : "未读")
+        ).join("\n"),
       options,
     );
     return;
   }
   if (page === "d4") {
-    screen(s, "d4", "莫比乌斯环月亮悬在蓝色十字架之下。", [
-      ["open_report", "展开报告"],
-    ]);
+    const options: Pair[] = [["open_report", "展开报告"]];
+    const readMessages = T.route() === "REPORT_BLACK" &&
+      s.flags.d4Report && s.counters.chat === C.d4.chat.length - 1;
+    if (readMessages) options.push(["report_church", C.d4.toChurch], ["go_map", C.d4.mapHint]);
+    screen(s, "d4", "莫比乌斯环月亮悬在蓝色十字架之下。" +
+      (readMessages ? "\n本次述职与消息已读，可继续前往教堂或查看地图。" : ""), options);
     return;
   }
   if (page === "church") {
@@ -316,7 +334,7 @@ function visit(s: RunState, name: string) {
     S.once("v02:hallTribunal", { assim: -3 });
     const read = S.seen("v02:hallEavesdrop");
     room(
-      read ? V.tribunalHall.day7 : V.tribunalHall.day6,
+      read ? "DAY 7\n" + V.tribunalHall.day7 : "DAY 6\n" + V.tribunalHall.day6,
       read ? [["hall_leave", V.leave]] : [["listen", V.tribunalHall.listen]],
     );
     return;
@@ -503,9 +521,11 @@ export function createRun(
 export function observe(s: RunState): PublicScene {
   const actions = [...s.options, ...addNav(s)];
   if (s.sceneId.startsWith("room:")) actions.push(["close_room", "返回地图"]);
-  const unique = Array.from(
-    new Map(actions.map(([id, label]) => [id, { id, label }])).values(),
-  );
+  // Keep scene-specific labels (such as the report's map-change hint) instead
+  // of replacing them with the generic navigation label for the same action.
+  const unique = actions.filter(([id], i) => actions.findIndex(([other]) => other === id) === i)
+    .filter(([id]) => id !== "inspect_pen" || s.sceneId === "gate" || !penBorrowed(s))
+    .map(([id, label]) => ({ id, label }));
   const title = s.sceneId.startsWith("room:")
     ? M.rooms.find((r) => r.id === s.sceneId.split(":")[1])?.zh
     : s.sceneId.startsWith("item:")
@@ -531,7 +551,7 @@ export function observe(s: RunState): PublicScene {
     scene_id: s.sceneId,
     title: title || C.site.title,
     narrative: s.text,
-    inventory: s.inventory.map(label),
+    inventory: s.inventory.filter(k => k !== "pen" || !penBorrowed(s)).map(label),
     actions: s.concluded ? [] : unique,
     concluded: s.concluded,
     ...(s.concluded
@@ -739,9 +759,10 @@ export function transition(
     } else if (room === "hall") {
       if (id === "listen") {
         S.once("v02:hallEavesdrop");
-        show(V.tribunalHall.day7, [["hall_leave", V.leave]]);
+        show("DAY 7\n" + V.tribunalHall.day7, [["hall_leave", V.leave]]);
       }
-      if (id === "hall_leave") show(V.tribunalHall.messages.join("\n"), []);
+      if (id === "hall_leave") show(V.tribunalHall.messages.map((text, i) =>
+        (i === 1 ? "维西娅：" : "莱恩：") + text).join("\n"), []);
       if (id === "hall_enter") hall(s, 1);
       if (id === "hall_next") hall(s, 2);
       if (id === "hall_portrait") hall(s, 3);
@@ -925,7 +946,7 @@ export function buildRecap(s: RunState) {
     concluded: s.concluded,
     days,
     areas: rooms,
-    inventory: s.inventory.map(label),
+    inventory: s.inventory.filter(k => k !== "pen" || !penBorrowed(s)).map(label),
     choices: s.publicChoices,
     ...(s.concluded
       ? {
