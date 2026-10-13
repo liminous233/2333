@@ -157,6 +157,7 @@ window.CONTENT = {
     credits: [
       ['作者', '翎 · liminous（世界观、剧情文案、页面设计与排版、素材）'],
       ['代码', 'Claude · 克（按翎的设计方案实现）'],
+      ['代码协作 / MCP', 'Astra'],
       ['枪', 'Gordon Gartrell · CC BY-SA 2.0 · Wikimedia Commons'],
       ['祈祷室围墙', '小红书 @Jyuemim'],
       ['黑日', '小红书 @無山'],
@@ -442,6 +443,7 @@ window.CONTENT = {
       ['gap'],
       ['role', 'Story, World & Design', 'liminous'],
       ['role', 'Code', 'Claude'],
+      ['role', 'Code', 'Astra'],
       ['gap'],
       ['head', 'Recorded at'],
       ['line', 'The Choir of Sacred Offering'],
