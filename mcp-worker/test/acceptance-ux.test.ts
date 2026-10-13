@@ -180,15 +180,16 @@ test("report keeps its map hint and offers completed conversation exits on retur
   assert.equal(observe(transition(fresh(), "inspect_letter").state).title, "欢迎信");
 });
 
-test("map updates remain visible in message, journal and cached map views without leaking routes", () => {
+test("map update is presented once per run, with journal and cached map fallbacks", () => {
   const initial = walk(["authenticate", "go_journal"]);
   for (const s of [initial, transition(initial, "moon_4").state]) {
     assert(!observe(s).narrative.includes("地图已开放"));
     assert(!observe(s).actions.some(a => a.label.includes("已开放新内容")));
   }
   const messages = walk(report);
-  const journal = transition(messages, "go_journal").state;
-  const map = transition(journal, "moon_4").state;
+  const incompleteMessages = walk(report.slice(0, 5));
+  const journal = transition(incompleteMessages, "go_journal").state;
+  const map = transition(incompleteMessages, "go_map").state;
   // Cached pre-update text must still receive the new public hint on reconnect.
   map.text = C.map.welcome.zh.join("\n");
   for (const s of [messages, journal, map]) {
@@ -198,6 +199,14 @@ test("map updates remain visible in message, journal and cached map views withou
     assert(!/REPORT_BLACK|ANOMALY|明晰|同化值/.test(view.narrative));
     observe(s);
     assert.deepEqual(s, before);
+    assert.throws(() => transition(s, "unavailable"), /UNAVAILABLE_ACTION/);
+    assert.deepEqual(s, before);
+    let continued = transition(s, "go_evidence").state;
+    for (const id of ["go_journal", "moon_4", "go_journal", "moon_3", "open_report"]) {
+      continued = transition(JSON.parse(JSON.stringify(continued)), id).state;
+      assert(!observe(continued).narrative.includes("地图已开放"));
+      assert(!observe(continued).actions.some(a => /已开放新内容|地图似乎有异动/.test(a.label)));
+    }
   }
   assert(observe(journal).actions.find(a => a.id === "moon_4")!.label.includes("已开放新内容"));
   assert(observe(journal).actions.find(a => a.id === "go_map")!.label.includes("已开放新内容"));

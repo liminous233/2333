@@ -10,6 +10,9 @@ type Pair = [string, string];
 // retain their historical meaning so old read marks and pen timing stay valid.
 const moonPosition = (n: number) => n === 3 ? 4 : n === 4 ? 3 : n;
 const mapUpdateNotice = "地图已开放新内容／发生变化。先前到过的地点也可能出现新内容，请重新查看各地点。";
+const showMapUpdate = (s: RunState) => !!s.flags.d4Report && !s.concluded &&
+  !s.flags["mcp:mapUpdateNoticed"] && (["map", "journal"].includes(s.sceneId) ||
+    (s.sceneId === "messages" && !s.options.some(([id]) => id === "next_message")));
 const pairs = (a: string[][]) => a as Pair[];
 export const storyFor = (s: RunState) =>
   createStory(stateApi(s), C, seededRandom(s.seed));
@@ -538,7 +541,7 @@ export function observe(s: RunState): PublicScene {
     item(s, kind, side);
   }
   const actions = [...s.options, ...addNav(s)];
-  const mapUpdated = !!s.flags.d4Report && !s.concluded;
+  const mapUpdated = showMapUpdate(s);
   if (s.sceneId.startsWith("room:")) actions.push(["close_room", "返回地图"]);
   // Keep scene-specific labels (such as the report's map-change hint) instead
   // of replacing them with the generic navigation label for the same action.
@@ -546,7 +549,9 @@ export function observe(s: RunState): PublicScene {
     .filter(([id]) => id !== "inspect_pen" || s.sceneId === "gate" || !penBorrowed(s))
     .map(([id, label]) => ({ id, label: mapUpdated &&
       (id === "go_map" || (s.sceneId === "journal" && label === "唱诗院地图"))
-      ? "唱诗院地图（已开放新内容／发生变化）" : label }));
+      ? "唱诗院地图（已开放新内容／发生变化）"
+      : s.flags["mcp:mapUpdateNoticed"] && id === "go_map" && label === C.d4.mapHint
+        ? "唱诗院地图" : label }));
   const title = s.sceneId.startsWith("room:")
     ? M.rooms.find((r) => r.id === s.sceneId.split(":")[1])?.zh
     : s.sceneId.startsWith("item:")
@@ -571,9 +576,7 @@ export function observe(s: RunState): PublicScene {
     revision: s.revision,
     scene_id: s.sceneId,
     title: title || C.site.title,
-    narrative: s.text + (mapUpdated && (["map", "journal"].includes(s.sceneId) ||
-      (s.sceneId === "messages" && !s.options.some(([id]) => id === "next_message")))
-      ? "\n\n" + mapUpdateNotice : ""),
+    narrative: s.text + (mapUpdated ? "\n\n" + mapUpdateNotice : ""),
     inventory: s.inventory.filter(k => k !== "pen" || !penBorrowed(s)).map(label),
     actions: s.concluded ? [] : unique,
     concluded: s.concluded,
@@ -603,6 +606,9 @@ export function transition(
     S = stateApi(s),
     T = storyFor(s),
     id = actionId;
+  // Consume only after a valid action from the scene that presented the notice.
+  // Re-reading that same revision stays pure; later scenes do not imply updates.
+  if (showMapUpdate(input)) s.flags["mcp:mapUpdateNoticed"] = true;
   const c2 = T.route() === "ANOMALY" && S.choice("v02:d4") === "embrace",
     black = T.blackMap(),
     reconnect = T.route() === "RECONNECT";
