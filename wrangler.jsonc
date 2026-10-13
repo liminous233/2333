@@ -2,6 +2,10 @@
   "name": "choir-0110",
   "pages_build_output_dir": "site",
   "compatibility_date": "2026-10-12",
+  "services": [{
+    "binding": "CASE0110_MCP",
+    "service": "case0110-mcp"
+  }],
   "d1_databases": [{
     "binding": "ENDING_DB",
     "database_name": "choir-ending-stats",
