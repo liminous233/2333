@@ -16,6 +16,12 @@
   var GATE = ['gun', 'card', 'clue', 'pen', 'kraft'];
   var LABEL = C.gate.objects;
 
+  // DAY4 一进入就借走；兼容已经进入过后续剧情的旧存档。
+  function penBorrowed() {
+    return !!(CC.state.flag('penBorrowed') || CC.state.seen('moon:4') ||
+      CC.state.flag('d4Report') || CC.state.flag('d4Diamond') || CC.state.record('v02:report'));
+  }
+
   /* ---------------------------------------------------------------- 各物件的样子 */
   // 短白香烛：用户用 GPT 生成的照片（白底已抠掉）；火苗和光晕是代码叠上去的，点燃时才显示
   function candle() {
@@ -122,6 +128,9 @@
     if (lb) html += '<p class="ev-cap__label mono"><span>' + CC.esc(lb.en) + '</span> · ' + CC.esc(lb.zh) + '</p>';
     var text = it.text || (it.hi ? (hi ? it.hi : it.lo) : '');
     if (text) html += '<p class="ev-cap__text">' + CC.esc(text) + '</p>';
+    if (kind === 'pen' && !penBorrowed() && (CC.state.flag('candleLit') || CC.state.choice('ev:candle') === 'light')) {
+      html += '<p class="ev-cap__text">' + CC.esc(it.loanHint) + '</p>';
+    }
     if (it.textEn) html += '<p class="ev-cap__en">' + CC.esc(it.textEn) + '</p>';
     if (kind === 'card') html += '<p class="ev-cap__hint mono">' + CC.esc(C.gate.card.flipHint) + '</p>';
     return html;
@@ -174,6 +183,7 @@
 
   function lift(kind, opts) {
     opts = opts || {};
+    if (kind === 'pen' && penBorrowed()) return null;
     if (current && !opts.page) return null;
     var reduce = CC.reducedMotion();
     var page = opts.page || null;
@@ -376,7 +386,10 @@
   CC.items = {
     look: look,
     // 箱子里要不要放这件（forever 捡到了、还没拼才放）
-    has: function (kind) { return kind !== 'forever' || (FOREVER_GOT() && !MERGED()); },
+    has: function (kind) {
+      if (kind === 'pen') return !penBorrowed();
+      return kind !== 'forever' || (FOREVER_GOT() && !MERGED());
+    },
     lift: lift,
     // 换页时把还开着的浮层收掉
     reset: function () { if (current) { current.destroy(); current = null; } },

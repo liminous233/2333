@@ -97,6 +97,7 @@
 
   /* ---------------------------------------------------------------- 页面 */
   CC.pages.d4 = function (root) {
+    CC.state.setFlag('penBorrowed', true);
     var D = C.d4;
     var reduce = CC.reducedMotion();
     var timers = [], cleanups = [];
