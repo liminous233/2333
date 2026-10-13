@@ -45,7 +45,7 @@ try {
     s = await call("act", { run_id: s.run_id, expected_revision: s.revision, action_id: id });
   }
   assert(s.narrative.includes("你的朋友将会在一天后借走它。"));
-  for (const id of ["put_back", "go_journal", "moon_4", "go_evidence"]) {
+  for (const id of ["put_back", "go_journal", "moon_3", "go_evidence"]) {
     s = await call("act", { run_id: s.run_id, expected_revision: s.revision, action_id: id });
   }
   assert(!s.actions.some((a: any) => a.id === "inspect_pen"));

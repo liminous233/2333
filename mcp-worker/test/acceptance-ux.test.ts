@@ -5,8 +5,43 @@ import { createRun, observe, transition, buildRecap } from "../src/game/engine";
 import { CONTENT as C } from "../src/game/content";
 const fresh = () => createRun(randomUUID(), "zh-CN");
 const walk = (ids: string[]) => ids.reduce((s, id) => transition(s, id).state, fresh());
-const report = ["authenticate", "go_journal", "moon_4", "open_report", "complete_report",
+const report = ["authenticate", "go_journal", "moon_3", "open_report", "complete_report",
   "next_message", "next_message", "next_message"];
+
+test("moon actions follow website positions while read marks and pen timing keep their meaning", () => {
+  const journal = walk(["authenticate", "go_journal"]);
+  assert.deepEqual(observe(journal).actions.filter(a => a.id.startsWith("moon_")).map(a => [a.id, a.label]), [
+    ["moon_1", "前往证物柜"], ["moon_2", "游客守则"], ["moon_3", "D4 日志"], ["moon_4", "唱诗院地图"],
+  ]);
+  assert(observe(journal).narrative.includes("从右往左"));
+  const map = transition(journal, "moon_4").state;
+  assert.equal(map.sceneId, "map");
+  assert(map.seen["moon:3"]);
+  assert(!map.seen["moon:4"]);
+  assert(observe(transition(map, "go_evidence").state).actions.some(a => a.id === "inspect_pen"));
+  const d4 = transition(journal, "moon_3").state;
+  assert.equal(d4.sceneId, "d4");
+  assert(d4.seen["moon:4"]);
+  assert(!observe(transition(d4, "go_evidence").state).actions.some(a => a.id === "inspect_pen"));
+});
+
+test("old journal actions remain safe until reentry and historical read marks are not swapped", () => {
+  const old = walk(["authenticate", "go_journal"]);
+  delete old.flags["mcp:moonOrder"];
+  old.options = [["moon_1", "前往证物柜"], ["moon_2", "游客守则"], ["moon_3", "唱诗院地图"], ["moon_4", "D4 日志"]];
+  old.text = "森林上方，月相依次展开。";
+  old.seen["moon:3"] = true;
+  const before = structuredClone(old);
+  observe(old);
+  assert.deepEqual(old, before);
+  assert.equal(transition(old, "moon_3").state.sceneId, "map");
+  assert.equal(transition(old, "moon_4").state.sceneId, "d4");
+  const resumed = transition(transition(old, "moon_3").state, "go_journal").state;
+  assert(observe(resumed).narrative.includes("唱诗院地图：已读"));
+  assert(observe(resumed).narrative.includes("D4 日志：未读"));
+  assert.equal(transition(JSON.parse(JSON.stringify(resumed)), "moon_3").state.sceneId, "d4");
+  assert.deepEqual(old, before);
+});
 
 test("desktop items never borrow evidence captions at either assimilation level", () => {
   for (const assim of [0, 80]) for (const locale of ["zh-CN", "en", "bilingual"] as const) {
@@ -74,7 +109,7 @@ test("pen foreshadows the loan only after lighting, then disappears on entering 
   s = transition(transition(s, "put_back").state, "inspect_pen").state;
   assert.deepEqual([s.assim, s.clarity], score);
   assert.equal(observe(s).narrative.split("一天后借走").length, 2);
-  for (const id of ["go_journal", "moon_4", "go_evidence"])
+  for (const id of ["go_journal", "moon_3", "go_evidence"])
     s = transition(s, id).state;
   // Visiting D4 is sufficient; opening/completing the report is not required.
   s = JSON.parse(JSON.stringify(s));
@@ -87,7 +122,7 @@ test("pen foreshadows the loan only after lighting, then disappears on entering 
   assert.deepEqual([s.assim, s.clarity], score);
   const unlit = walk(["authenticate", "go_evidence", "inspect_candle", "back", "put_back", "inspect_pen"]);
   assert(!observe(unlit).narrative.includes("一天后借走"));
-  const after = walk(["authenticate", "go_journal", "moon_4", "go_evidence"]);
+  const after = walk(["authenticate", "go_journal", "moon_3", "go_evidence"]);
   assert(!observe(after).actions.some(a => a.id === "inspect_pen"));
 });
 
@@ -135,12 +170,37 @@ test("journal exposes only entry read marks without changing the church gate", (
 
 test("report keeps its map hint and offers completed conversation exits on return", () => {
   let s = walk(report);
-  assert.equal(observe(s).actions.find(a => a.id === "go_map")!.label, C.d4.mapHint);
-  s = transition(transition(s, "go_journal").state, "moon_4").state;
+  assert(observe(s).actions.find(a => a.id === "go_map")!.label.includes("已开放新内容"));
+  s = transition(transition(s, "go_journal").state, "moon_3").state;
   assert(observe(s).actions.some(a => a.id === "report_church"));
   assert(observe(s).actions.some(a => a.id === "open_report"));
   assert.equal(transition(s, "report_church").state.sceneId, "church");
-  const unfinished = walk(["authenticate", "go_journal", "moon_4", "open_report", "complete_report", "go_journal", "moon_4"]);
+  const unfinished = walk(["authenticate", "go_journal", "moon_3", "open_report", "complete_report", "go_journal", "moon_3"]);
   assert(!observe(unfinished).actions.some(a => a.id === "report_church"));
   assert.equal(observe(transition(fresh(), "inspect_letter").state).title, "欢迎信");
+});
+
+test("map updates remain visible in message, journal and cached map views without leaking routes", () => {
+  const initial = walk(["authenticate", "go_journal"]);
+  for (const s of [initial, transition(initial, "moon_4").state]) {
+    assert(!observe(s).narrative.includes("地图已开放"));
+    assert(!observe(s).actions.some(a => a.label.includes("已开放新内容")));
+  }
+  const messages = walk(report);
+  const journal = transition(messages, "go_journal").state;
+  const map = transition(journal, "moon_4").state;
+  // Cached pre-update text must still receive the new public hint on reconnect.
+  map.text = C.map.welcome.zh.join("\n");
+  for (const s of [messages, journal, map]) {
+    const before = structuredClone(s), view = observe(s);
+    assert(view.narrative.includes("地图已开放新内容／发生变化"));
+    assert(view.narrative.includes("先前到过的地点也可能出现新内容"));
+    assert(!/REPORT_BLACK|ANOMALY|明晰|同化值/.test(view.narrative));
+    observe(s);
+    assert.deepEqual(s, before);
+  }
+  assert(observe(journal).actions.find(a => a.id === "moon_4")!.label.includes("已开放新内容"));
+  assert(observe(journal).actions.find(a => a.id === "go_map")!.label.includes("已开放新内容"));
+  assert.deepEqual(observe(map).actions.map(a => a.id).filter(id => id.startsWith("visit_")),
+    observe(transition(initial, "moon_4").state).actions.map(a => a.id).filter(id => id.startsWith("visit_")));
 });

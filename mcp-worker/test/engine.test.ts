@@ -97,7 +97,7 @@ test("39/40/49/50 reports lock; original route code and seeded old ID persist", 
     [49, "ANOMALY"],
     [50, "EARLY_MOON"],
   ] as const) {
-    let s = walk(initial(), ["authenticate", "go_journal", "moon_4"]);
+    let s = walk(initial(), ["authenticate", "go_journal", "moon_3"]);
     s.assim = value;
     s = step(s, "open_report");
     assert.equal(storyFor(s).route(), route);
@@ -216,7 +216,7 @@ test("church gate, early moon and unfinished hymn cannot bypass credits", () => 
     "inspect_anemone",
     "put_back",
     "go_journal",
-    "moon_4",
+    "moon_3",
     "open_report",
   ]);
   assert.equal(s.assim, 50);

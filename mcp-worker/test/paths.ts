@@ -36,7 +36,7 @@ export const charge42 = [
   "leave_chapel",
   "close_room",
 ];
-export const d4 = ["go_journal", "moon_4", ...report];
+export const d4 = ["go_journal", "moon_3", ...report];
 export const reconnectChain = [
   "go_map",
   "visit_studio",

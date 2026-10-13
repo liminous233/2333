@@ -6,6 +6,10 @@ const V = C.v02,
   M = C.map,
   E = C.evidence;
 type Pair = [string, string];
+// Public positions follow the website (right to left); persisted scene keys
+// retain their historical meaning so old read marks and pen timing stay valid.
+const moonPosition = (n: number) => n === 3 ? 4 : n === 4 ? 3 : n;
+const mapUpdateNotice = "地图已开放新内容／发生变化。先前到过的地点也可能出现新内容，请重新查看各地点。";
 const pairs = (a: string[][]) => a as Pair[];
 export const storyFor = (s: RunState) =>
   createStory(stateApi(s), C, seededRandom(s.seed));
@@ -257,18 +261,20 @@ function enter(s: RunState, page: string) {
     return;
   }
   if (page === "journal") {
-    const options: Pair[] = C.journal.moons
+    s.flags["mcp:moonOrder"] = "web";
+    const moons = [...C.journal.moons].sort((a, b) => moonPosition(a.n) - moonPosition(b.n));
+    const options: Pair[] = moons
       .filter((m) => !m.twin && (m.route !== "church" || T.churchOpen()))
-      .map((m) => ["moon_" + m.n, m.label]);
+      .map((m) => ["moon_" + moonPosition(m.n), m.label]);
     if ([1, 2, 3, 4, 5].every((n) => s.seen["moon:" + n]))
       options.push(["moon_6", "凝视双月"]);
     screen(
       s,
       "journal",
-      "森林上方，月相依次展开。" +
+      "森林上方，月相依次展开。编号与网页一致，从右往左数。" +
         (!T.churchOpen() ? "\n教堂：" + C.journal.churchClosed : "") +
         "\n月相入口记录（从对应月相进入后标为已读）：\n" +
-        C.journal.moons.filter((m) => m.n <= 4).map((m) =>
+        moons.filter((m) => m.n <= 4).map((m) =>
           m.label + "：" + (s.seen["moon:" + m.n] ? "已读" : "未读")
         ).join("\n"),
       options,
@@ -532,12 +538,15 @@ export function observe(s: RunState): PublicScene {
     item(s, kind, side);
   }
   const actions = [...s.options, ...addNav(s)];
+  const mapUpdated = !!s.flags.d4Report && !s.concluded;
   if (s.sceneId.startsWith("room:")) actions.push(["close_room", "返回地图"]);
   // Keep scene-specific labels (such as the report's map-change hint) instead
   // of replacing them with the generic navigation label for the same action.
   const unique = actions.filter(([id], i) => actions.findIndex(([other]) => other === id) === i)
     .filter(([id]) => id !== "inspect_pen" || s.sceneId === "gate" || !penBorrowed(s))
-    .map(([id, label]) => ({ id, label }));
+    .map(([id, label]) => ({ id, label: mapUpdated &&
+      (id === "go_map" || (s.sceneId === "journal" && label === "唱诗院地图"))
+      ? "唱诗院地图（已开放新内容／发生变化）" : label }));
   const title = s.sceneId.startsWith("room:")
     ? M.rooms.find((r) => r.id === s.sceneId.split(":")[1])?.zh
     : s.sceneId.startsWith("item:")
@@ -562,7 +571,9 @@ export function observe(s: RunState): PublicScene {
     revision: s.revision,
     scene_id: s.sceneId,
     title: title || C.site.title,
-    narrative: s.text,
+    narrative: s.text + (mapUpdated && (["map", "journal"].includes(s.sceneId) ||
+      (s.sceneId === "messages" && !s.options.some(([id]) => id === "next_message")))
+      ? "\n\n" + mapUpdateNotice : ""),
     inventory: s.inventory.filter(k => k !== "pen" || !penBorrowed(s)).map(label),
     actions: s.concluded ? [] : unique,
     concluded: s.concluded,
@@ -598,7 +609,10 @@ export function transition(
   if (id.startsWith("go_")) enter(s, id.slice(3));
   else if (id === "close_room") enter(s, "map");
   else if (id.startsWith("moon_")) {
-    const n = Number(id.slice(5));
+    const position = Number(id.slice(5));
+    // A save paused on an old journal still accepts its already-issued actions.
+    // It adopts the new numbering only when journal is entered again.
+    const n = s.flags["mcp:moonOrder"] === "web" ? moonPosition(position) : position;
     S.once("moon:" + n);
     if (n === 6) enter(s, "church");
     else enter(s, C.journal.moons[n - 1].route!);
