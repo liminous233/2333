@@ -35,6 +35,7 @@ const output = z.strictObject({
   areas: z.array(z.string()).optional(),
   choices: z.array(z.string()).optional(),
   recap: z.string().optional(),
+  share_text: z.string().optional(),
   global_counts: z
     .strictObject({
       peace: z.number().int(),
@@ -59,7 +60,7 @@ const descriptions = {
     "读取当前公开场景和 actions。纯读取，不计分。只可将返回的 action id 传给 act。",
   act: "执行当前公开 actions 中的一项。必须传入最新 revision；冲突会返回当前场景，绝不重复结算。结束后只能读取记录。",
   get_run_record:
-    "回望已经到达的区域和公开选择。结束后返回原作本局回望与全站次数；进行中不提供隐藏数值或路线预测。",
+    "回望已经到达的区域和公开选择。结束后返回原作本局回望、可直接复制且不含 run_id 的 share_text，以及全站次数；进行中不提供隐藏数值或路线预测。",
 };
 const messages: Record<string, string> = {
   RUN_NOT_FOUND: "找不到此局或保留期已到；检查 run_id，或 start_game 开新局。",

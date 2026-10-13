@@ -537,7 +537,8 @@ export function observe(s: RunState): PublicScene {
     ...(s.concluded
       ? {
           ending: C.endingStats.names[s.endingKind!],
-          record_hint: "调用 get_run_record 阅读本局回望。",
+          record_hint:
+            "调用 get_run_record 阅读本局回望；其中 share_text 可直接复制分享。",
         }
       : {}),
     ...(s.locale !== "zh-CN"
@@ -915,6 +916,9 @@ export function buildRecap(s: RunState) {
   const rooms = M.rooms
     .filter((r) => S.seen("v02:room:" + r.id))
     .map((r) => r.zh);
+  const recap = s.concluded
+    ? recapText(s.records["v02:ending"], C)
+    : undefined;
   return {
     run_id: s.runId,
     revision: s.revision,
@@ -926,7 +930,8 @@ export function buildRecap(s: RunState) {
     ...(s.concluded
       ? {
           ending: C.endingStats.names[s.endingKind!],
-          recap: recapText(s.records["v02:ending"], C),
+          recap,
+          share_text: `CASE 0110 · ${C.site.title}\n${recap}`,
         }
       : {}),
   };

@@ -45,9 +45,11 @@ npx @modelcontextprotocol/inspector@2.10.1 --cli http://127.0.0.1:8787/mcp --tra
 | `start_game` | 新建匿名局，返回 `run_id` 和 revision 0 |
 | `observe` | 只读当前公开场景与动作 |
 | `act` | `run_id` + `expected_revision` + 当前 `action_id` |
-| `get_run_record` | 已公开的回望；结束后显示原作回望与全站次数 |
+| `get_run_record` | 已公开的回望；结束后显示原作回望、可复制的 `share_text` 与全站次数 |
 
 每次成功动作返回下一场景，因此不必在每次动作后再调用 observe。工具成功和业务错误均提供 `structuredContent` 与 JSON 文本 fallback；协议层无效参数由官方 SDK 返回标准 MCP 错误。
+
+完结后的 `share_text` 是统一的分享文本，包含 CASE 标题和网页同款本局回望，不含 `run_id`，可直接交给玩家复制发帖或回传作者。它不是可导入存档；继续或接力一局仍须私下保管并传递 `run_id`。全站次数单独位于 `global_counts`，不会混入分享文本。
 
 `run_id` 是游戏的随机 bearer handle：拿到它的人可以阅读和继续该局，不应公开。它不是宿主会话 ID，没有账号或 cookie。无法找回丢失的 handle。每局 seed 独立生成；旧证件姓名在同一局保持不变。`en` 是实验性模式：只使用已有英文，无英文的段落保留中文；`bilingual` 展示已有双语。没有自动翻译服务。
 

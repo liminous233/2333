@@ -61,6 +61,8 @@ for (const modern of [false, true])
         assert.equal(s.ending, "异神极乐 [∞]");
         const record = await call("get_run_record", { run_id: s.run_id });
         assert.equal(record.structuredContent.global_counts.infinity, 1);
+        assert.match(record.structuredContent.share_text, /异神极乐 \[∞\]/);
+        assert(!record.structuredContent.share_text.includes(s.run_id));
         const invalid: any = await (client as any).callTool({
           name: "observe",
           arguments: { run_id: s.run_id, extra: "denied" },

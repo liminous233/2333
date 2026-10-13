@@ -54,11 +54,14 @@ for (const [kind, path] of Object.entries(paths))
     assert.equal(s.endingKind, kind);
     assert(s.concluded);
     assert.equal(observe(s).actions.length, 0);
+    const record = buildRecap(s);
     assert(
-      buildRecap(s).recap!.includes(
+      record.recap!.includes(
         C.endingStats.names[kind as keyof typeof C.endingStats.names],
       ),
     );
+    assert.equal(record.share_text, `CASE 0110 · ${C.site.title}\n${record.recap}`);
+    assert(!record.share_text.includes(s.runId));
     const before = structuredClone(s);
     assert.throws(() => transition(s, "go_map"), /RUN_FINISHED/);
     assert.deepEqual(s, before);
